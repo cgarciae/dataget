@@ -183,26 +183,28 @@ class SetsBase(object):
     def random_batch_arrays_generator(self, batch_size):
         import numpy as np
 
-        features, labels = self.arrays()
-        n = len(features)
+        for data in self.random_batch_dataframe_generator(batch_size):
 
-        while True:
-            idx = np.random.choice(n, batch_size)
+            features = np.stack(data.Image.as_matrix())
+            labels = np.stack(data.ClassId.as_matrix())
 
-            yield features[idx], labels[idx]
+            yield features, labels
 
 
 class TestGermanTrafficSignsDataset(SetsBase, TestSet):
 
     def dataframe(self):
-        import pandas as pd
+        if not hasattr(self, '_data'):
+            import pandas as pd
 
-        csv_path = os.path.join(self.path, "GT-final_test.csv")
+            csv_path = os.path.join(self.path, "GT-final_test.csv")
 
-        df = pd.read_csv(csv_path, sep=";")
-        df['Filename'] = self.path + "/" + df['Filename']
+            df = pd.read_csv(csv_path, sep=";")
+            df['Filename'] = self.path + "/" + df['Filename']
 
-        yield df
+            self._data = df
+
+        return self._data
 
 
 class TrainingGermanTrafficSignsDataset(SetsBase, TrainingSet):
@@ -220,13 +222,16 @@ class TrainingGermanTrafficSignsDataset(SetsBase, TrainingSet):
                 yield df
 
     def dataframe(self):
-        from scipy.misc import imread
-        import pandas as pd
+        if not hasattr(self, '_data'):
+            from scipy.misc import imread
+            import pandas as pd
 
-        data = pd.concat(self._dataframe_generator())
-        data["Image"] = data.Filename.apply(imread)
+            data = pd.concat(self._dataframe_generator())
+            data["Image"] = data.Filename.apply(imread)
 
-        return data
+            self._data = data
+
+        return self._data
 
 
 
