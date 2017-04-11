@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4a26a2ba
+# __coconut_hash__ = 0x4244a120
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -523,8 +523,7 @@ from . import DATASETS
 
 TRAINING_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Training_Images.zip"
 TEST_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_Images.zip"
-# TEST_CSV_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_GT.zip"
-TEST_CSV_URL = "https://github.com/cgarciae/german-traffic-signs-data/raw/master/GTSRB_Final_Test_GT.zip"
+TEST_CSV_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_GT.zip"
 
 
 def get_progress():
