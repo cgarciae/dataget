@@ -11,6 +11,9 @@
 from setuptools import setup, find_packages
 from dataget import __version__
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 tests_require = [
     'mock',
     'nose',
@@ -48,17 +51,14 @@ an incredible python package
     ],
     packages=find_packages(),
     include_package_data=False,
-    install_requires=[
-        # add your dependencies here
-        # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
-    ],
+    install_requires = required,
     extras_require={
         'tests': tests_require,
     },
     entry_points={
         'console_scripts': [
             # add cli scripts here in this form:
-            # 'dataget=dataget.cli:main',
+            'dataget=dataget.cli:main',
         ],
     },
 )
