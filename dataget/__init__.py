@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xb57abc25
+# __coconut_hash__ = 0xce49857b
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -523,5 +523,7 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 from .version import __version__  # NOQA
 
 from . import utils
-from . import sets
-from .sets import DATASETS
+from . import datasets
+from .datasets import list_datasets
+from .datasets import data
+from .datasets import get_path
