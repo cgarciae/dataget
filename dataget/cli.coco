@@ -1,0 +1,136 @@
+import click
+click.disable_unicode_literals_warning = True
+
+import os
+
+from dataget import list_datasets, data, get_path
+
+@click.group()
+@click.option('--path', '-p', default=None)
+@click.pass_context
+def main(ctx, path):
+    path = get_path(path)
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    ctx.obj = dict(path = path)
+
+
+@main.command()
+@click.option('--all', '-a', is_flag=True)
+@click.pass_context
+def ls(ctx, all):
+    if all:
+        [ print(s) for s in list_datasets() ]
+
+    else:
+        path = ctx.obj['path']
+        [ print(s) for s in os.listdir(path) if os.path.join(path, s) |> os.path.isdir ]
+
+
+@main.command()
+@click.argument('datasets', nargs=-1)
+@click.option('--all', '-a', is_flag=True)
+@click.pass_context
+def clear(ctx, datasets, all):
+    path = ctx.obj["path"]
+
+    if all:
+        datasets = list_datasets()
+
+    for dataset_name in datasets:
+        dataset = data(dataset_name, path)
+        dataset.clear()
+
+
+@main.command()
+@click.argument('datasets', nargs=-1)
+@click.option('--clear', '-c', is_flag=True)
+@click.option('--keep-sources', '-k', is_flag=True)
+@click.option('--dont-download', '-d', is_flag=True)
+@click.option('--dont-extract', '-e', is_flag=True)
+@click.option('--arg', '-a', multiple=True)
+@click.pass_context
+def load(ctx, datasets, clear, keep_sources, dont_download, dont_extract, arg):
+    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=keep_sources, download=not dont_download, extract=not dont_extract, args=arg)
+
+
+@main.command()
+@click.argument('datasets', nargs=-1)
+@click.option('--arg', '-a', multiple=True)
+@click.pass_context
+def process(ctx, datasets, arg):
+    args = arg
+    path = ctx.obj["path"]
+
+    if len(datasets) > 1:
+        dataset_kargs_dict = multiset_parse_args(args)
+    else:
+        dataset_kargs = parse_args(args)
+        dataset_kargs_dict = {datasets[0]: dataset_kargs}
+
+
+    for dataset_name in datasets:
+        dataset = data(dataset_name, path)
+        dataset_kargs = dataset_kargs_dict[dataset_name]
+        dataset.process(**dataset_kargs)
+
+
+@main.command()
+@click.argument('datasets', nargs=-1)
+@click.option('--clear', '-c', is_flag=True)
+@click.option('--arg', '-a', multiple=True)
+@click.pass_context
+def download(ctx, datasets, clear, arg):
+    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=True, download=True, extract=False, args=arg)
+
+
+@main.command()
+@click.argument('datasets', nargs=-1)
+@click.option('--arg', '-a', multiple=True)
+@click.pass_context
+def extract(ctx, datasets, arg):
+    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=True, download=False, extract=True, args=arg)
+
+@main.command('remove-sources')
+@click.argument('datasets', nargs=-1)
+@click.option('--arg', '-a', multiple=True)
+@click.pass_context
+def remove_sources(ctx, datasets, arg):
+    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=False, download=False, extract=False, args=arg)
+
+def _load(ctx, datasets, clear=False, keep_sources=False, download=True, extract=True, args=[]):
+    path = ctx.obj["path"]
+
+    if len(datasets) > 1:
+        dataset_kargs_dict = multiset_parse_args(args)
+    else:
+        dataset_kargs = parse_args(args)
+        dataset_kargs_dict = {datasets[0]: dataset_kargs}
+
+
+    for dataset_name in datasets:
+        dataset = data(dataset_name, path)
+        dataset_kargs = dataset_kargs_dict[dataset_name]
+        dataset.download(download=download, extract=extract, clear=clear, keep_sources=keep_sources, **dataset_kargs)
+
+def parse_args(args):
+    dataset_kargs = {}
+
+    for arg in args:
+        key, value = arg.split(":")
+        dataset_kargs.update({key: value})
+
+    return dataset_kargs
+
+def multiset_parse_args(args):
+    dataset_kargs_dict = {}
+
+    for arg in args:
+        dataset_name, key, value = arg.split(":")
+        ops = dataset_kargs_dict.get(dataset_name, {})
+        ops.update({key: value})
+        dataset_kargs_dict[dataset_name] = ops
+
+    return dataset_kargs_dict
