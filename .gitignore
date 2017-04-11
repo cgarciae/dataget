@@ -1,4 +1,4 @@
-dataget/**/*.py
+#dataget/**/*.py
 dataget/**/*.pyc
 
 # Byte-compiled / optimized / DLL files
