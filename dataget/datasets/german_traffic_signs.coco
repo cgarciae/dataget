@@ -43,7 +43,7 @@ class GermanTrafficSignsDataset(DataSet):
     def name(self):
         return "German Traffic Signs Dataset"
 
-    def _download(self, download, extract, keep_sources):
+    def _load(self, download, extract, keep_sources):
         training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
         test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
 

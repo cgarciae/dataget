@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4900a92d
+# __coconut_hash__ = 0x2816d42
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -564,24 +564,24 @@ def clear(ctx, datasets, all):
 @click.option('--keep-sources', '-k', is_flag=True)
 @click.option('--dont-download', '-d', is_flag=True)
 @click.option('--dont-extract', '-e', is_flag=True)
-@click.option('--arg', '-a', multiple=True)
+@click.option('--parameter', '-a', multiple=True)
 @click.pass_context
-def load(ctx, datasets, clear, keep_sources, dont_download, dont_extract, arg):
-    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=keep_sources, download=not dont_download, extract=not dont_extract, args=arg)
+def load(ctx, datasets, clear, keep_sources, dont_download, dont_extract, parameter):
+    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=keep_sources, download=not dont_download, extract=not dont_extract, parameters=parameter)
 
 
 @main.command()
 @click.argument('datasets', nargs=-1)
-@click.option('--arg', '-a', multiple=True)
+@click.option('--parameter', '-p', multiple=True)
 @click.pass_context
-def process(ctx, datasets, arg):
-    args = arg
+def process(ctx, datasets, parameter):
+    parameters = parameter
     path = ctx.obj["path"]
 
     if len(datasets) > 1:
-        dataset_kargs_dict = multiset_parse_args(args)
+        dataset_kargs_dict = multiset_parse_args(parameters)
     else:
-        dataset_kargs = parse_args(args)
+        dataset_kargs = parse_args(parameters)
         dataset_kargs_dict = {datasets[0]: dataset_kargs}
 
 
@@ -594,55 +594,53 @@ def process(ctx, datasets, arg):
 @main.command()
 @click.argument('datasets', nargs=-1)
 @click.option('--clear', '-c', is_flag=True)
-@click.option('--arg', '-a', multiple=True)
+@click.option('--parameter', '-p', multiple=True)
 @click.pass_context
-def download(ctx, datasets, clear, arg):
-    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=True, download=True, extract=False, args=arg)
+def download(ctx, datasets, clear, parameter):
+    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=True, download=True, extract=False, parameters=parameter)
 
 
 @main.command()
 @click.argument('datasets', nargs=-1)
-@click.option('--arg', '-a', multiple=True)
 @click.pass_context
-def extract(ctx, datasets, arg):
-    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=True, download=False, extract=True, args=arg)
+def extract(ctx, datasets, parameter):
+    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=True, download=False, extract=True)
 
 @main.command('remove-sources')
 @click.argument('datasets', nargs=-1)
-@click.option('--arg', '-a', multiple=True)
 @click.pass_context
-def remove_sources(ctx, datasets, arg):
-    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=False, download=False, extract=False, args=arg)
+def remove_sources(ctx, datasets):
+    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=False, download=False, extract=False)
 
-def _load(ctx, datasets, clear=False, keep_sources=False, download=True, extract=True, args=[]):
+def _load(ctx, datasets, clear=False, keep_sources=False, download=True, extract=True, parameters=[]):
     path = ctx.obj["path"]
 
     if len(datasets) > 1:
-        dataset_kargs_dict = multiset_parse_args(args)
+        dataset_kargs_dict = multiset_parse_args(parameters)
     else:
-        dataset_kargs = parse_args(args)
+        dataset_kargs = parse_args(parameters)
         dataset_kargs_dict = {datasets[0]: dataset_kargs}
 
 
     for dataset_name in datasets:
         dataset = data(dataset_name, path)
         dataset_kargs = dataset_kargs_dict[dataset_name]
-        dataset.download(download=download, extract=extract, clear=clear, keep_sources=keep_sources, **dataset_kargs)
+        dataset.load(download=download, extract=extract, clear=clear, keep_sources=keep_sources, **dataset_kargs)
 
-def parse_args(args):
+def parse_args(parameters):
     dataset_kargs = {}
 
-    for arg in args:
-        key, value = arg.split(":")
+    for parameter in parameters:
+        key, value = parameter.split(":")
         dataset_kargs.update({key: value})
 
     return dataset_kargs
 
-def multiset_parse_args(args):
+def multiset_parse_args(parameters):
     dataset_kargs_dict = {}
 
-    for arg in args:
-        dataset_name, key, value = arg.split(":")
+    for parameter in parameters:
+        dataset_name, key, value = parameter.split(":")
         ops = dataset_kargs_dict.get(dataset_name, {})
         ops.update({key: value})
         dataset_kargs_dict[dataset_name] = ops

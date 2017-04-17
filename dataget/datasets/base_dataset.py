@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xb92b4f25
+# __coconut_hash__ = 0x5991e8cb
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -525,25 +525,34 @@ class DataSet(object):
         self.test_set = self.test_set_class(self)
 
 
-    def download(self, download=True, clear=False, keep_sources=False, extract=True, **kwargs):
-
+    def load(self, download=True, clear=False, keep_sources=False, extract=True, **kwargs):
         if clear:
             self.clear()
 
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
-        self._download(download, extract, keep_sources, **kwargs)
+        self._load(download, extract, keep_sources, **kwargs)
 
         return self
 
-    def donwload_once(self, *args, **kwargs):
-
+    def load_once(self, *args, **kwargs):
         if not os.path.exists(self.path):
-            self.download(*args, **kwargs)
+            self.load(*args, **kwargs)
 
         return self
 
+    @_coconut_tco
+    def download(self, **kwargs):
+        raise _coconut_tail_call(self.load, download=True, clear=False, keep_sources=True, extract=False)
+
+    @_coconut_tco
+    def extract(self):
+        raise _coconut_tail_call(self.load, download=False, clear=False, keep_sources=True, extract=True)
+
+    @_coconut_tco
+    def remove_sources(self):
+        raise _coconut_tail_call(self.load, download=False, clear=False, keep_sources=False, extract=False)
 
     def process(self, **kwargs):
 
@@ -574,7 +583,7 @@ class DataSet(object):
         pass
 
     @abstractmethod
-    def _download(self):
+    def _load(self):
         pass
 
     @abstractmethod

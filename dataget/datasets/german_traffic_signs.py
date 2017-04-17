@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x76efbec2
+# __coconut_hash__ = 0xbb9f8f4f
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -557,7 +557,7 @@ class GermanTrafficSignsDataset(DataSet):
     def name(self):
         return "German Traffic Signs Dataset"
 
-    def _download(self, download, extract, keep_sources):
+    def _load(self, download, extract, keep_sources):
         training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
         test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
 
