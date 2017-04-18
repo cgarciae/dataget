@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x5991e8cb
+# __coconut_hash__ = 0x7f8abf51
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -516,54 +516,123 @@ from abc import ABCMeta
 from abc import abstractmethod
 from abc import abstractproperty
 
+DATASETS = {}
+
+def get_path(path=None, global_=False):
+    if global_:
+        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else os.path.expanduser("~/.dataget")
+        path = os.path.join(path, "data")
+    elif not path:
+        path = os.path.join(os.getcwd(), ".dataget", "data")
+
+    return path
+
+def data(dataset_name, path=None, global_=False):
+
+    path = get_path(path=path, global_=global_)
+
+    dataset_class = DATASETS.get(dataset_name, None)
+    dataset = dataset_class(dataset_name, path)
+
+    if not dataset:
+        raise Exception("Dataset {} does not exist".format(dataset_name))
+
+    return dataset
+
+
+def ls(installed=False, path=None, global_=False):
+    if installed:
+        path = get_path(path=path, global_=global_)
+        [print(s) for s in os.listdir(path) if (os.path.isdir)(os.path.join(path, s))]
+    else:
+        [print(s) for s in DATASETS.keys()]
+
+
 class DataSet(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, home_path):
-        self.path = os.path.join(home_path, name)
+        self.name = name
+        self.path = os.path.join(home_path, self.name)
         self.training_set = self.training_set_class(self)
         self.test_set = self.test_set_class(self)
 
 
-    def load(self, download=True, clear=False, keep_sources=False, extract=True, **kwargs):
+    def get(self, clear=False, remove_compressed=True, process=True, remove_raw=True, **kwargs):
+# clear
         if clear:
             self.clear()
 
-        if not os.path.exists(self.path):
+# return if path exists, dataset downloaded already, else create path
+        if not self.is_empty():
+            return self
+
+# get data
+        self.download(**kwargs).extract(**kwargs)
+
+# clean
+        if remove_compressed:
+            self.remove_compressed(**kwargs)
+
+# process
+        if process:
+            self.process(**kwargs)
+
+            if remove_raw:
+                self.remove_raw()
+
+        return self
+
+
+    def download(self, clear=False, **kwargs):
+# clear
+        if clear:
+            self.clear()
+
+        if not self.is_empty():
+            return self
+        elif not self.path_exists():
             os.makedirs(self.path)
 
-        self._load(download, extract, keep_sources, **kwargs)
+        self._download(**kwargs)
 
         return self
 
-    def load_once(self, *args, **kwargs):
-        if not os.path.exists(self.path):
-            self.load(*args, **kwargs)
+    def extract(self, **kwargs):
+        self._remove_raw(**kwargs)
 
         return self
 
-    @_coconut_tco
-    def download(self, **kwargs):
-        raise _coconut_tail_call(self.load, download=True, clear=False, keep_sources=True, extract=False)
+    def remove_compressed(self, **kwargs):
+        self._remove_raw(**kwargs)
 
-    @_coconut_tco
-    def extract(self):
-        raise _coconut_tail_call(self.load, download=False, clear=False, keep_sources=True, extract=True)
-
-    @_coconut_tco
-    def remove_sources(self):
-        raise _coconut_tail_call(self.load, download=False, clear=False, keep_sources=False, extract=False)
+        return self
 
     def process(self, **kwargs):
-
-        self._process(**kwargs)
+        self._remove_raw(**kwargs)
 
         return self
+
+    def remove_raw(self, **kwargs):
+        self._remove_raw(**kwargs)
+
+        return self
+
 
     def clear(self):
         shutil.rmtree(self.path)
 
         return self
+
+    @_coconut_tco
+    def path_exists(self):
+        raise _coconut_tail_call(os.path.exists, self.path)
+
+    def is_empty(self):
+        if not self.path_exists():
+            return True
+        else:
+            return not os.listdir(self.path)
 
 
     @abstractproperty
@@ -578,16 +647,24 @@ class DataSet(object):
     def help(self):
         pass
 
-    @abstractproperty
-    def name(self):
+    @abstractmethod
+    def _download(self):
         pass
 
     @abstractmethod
-    def _load(self):
+    def _extract(self):
+        pass
+
+    @abstractmethod
+    def _remove_compressed(self):
         pass
 
     @abstractmethod
     def _process(self):
+        pass
+
+    @abstractmethod
+    def _remove_raw(self):
         pass
 
 

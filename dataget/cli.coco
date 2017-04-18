@@ -3,132 +3,104 @@ click.disable_unicode_literals_warning = True
 
 import os
 
-from dataget import list_datasets, data, get_path
+from dataget import ls as _ls, data, get_path
 
 @click.group()
 @click.option('--path', '-p', default=None)
+@click.option('--global_', '-g', is_flag=True)
 @click.pass_context
-def main(ctx, path):
-    path = get_path(path)
+def main(ctx, path, global_):
+    path = get_path(path=path, global_= global_)
 
     if not os.path.exists(path):
         os.makedirs(path)
 
-    ctx.obj = dict(path = path)
+    ctx.obj = dict(path = path, global_=global_)
 
 
 @main.command()
-@click.option('--all', '-a', is_flag=True)
+@click.option('--installed', '-i', is_flag=True)
 @click.pass_context
-def ls(ctx, all):
-    if all:
-        [ print(s) for s in list_datasets() ]
+def ls(ctx, installed):
+    path = ctx.obj['path']
+    global_ = ctx.obj['global_']
 
-    else:
-        path = ctx.obj['path']
-        [ print(s) for s in os.listdir(path) if os.path.join(path, s) |> os.path.isdir ]
+    _ls(installed=installed, path=path, global_=global_)
 
 
 @main.command()
-@click.argument('datasets', nargs=-1)
-@click.option('--all', '-a', is_flag=True)
-@click.pass_context
-def clear(ctx, datasets, all):
-    path = ctx.obj["path"]
-
-    if all:
-        datasets = list_datasets()
-
-    for dataset_name in datasets:
-        dataset = data(dataset_name, path)
-        dataset.clear()
-
-
-@main.command()
-@click.argument('datasets', nargs=-1)
+@click.argument('dataset')
 @click.option('--clear', '-c', is_flag=True)
-@click.option('--keep-sources', '-k', is_flag=True)
-@click.option('--dont-download', '-d', is_flag=True)
-@click.option('--dont-extract', '-e', is_flag=True)
-@click.option('--parameter', '-a', multiple=True)
+@click.option('--remove-compressed', is_flag=True)
+@click.option('--dont-process', is_flag=True)
+@click.option('--remove-raw', is_flag=True)
+@click.argument('kwargs', nargs=-1)
 @click.pass_context
-def load(ctx, datasets, clear, keep_sources, dont_download, dont_extract, parameter):
-    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=keep_sources, download=not dont_download, extract=not dont_extract, parameters=parameter)
+def get(ctx, dataset, clear, remove_compressed, dont_process, remove_raw, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    process = not dont_process
+
+    data(dataset, ctx.obj["path"]).get(clear=clear, remove_compressed=remove_compressed, process=process, remove_raw=remove_raw, **kwargs)
 
 
 @main.command()
-@click.argument('datasets', nargs=-1)
-@click.option('--parameter', '-p', multiple=True)
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
 @click.pass_context
-def process(ctx, datasets, parameter):
-    parameters = parameter
-    path = ctx.obj["path"]
-
-    if len(datasets) > 1:
-        dataset_kargs_dict = multiset_parse_args(parameters)
-    else:
-        dataset_kargs = parse_args(parameters)
-        dataset_kargs_dict = {datasets[0]: dataset_kargs}
-
-
-    for dataset_name in datasets:
-        dataset = data(dataset_name, path)
-        dataset_kargs = dataset_kargs_dict[dataset_name]
-        dataset.process(**dataset_kargs)
-
+def clear(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).clear(**kwargs)
 
 @main.command()
-@click.argument('datasets', nargs=-1)
+@click.argument('dataset')
 @click.option('--clear', '-c', is_flag=True)
-@click.option('--parameter', '-p', multiple=True)
+@click.argument('kwargs', nargs=-1)
 @click.pass_context
-def download(ctx, datasets, clear, parameter):
-    _load(ctx=ctx, datasets=datasets, clear=clear, keep_sources=True, download=True, extract=False, parameters=parameter)
+def download(ctx, dataset, clear, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).download(clear=clear, **kwargs)
+
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def extract(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).extract(**kwargs)
 
 
 @main.command()
-@click.argument('datasets', nargs=-1)
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
 @click.pass_context
-def extract(ctx, datasets, parameter):
-    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=True, download=False, extract=True)
+def remove_compressed(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).remove_compressed(**kwargs)
 
-@main.command('remove-sources')
-@click.argument('datasets', nargs=-1)
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
 @click.pass_context
-def remove_sources(ctx, datasets):
-    _load(ctx=ctx, datasets=datasets, clear=False, keep_sources=False, download=False, extract=False)
-
-def _load(ctx, datasets, clear=False, keep_sources=False, download=True, extract=True, parameters=[]):
-    path = ctx.obj["path"]
-
-    if len(datasets) > 1:
-        dataset_kargs_dict = multiset_parse_args(parameters)
-    else:
-        dataset_kargs = parse_args(parameters)
-        dataset_kargs_dict = {datasets[0]: dataset_kargs}
+def process(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).process(**kwargs)
 
 
-    for dataset_name in datasets:
-        dataset = data(dataset_name, path)
-        dataset_kargs = dataset_kargs_dict[dataset_name]
-        dataset.load(download=download, extract=extract, clear=clear, keep_sources=keep_sources, **dataset_kargs)
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def remove_raw(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).remove_raw(**kwargs)
 
-def parse_args(parameters):
-    dataset_kargs = {}
 
-    for parameter in parameters:
-        key, value = parameter.split(":")
-        dataset_kargs.update({key: value})
 
-    return dataset_kargs
 
-def multiset_parse_args(parameters):
-    dataset_kargs_dict = {}
-
-    for parameter in parameters:
-        dataset_name, key, value = parameter.split(":")
-        ops = dataset_kargs_dict.get(dataset_name, {})
-        ops.update({key: value})
-        dataset_kargs_dict[dataset_name] = ops
-
-    return dataset_kargs_dict
+def parse_kwargs(kwargs):
+    return (
+        kwargs
+        |> map$(.split$(?, 1))
+        |> map$(tuple)
+        |> dict
+    )

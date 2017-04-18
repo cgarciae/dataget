@@ -1,2 +1,23 @@
+import urllib
+import os
 
-REQUIRED = object()
+def get_progress():
+    def progress(count, blockSize, totalSize):
+
+        new = int( count * blockSize * 100 / totalSize )
+
+        if new % 5 == 0 and new != progress.last:
+            print("{}%".format(new))
+            progress.last = new
+
+    progress.last = -1
+
+    return progress
+
+def get_file(file_url, path, filename=None):
+    if filename is None:
+        filename = file_url.split("/")[-1]
+
+    file_path = os.path.join(path, filename)
+    testfile = urllib.URLopener()
+    testfile.retrieve(file_url, file_path, get_progress())

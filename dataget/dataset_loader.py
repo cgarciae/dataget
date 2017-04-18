@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xbb74d2d
+# __coconut_hash__ = 0xbe83bb2d
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,31 +510,60 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-DATASETS = {}
-
 import os
-from . import base_dataset
-from . import german_traffic_signs
+from platform import python_version
+from inspect import getmembers
+from inspect import isclass
+from dataget import get_path
+from dataget.dataset import DataSet
 
 
+def load_datasets(DATASETS, module_root, datasets_path):
+    datasets = (_coconut.functools.partial(map, _coconut.operator.methodcaller("replace", ".py", "")))((_coconut.functools.partial(filter, _coconut.operator.methodcaller("endswith", ".py")))(os.listdir(datasets_path)))
+
+    for dataset in datasets:
+        dataset_module_name = dataset.replace("-", "_")
+        module_name = "{}.{}".format(module_root, dataset_module_name)
+
+        dataset_module = (_coconut.functools.partial(get_dataset_module, module_name))((_coconut.functools.partial(os.path.join, datasets_path))("{}.py".format(dataset)))
+        [(dataset_class_name, dataset_class)] = getmembers(dataset_module, is_subclass_of_dataset)
+
+        DATASETS.update({dataset: dataset_class})
 
 
-def get_path(path):
-    return path if path else os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else os.path.join(os.getcwd(), "data")
+def load_custom_datasets(DATASETS):
+    datasets_path = "/".join(__file__.split("/")[:-1])
+    datasets_path = os.path.join(datasets_path, "datasets")
 
-def data(dataset_name, path=None):
-
-    path = get_path(path)
-
-    dataset_class = DATASETS.get(dataset_name, None)
-    dataset = dataset_class(dataset_name, path)
-
-    if not dataset:
-        raise Exception("Dataset {} does not exist".format(dataset_name))
-
-    return dataset
+    load_datasets(DATASETS, "datasets", datasets_path)
 
 
-@_coconut_tco
-def list_datasets():
-    raise _coconut_tail_call(DATASETS.keys)
+def load_plugin_datasets(DATASETS):
+    datasets_path = get_path(global_=True)
+    datasets_path = os.path.join(datasets_path, "datasets")
+
+    if not os.path.exists(datasets_path):
+        os.makedirs(datasets_path)
+    else:
+        load_datasets(DATASETS, "datasets", datasets_path)
+
+
+def get_dataset_module(module_name, file_path):
+    if python_version() >= "3.5":
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+    elif python_version() >= "3":
+        from importlib.machinery import SourceFileLoader
+        module = SourceFileLoader(module_name, file_path).load_module()
+
+    else:
+        import imp
+        module = imp.load_source(module_name, file_path)
+
+    return module
+
+def is_subclass_of_dataset(x):
+    return isclass(x) and issubclass(x, DataSet) and x is not DataSet

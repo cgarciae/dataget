@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xa0beb86a
+# __coconut_hash__ = 0xa582e158
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,5 +510,26 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
+import urllib
+import os
 
-REQUIRED = object()
+def get_progress():
+    def progress(count, blockSize, totalSize):
+
+        new = int(count * blockSize * 100 / totalSize)
+
+        if new % 5 == 0 and new != progress.last:
+            print("{}%".format(new))
+            progress.last = new
+
+    progress.last = -1
+
+    return progress
+
+def get_file(file_url, path, filename=None):
+    if filename is None:
+        filename = file_url.split("/")[-1]
+
+    file_path = os.path.join(path, filename)
+    testfile = urllib.URLopener()
+    testfile.retrieve(file_url, file_path, get_progress())

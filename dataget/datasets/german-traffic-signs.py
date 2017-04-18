@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xbb9f8f4f
+# __coconut_hash__ = 0xf927ed37
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -514,11 +514,10 @@ import urllib
 import zipfile
 import os
 import shutil
-
-from .base_dataset import DataSet
-from .base_dataset import TrainingSet
-from .base_dataset import TestSet
-from . import DATASETS
+from dataget.utils import get_file
+from dataget.dataset import DataSet
+from dataget.dataset import TrainingSet
+from dataget.dataset import TestSet
 
 
 TRAINING_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Training_Images.zip"
@@ -526,20 +525,14 @@ TEST_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_Images.zip"
 TEST_CSV_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_GT.zip"
 
 
-def get_progress():
-    def progress(count, blockSize, totalSize):
-
-        new = int(count * blockSize * 100 / totalSize)
-
-        if new % 5 == 0 and new != progress.last:
-            print("{}%".format(new))
-            progress.last = new
-
-    progress.last = -1
-
-    return progress
-
 class GermanTrafficSignsDataset(DataSet):
+
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+        self._training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
+        self._test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
+
 
     @property
     def training_set_class(self):
@@ -553,83 +546,70 @@ class GermanTrafficSignsDataset(DataSet):
     def help(self):
         return "TODO"
 
-    @property
-    def name(self):
-        return "German Traffic Signs Dataset"
 
-    def _load(self, download, extract, keep_sources):
-        training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
-        test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
+    def _download(self, **kwargs):
+        print("downloading training-set.zip")
+        get_file(TRAINING_SET_URL, self.path, "training-set.zip")
 
-        if download:
-            print("_downloading training-set.zip")
-            testfile = urllib.URLopener()
-            testfile.retrieve(TRAINING_SET_URL, self.training_set.path + ".zip", get_progress())
+        print("downloading test-set.zip")
+        get_file(TEST_SET_URL, self.path, "test-set.zip")
 
-            print("_downloading test-set.zip")
-            testfile = urllib.URLopener()
-            testfile.retrieve(TEST_SET_URL, self.test_set.path + ".zip", get_progress())
-
-            print("_downloading GT-final_test.csv.zip")
-            testfile = urllib.URLopener()
-            testfile.retrieve(TEST_CSV_URL, self.path + "/GT-final_test.csv.zip", get_progress())
+        print("downloading GT-final_test.csv.zip")
+        get_file(TEST_CSV_URL, self.path, "GT-final_test.csv.zip")
 
 
-        if extract:
-            print("extracting training-set.zip")
-            zip_ref = zipfile.ZipFile(self.training_set.path + ".zip", 'r')
-            zip_ref.extractall(self.training_set.path)
-            zip_ref.close()
+    def _extract(self, **kwargs):
+        print("extracting training-set.zip")
+        zip_ref = zipfile.ZipFile(self.training_set.path + ".zip", 'r')
+        zip_ref.extractall(self.training_set.path)
+        zip_ref.close()
 
 
-            print("extracting test-set.zip")
-            zip_ref = zipfile.ZipFile(self.test_set.path + ".zip", 'r')
-            zip_ref.extractall(self.test_set.path)
-            zip_ref.close()
-            os.remove(self.test_set.path + "/GTSRB/Final_Test/Images/GT-final_test.test.csv")
+        print("extracting test-set.zip")
+        zip_ref = zipfile.ZipFile(self.test_set.path + ".zip", 'r')
+        zip_ref.extractall(self.test_set.path)
+        zip_ref.close()
+        os.remove(self.test_set.path + "/GTSRB/Final_Test/Images/GT-final_test.test.csv")
 
 
-            print("extracting GT-final_test.csv.zip")
-            zip_ref = zipfile.ZipFile(self.path + "/GT-final_test.csv.zip", 'r')
-            zip_ref.extract("GT-final_test.csv", self.test_set.path + "/GTSRB/Final_Test/Images")
-            zip_ref.close()
+        print("extracting GT-final_test.csv.zip")
+        zip_ref = zipfile.ZipFile(self.path + "/GT-final_test.csv.zip", 'r')
+        zip_ref.extract("GT-final_test.csv", self.test_set.path + "/GTSRB/Final_Test/Images")
+        zip_ref.close()
 
-            print("organizing files")
-            for dir in os.listdir(training_images_path):
-                old_dir = os.path.join(training_images_path, dir)
-                new_dir = os.path.join(self.training_set.path, dir)
+        print("organizing files")
+        for dir in os.listdir(self._training_images_path):
+            old_dir = os.path.join(self._training_images_path, dir)
+            new_dir = os.path.join(self.training_set.path, dir)
 
-                os.rename(old_dir, new_dir)
+            os.rename(old_dir, new_dir)
 
-            for dir in os.listdir(test_images_path):
-                old_dir = os.path.join(test_images_path, dir)
-                new_dir = os.path.join(self.test_set.path, dir)
+        for dir in os.listdir(self._test_images_path):
+            old_dir = os.path.join(self._test_images_path, dir)
+            new_dir = os.path.join(self.test_set.path, dir)
 
-                os.rename(old_dir, new_dir)
+            os.rename(old_dir, new_dir)
 
 #training images readme
-            old_dir = os.path.join(self.training_set.path, "GTSRB/Readme-Images.txt")
-            new_dir = os.path.join(self.training_set.path, "Readme-Images.txt")
-            os.rename(old_dir, new_dir)
-            (shutil.rmtree)(os.path.join(self.training_set.path, "GTSRB"))
+        old_dir = os.path.join(self.training_set.path, "GTSRB/Readme-Images.txt")
+        new_dir = os.path.join(self.training_set.path, "Readme-Images.txt")
+        os.rename(old_dir, new_dir)
+        (shutil.rmtree)(os.path.join(self.training_set.path, "GTSRB"))
 
 #training images readme
-            old_dir = os.path.join(self.test_set.path, "GTSRB/Readme-Images-Final-test.txt")
-            new_dir = os.path.join(self.test_set.path, "Readme-Images.txt")
-            os.rename(old_dir, new_dir)
-            (shutil.rmtree)(os.path.join(self.test_set.path, "GTSRB"))
+        old_dir = os.path.join(self.test_set.path, "GTSRB/Readme-Images-Final-test.txt")
+        new_dir = os.path.join(self.test_set.path, "Readme-Images.txt")
+        os.rename(old_dir, new_dir)
+        (shutil.rmtree)(os.path.join(self.test_set.path, "GTSRB"))
 
 
-        if not keep_sources:
-            print("removing sources")
-            os.remove(self.training_set.path + ".zip")
-            os.remove(self.test_set.path + ".zip")
-            os.remove(self.path + "/GT-final_test.csv.zip")
+    def _remove_compressed(self, **kwargs):
+        print("removing compressed")
+        os.remove(self.training_set.path + ".zip")
+        os.remove(self.test_set.path + ".zip")
+        os.remove(self.path + "/GT-final_test.csv.zip")
 
-
-        print("DONE")
-
-    def _process(self, dims="32x32"):
+    def _process(self, dims="32x32", extension="jpg", **kwargs):
         import os
         import sys
         from PIL import Image
@@ -647,31 +627,35 @@ class GermanTrafficSignsDataset(DataSet):
 
                 if file.endswith(".ppm"):
 
-                    jpg_file = file.replace(".ppm", ".jpg")
+                    new_file = file.replace(".ppm", ".{}".format(extension))
 
                     with Image.open(file) as im :
                         im = im.resize(dims)
-                        im.save(jpg_file, quality=100)
-
-                    os.remove(file)
+                        im.save(new_file, quality=100)
 
                     dirs = file.split("/")
                     _class = dirs[-2]
 
                     if _class != CLASS:
                         CLASS = _class
-
                         print("formating {_class}".format(_class=_class))
 
                 elif file.endswith(".csv"):
-
                     with open(file, 'r') as f :
                         csv = f.read()
 
-                    csv = csv.replace(".ppm", ".jpg")
+                    csv = csv.replace(".ppm", ".{}".format(extension))
 
                     with open(file, 'w') as f :
                         f.write(csv)
+
+
+    def _remove_raw(self, **kwargs):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
+                if file.endswith(".ppm"):
+                    os.remove(file)
 
 
 
@@ -747,8 +731,3 @@ class TrainingGermanTrafficSignsDataset(SetsBase, TrainingSet):
             self._data = data
 
         return self._data
-
-
-
-
-DATASETS.update({"german-traffic-signs": GermanTrafficSignsDataset})

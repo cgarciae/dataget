@@ -11,5 +11,12 @@
 from .version import __version__  # NOQA
 
 from . import utils
-from . import datasets
-from .datasets import list_datasets, data, get_path
+from . import dataset
+from .dataset import ls, data, get_path, DATASETS
+from .dataset_loader import load_custom_datasets, load_plugin_datasets
+
+
+
+
+load_custom_datasets(DATASETS)
+load_plugin_datasets(DATASETS)
