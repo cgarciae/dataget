@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x7f8abf51
+# __coconut_hash__ = 0xea4dd16
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -599,17 +599,17 @@ class DataSet(object):
         return self
 
     def extract(self, **kwargs):
-        self._remove_raw(**kwargs)
+        self._extract(**kwargs)
 
         return self
 
     def remove_compressed(self, **kwargs):
-        self._remove_raw(**kwargs)
+        self._remove_compressed(**kwargs)
 
         return self
 
     def process(self, **kwargs):
-        self._remove_raw(**kwargs)
+        self._process(**kwargs)
 
         return self
 
@@ -665,6 +665,10 @@ class DataSet(object):
 
     @abstractmethod
     def _remove_raw(self):
+        pass
+
+    @abstractmethod
+    def reqs(self, **kwargs):
         pass
 
 

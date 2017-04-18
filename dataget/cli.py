@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xe7e23bfc
+# __coconut_hash__ = 0xd6f26c51
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -540,6 +540,14 @@ def ls(ctx, installed):
     global_ = ctx.obj['global_']
 
     _ls(installed=installed, path=path, global_=global_)
+
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def reqs(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).reqs(**kwargs)
 
 
 @main.command()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xf927ed37
+# __coconut_hash__ = 0x76d846a9
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -546,6 +546,9 @@ class GermanTrafficSignsDataset(DataSet):
     def help(self):
         return "TODO"
 
+    def reqs(self, **kwargs):
+        return "pillow pandas numpy"
+
 
     def _download(self, **kwargs):
         print("downloading training-set.zip")
@@ -609,7 +612,7 @@ class GermanTrafficSignsDataset(DataSet):
         os.remove(self.test_set.path + ".zip")
         os.remove(self.path + "/GT-final_test.csv.zip")
 
-    def _process(self, dims="32x32", extension="jpg", **kwargs):
+    def _process(self, dims="32x32", format="jpg", **kwargs):
         import os
         import sys
         from PIL import Image
@@ -617,7 +620,7 @@ class GermanTrafficSignsDataset(DataSet):
         dims = dims.split('x')
         dims = tuple(map(int, dims))
 
-        print("Image dims: {}".format(dims))
+        print("Image dims: {}, Image format: {}".format(dims, format))
 
         CLASS = None
 
@@ -627,7 +630,7 @@ class GermanTrafficSignsDataset(DataSet):
 
                 if file.endswith(".ppm"):
 
-                    new_file = file.replace(".ppm", ".{}".format(extension))
+                    new_file = file.replace(".ppm", ".{}".format(format))
 
                     with Image.open(file) as im :
                         im = im.resize(dims)
@@ -644,7 +647,7 @@ class GermanTrafficSignsDataset(DataSet):
                     with open(file, 'r') as f :
                         csv = f.read()
 
-                    csv = csv.replace(".ppm", ".{}".format(extension))
+                    csv = csv.replace(".ppm", ".{}".format(format))
 
                     with open(file, 'w') as f :
                         f.write(csv)

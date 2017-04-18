@@ -27,6 +27,14 @@ def ls(ctx, installed):
 
     _ls(installed=installed, path=path, global_=global_)
 
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def reqs(ctx, dataset, kwargs):
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).reqs(**kwargs)
+
 
 @main.command()
 @click.argument('dataset')
