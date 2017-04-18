@@ -1,5 +1,126 @@
 # dataget
 
+## Bash
+
+### Hello World
+
+## Python
+
+
+## Contributing
+
+### Template
+```python
+from dataget.dataset import DataSet, TrainingSet, TestSet
+
+
+class GermanTrafficSignsDataset(DataSet):
+
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+        # self.path
+        # self.training_set
+        # self.training_set.path
+        # self.test_set
+        # self.test_set.path
+
+
+    @property
+    def training_set_class(self):
+        return TrainingSetMyDataSet
+
+    @property
+    def test_set_class(self):
+        return TestSetMyDataSet
+
+    @property
+    def help(self):
+        return "" # information for the help command
+
+    def reqs(self, **kwargs):
+        return "" # e.g. "numpy pandas pillow"
+
+
+    def _download(self, **kwargs):
+        # download the data, propably a compressed format
+
+    def _extract(self, **kwargs):
+        # extract the data
+
+    def _remove_compressed(self, **kwargs):
+        # remove the compressed files
+
+    def _process(self, **kwargs):
+        # process the data if needed
+
+    def _remove_raw(self, **kwargs):
+        # remove the raw data if needed
+
+
+class TrainingSetMyDataSet(TrainingSet):
+
+
+      def __init__(self, *args, **kwargs):
+          super(self.__class__, self).__init__(*args, **kwargs)
+
+          # self.path
+
+      def dataframe(self):
+          # code
+
+          return df
+
+
+      def arrays(self):
+          # code
+
+          return features, labels
+
+
+      def random_batch_dataframe_generator(self, batch_size):
+          # code
+
+          yield df
+
+
+      def random_batch_arrays_generator(self, batch_size):
+          # code
+
+          yield features, labels
+
+class TestSetMyDataSet(TestSet):
+
+      def __init__(self, *args, **kwargs):
+          super(self.__class__, self).__init__(*args, **kwargs)
+
+          # self.path
+
+      def dataframe(self):
+          # code
+
+          return df
+
+
+      def arrays(self):
+          # code
+
+          return features, labels
+
+
+      def random_batch_dataframe_generator(self, batch_size):
+          # code
+
+          yield df
+
+
+      def random_batch_arrays_generator(self, batch_size):
+          # code
+
+          yield features, labels
+
+```
+
 ## Example
 ### Simple
 Using bash

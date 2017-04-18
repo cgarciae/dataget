@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x183d6b9f
+# __coconut_hash__ = 0xfd583bb0
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,31 +510,140 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-import urllib
+from dataget.dataset import DataSet
+from dataget.dataset import TrainingSet
+from dataget.dataset import TestSet
+from dataget.utils import get_file
+import idx2numpy
+import gzip
 import os
 
-def get_progress():
-    def progress(count, blockSize, totalSize):
+TRAIN_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
+TRAIN_LABELS_URL = "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz"
+TEST_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz"
+TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
 
-        new = int(count * blockSize * 100 / totalSize)
+def ungzip(src_name, dest_name):
+    with gzip.open(src_name, 'rb') as infile :
+        with open(dest_name, 'wb') as outfile :
+            for line in infile:
+                outfile.write(line)
 
-        if new % 5 == 0 and new != progress.last:
-            print("{}%".format(new))
-            progress.last = new
+class MNIST(DataSet):
 
-    progress.last = -1
+    def __init__(self, *args, **kwargs):
+        super(MNIST, self).__init__(*args, **kwargs)
 
-    return progress
+# self.path
+# self.training_set
+# self.training_set.path
+# self.test_set
+# self.test_set.path
 
-def get_file(file_url, path, filename=None, print_info=True):
-    if filename is None:
-        filename = file_url.split("/")[-1]
 
-    file_path = os.path.join(path, filename)
+    @property
+    def training_set_class(self):
+        return MNISTTrainingSet
 
-    if print_info:
-        print("downloading {}".format(filename))
+    @property
+    def test_set_class(self):
+        return MNISTTestSet
 
-    url_opener = urllib.URLopener()
-    url_opener.retrieve(file_url, file_path, get_progress())
-    url_opener.close()
+    @property
+    def help(self):
+        return ""  # information for the help command
+
+    def reqs(self, **kwargs):
+        return "idx2numpy"  # e.g. "numpy pandas pillow"
+
+    def _download(self, **kwargs):
+        get_file(TRAIN_FEATURES_URL, self.path, "train-features.gz")
+        get_file(TRAIN_LABELS_URL, self.path, "train-labels.gz")
+        get_file(TEST_FEATURES_URL, self.path, "test-features.gz")
+        get_file(TEST_LABELS_URL, self.path, "test-labels.gz")
+
+    def _extract(self, **kwargs):
+        self.training_set.make_dirs()
+        self.test_set.make_dirs()
+
+        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.training_set.path, "train-features.idx"))
+
+        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.training_set.path, "train-labels.idx"))
+
+        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.test_set.path, "test-features.idx"))
+
+        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.test_set.path, "test-labels.idx"))
+
+
+
+
+    def _remove_compressed(self, **kwargs):
+# remove the compressed files
+        (os.remove)(os.path.join(self.path, "train-features.gz"))
+        (os.remove)(os.path.join(self.path, "train-labels.gz"))
+        (os.remove)(os.path.join(self.path, "test-features.gz"))
+        (os.remove)(os.path.join(self.path, "test-labels.gz"))
+
+    def _process(self, **kwargs):
+# process the data if needed
+        pass
+
+    def _remove_raw(self, **kwargs):
+# remove the raw data if needed
+        pass
+
+
+class MNISTTrainingSet(TrainingSet):
+
+
+    def __init__(self, *args, **kwargs):
+        super(MNISTTrainingSet, self).__init__(*args, **kwargs)
+
+# self.path
+
+    def dataframe(self):
+# code
+
+        return df
+
+    def arrays(self):
+# code
+
+        return features, labels
+
+    def random_batch_dataframe_generator(self, batch_size):
+# code
+
+        yield df
+
+    def random_batch_arrays_generator(self, batch_size):
+# code
+
+        yield features, labels
+
+class MNISTTestSet(TestSet):
+
+    def __init__(self, *args, **kwargs):
+        super(MNISTTestSet, self).__init__(*args, **kwargs)
+
+# self.path
+
+    def dataframe(self):
+# code
+
+        return df
+
+    def arrays(self):
+# code
+
+        return features, labels
+
+    def random_batch_dataframe_generator(self, batch_size):
+# code
+
+        yield df
+
+    def random_batch_arrays_generator(self, batch_size):
+# code
+
+        yield features, labels

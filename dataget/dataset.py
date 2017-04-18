@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xea4dd16
+# __coconut_hash__ = 0x6fdcc46e
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -672,13 +672,16 @@ class DataSet(object):
         pass
 
 
-
-class TrainingSet(object):
+class SubSet(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, dataset):
+    def __init__(self, dataset, name):
         self.dataset = dataset
-        self.path = os.path.join(dataset.path, "training-set")
+        self.path = os.path.join(dataset.path, name)
+
+    def make_dirs(self):
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
 
     @abstractmethod
     def dataframe(self):
@@ -696,25 +699,13 @@ class TrainingSet(object):
     def random_batch_arrays_generator(self, batch_size):
         pass
 
-class TestSet(object):
-    __metaclass__ = ABCMeta
+class TrainingSet(SubSet):
 
     def __init__(self, dataset):
-        self.dataset = dataset
-        self.path = os.path.join(dataset.path, "test-set")
+        super(TrainingSet, self).__init__(dataset, "training-set")
 
-    @abstractmethod
-    def dataframe(self):
-        pass
 
-    @abstractmethod
-    def arrays(self):
-        pass
+class TestSet(SubSet):
 
-    @abstractmethod
-    def random_batch_dataframe_generator(self, batch_size):
-        pass
-
-    @abstractmethod
-    def random_batch_arrays_generator(self, batch_size):
-        pass
+    def __init__(self, dataset):
+        super(TestSet, self).__init__(dataset, "test-set")

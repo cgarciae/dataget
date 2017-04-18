@@ -14,10 +14,15 @@ def get_progress():
 
     return progress
 
-def get_file(file_url, path, filename=None):
+def get_file(file_url, path, filename=None, print_info=True):
     if filename is None:
         filename = file_url.split("/")[-1]
 
     file_path = os.path.join(path, filename)
-    testfile = urllib.URLopener()
-    testfile.retrieve(file_url, file_path, get_progress())
+
+    if print_info:
+        print("downloading {}".format(filename))
+
+    url_opener = urllib.URLopener()
+    url_opener.retrieve(file_url, file_path, get_progress())
+    url_opener.close()

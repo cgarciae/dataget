@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x76d846a9
+# __coconut_hash__ = 0x19cece54
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -528,7 +528,7 @@ TEST_CSV_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_GT.zip"
 class GermanTrafficSignsDataset(DataSet):
 
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
+        super(GermanTrafficSignsDataset, self).__init__(*args, **kwargs)
 
         self._training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
         self._test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
