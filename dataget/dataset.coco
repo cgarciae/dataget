@@ -4,37 +4,6 @@ from abc import ABCMeta
 from abc import abstractmethod
 from abc import abstractproperty
 
-DATASETS = {}
-
-def get_path(path=None, global_=False):
-    if global_:
-        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else  os.path.expanduser("~/.dataget")
-        path = os.path.join(path, "data")
-    elif not path:
-        path = os.path.join(os.getcwd(), ".dataget", "data")
-
-    return path
-
-def data(dataset_name, path=None, global_=False):
-
-    path = get_path(path=path, global_=global_)
-
-    dataset_class = DATASETS.get(dataset_name, None)
-    dataset = dataset_class(dataset_name, path)
-
-    if not dataset:
-        raise Exception("Dataset {} does not exist".format(dataset_name))
-
-    return dataset
-
-
-def ls(installed=False, path=None, global_=False):
-    if installed:
-        path = get_path(path=path, global_=global_)
-        [ print(s) for s in os.listdir(path) if os.path.join(path, s) |> os.path.isdir ]
-    else:
-        [ print(s) for s in DATASETS.keys() ]
-
 
 class DataSet(object):
     __metaclass__ = ABCMeta

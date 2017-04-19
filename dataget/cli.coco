@@ -3,7 +3,7 @@ click.disable_unicode_literals_warning = True
 
 import os
 
-from dataget import ls as _ls, data, get_path
+from dataget.api import ls as _ls, data, get_path
 
 @click.group()
 @click.option('--path', '-p', default=None)
@@ -11,21 +11,17 @@ from dataget import ls as _ls, data, get_path
 @click.pass_context
 def main(ctx, path, global_):
     path = get_path(path=path, global_= global_)
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-
     ctx.obj = dict(path = path, global_=global_)
 
 
 @main.command()
-@click.option('--installed', '-i', is_flag=True)
+@click.option('--available', '-a', is_flag=True)
 @click.pass_context
-def ls(ctx, installed):
+def ls(ctx, available):
     path = ctx.obj['path']
     global_ = ctx.obj['global_']
 
-    _ls(installed=installed, path=path, global_=global_)
+    _ls(available=available, path=path, global_=global_)
 
 @main.command()
 @click.argument('dataset')
@@ -39,14 +35,17 @@ def reqs(ctx, dataset, kwargs):
 @main.command()
 @click.argument('dataset')
 @click.option('--clear', '-c', is_flag=True)
-@click.option('--remove-compressed', is_flag=True)
+@click.option('--dont-remove-compressed', is_flag=True)
 @click.option('--dont-process', is_flag=True)
-@click.option('--remove-raw', is_flag=True)
+@click.option('--dont-remove-raw', is_flag=True)
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def get(ctx, dataset, clear, remove_compressed, dont_process, remove_raw, kwargs):
+def get(ctx, dataset, clear, dont_remove_compressed, dont_process, dont_remove_raw, kwargs):
     kwargs = parse_kwargs(kwargs)
+
     process = not dont_process
+    remove_raw = not dont_remove_raw
+    remove_compressed = not dont_remove_compressed
 
     data(dataset, ctx.obj["path"]).get(clear=clear, remove_compressed=remove_compressed, process=process, remove_raw=remove_raw, **kwargs)
 

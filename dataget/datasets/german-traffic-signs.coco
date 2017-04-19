@@ -3,7 +3,7 @@ import zipfile
 import os
 import shutil
 from dataget.utils import get_file
-from dataget.dataset import DataSet, TrainingSet, TestSet
+from dataget.dataset import DataSet, SubSet
 
 
 TRAINING_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Training_Images.zip"
@@ -147,54 +147,94 @@ class GermanTrafficSignsDataset(DataSet):
 
 
 
-class SetsBase(object):
+class SetBase(SubSet):
+
+    def __init__(self, *args, **kwargs):
+        super(SetBase, self).__init__(*args, **kwargs)
+        self._dataframe = None
+        self._features = None
+        self._labels = None
+
+
+    def _load_dataframe(self):
+        if self._dataframe is None:
+            import pandas as pd
+            self._dataframe = pd.concat(self._dataframe_generator())
+            self._dataframe["class_id"] = self._dataframe["ClassId"]
+            self._dataframe["filename"] = self._dataframe["Filename"]
+
+            del self._dataframe["ClassId"]
+            del self._dataframe["Filename"]
+
+    def dataframe(self):
+        from scipy.misc import imread
+
+        self._load_dataframe()
+
+        if not "image" in self._dataframe:
+            self._dataframe["image"] = self._dataframe.filename.apply(imread)
+
+        return self._dataframe
+
 
     def arrays(self):
         import numpy as np
 
-        data = self.dataframe()
+        if self._features is None or self._labels is None:
+            dataframe = self.dataframe()
 
-        features = np.stack(data.Image.as_matrix())
-        labels = np.stack(data.ClassId.as_matrix())
+            self._features = np.stack(dataframe.image.as_matrix())
+            self._labels = np.stack(dataframe.class_id.as_matrix())
 
-        return features, labels
+        return self._features, self._labels
 
 
     def random_batch_dataframe_generator(self, batch_size):
-        data = self.dataframe()
+        from scipy.misc import imread
+
+        self._load_dataframe()
 
         while True:
-            yield data.sample(batch_size)
+            batch = self._dataframe.sample(batch_size)
+
+            if not "image" in batch:
+                batch["image"] = batch.filename.apply(imread)
+
+            yield batch
 
 
     def random_batch_arrays_generator(self, batch_size):
         import numpy as np
 
         for data in self.random_batch_dataframe_generator(batch_size):
-
-            features = np.stack(data.Image.as_matrix())
-            labels = np.stack(data.ClassId.as_matrix())
+            features = np.stack(data.image.as_matrix())
+            labels = np.stack(data.class_id.as_matrix())
 
             yield features, labels
 
 
-class TestGermanTrafficSignsDataset(SetsBase, TestSet):
+class TestGermanTrafficSignsDataset(SetBase):
 
-    def dataframe(self):
-        if not hasattr(self, '_data'):
-            import pandas as pd
+    def __init__(self, dataset):
+        super(TestGermanTrafficSignsDataset, self).__init__(dataset, "test-set")
 
-            csv_path = os.path.join(self.path, "GT-final_test.csv")
+    def _dataframe_generator(self):
+        import pandas as pd
+        csv_path = csv_path = os.path.join(self.path, "GT-final_test.csv")
 
-            df = pd.read_csv(csv_path, sep=";")
-            df['Filename'] = self.path + "/" + df['Filename']
+        df = pd.read_csv(csv_path, sep=";")
+        df['Filename'] = self.path + "/" + df['Filename']
 
-            self._data = df
-
-        return self._data
+        yield df
 
 
-class TrainingGermanTrafficSignsDataset(SetsBase, TrainingSet):
+
+
+class TrainingGermanTrafficSignsDataset(SetBase):
+
+    def __init__(self, dataset):
+        super(TrainingGermanTrafficSignsDataset, self).__init__(dataset, "training-set")
+
 
     def _dataframe_generator(self):
         import pandas as pd
@@ -207,15 +247,3 @@ class TrainingGermanTrafficSignsDataset(SetsBase, TrainingSet):
                 df['Filename'] = os.path.join(self.path, cls_string) + "/" + df['Filename']
 
                 yield df
-
-    def dataframe(self):
-        if not hasattr(self, '_data'):
-            from scipy.misc import imread
-            import pandas as pd
-
-            data = pd.concat(self._dataframe_generator())
-            data["Image"] = data.Filename.apply(imread)
-
-            self._data = data
-
-        return self._data

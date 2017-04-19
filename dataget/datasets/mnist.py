@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x50b541cf
+# __coconut_hash__ = 0x35ae0996
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -511,8 +511,7 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 # Compiled Coconut: ------------------------------------------------------
 
 from dataget.dataset import DataSet
-from dataget.dataset import TrainingSet
-from dataget.dataset import TestSet
+from dataget.dataset import SubSet
 from dataget.utils import get_file
 from dataget.utils import maybe_mkdir
 import gzip
@@ -590,17 +589,18 @@ class MNIST(DataSet):
         self.training_set.make_dirs()
         self.test_set.make_dirs()
 
-        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.training_set.path, "train-features.idx"))
+        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.path, "train-features.idx"))
 
-        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.training_set.path, "train-labels.idx"))
+        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.path, "train-labels.idx"))
 
-        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.test_set.path, "test-features.idx"))
+        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.path, "test-features.idx"))
 
-        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.test_set.path, "test-labels.idx"))
+        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.path, "test-labels.idx"))
 
 
     def _remove_compressed(self, **kwargs):
 # remove the compressed files
+        print("removing compressed")
         (os.remove)(os.path.join(self.path, "train-features.gz"))
         (os.remove)(os.path.join(self.path, "train-labels.gz"))
         (os.remove)(os.path.join(self.path, "test-features.gz"))
@@ -615,69 +615,100 @@ class MNIST(DataSet):
         print("Image dims: {}, format: {}".format(dims, format))
 
         print("processing training-set")
-        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.training_set.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.training_set.path, "train-labels.idx")), dims=dims, format=format)
+        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.path, "train-labels.idx")), dims=dims, format=format)
 
         print("processing test-set")
-        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.test_set.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.test_set.path, "test-labels.idx")), dims=dims, format=format)
+        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.path, "test-labels.idx")), dims=dims, format=format)
 
 
     def _remove_raw(self, **kwargs):
-        (os.remove)(os.path.join(self.training_set.path, "train-features.idx"))
-        (os.remove)(os.path.join(self.training_set.path, "train-labels.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-features.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-labels.idx"))
+        print("removing raw")
+        (os.remove)(os.path.join(self.path, "train-features.idx"))
+        (os.remove)(os.path.join(self.path, "train-labels.idx"))
+        (os.remove)(os.path.join(self.path, "test-features.idx"))
+        (os.remove)(os.path.join(self.path, "test-labels.idx"))
 
 
-class MNISTTrainingSet(TrainingSet):
 
-    def __init__(self, *args, **kwargs):
-        super(MNISTTrainingSet, self).__init__(*args, **kwargs)
 
-# self.path
-
-    def dataframe(self):
-# code
-
-        return df
-
-    def arrays(self):
-# code
-
-        return features, labels
-
-    def random_batch_dataframe_generator(self, batch_size):
-# code
-
-        yield df
-
-    def random_batch_arrays_generator(self, batch_size):
-# code
-
-        yield features, labels
-
-class MNISTTestSet(TestSet):
+class SetBase(SubSet):
 
     def __init__(self, *args, **kwargs):
-        super(MNISTTestSet, self).__init__(*args, **kwargs)
+        super(SetBase, self).__init__(*args, **kwargs)
+        self._dataframe = None
+        self._features = None
+        self._labels = None
 
-# self.path
+
+    def _dict_generator(self):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                if root != self.path:
+                    class_id = (int)((_coconut.operator.itemgetter(-1))(root.split("/")))
+
+                    yield dict(filename=os.path.join(root, file), class_id=class_id)
+        print("Done")
+
+    def _load_dataframe(self):
+        if self._dataframe is None:
+            import pandas as pd
+            self._dataframe = pd.DataFrame(self._dict_generator())
+
 
     def dataframe(self):
-# code
+        from scipy.misc import imread
 
-        return df
+        self._load_dataframe()
+
+        if not "image" in self._dataframe:
+            self._dataframe["image"] = self._dataframe.filename.apply(imread)
+
+        return self._dataframe
+
 
     def arrays(self):
-# code
+        import numpy as np
 
-        return features, labels
+        if self._features is None or self._labels is None:
+            dataframe = self.dataframe()
+
+            self._features = np.stack(dataframe.image.as_matrix())
+            self._labels = np.stack(dataframe.class_id.as_matrix())
+
+        return self._features, self._labels
+
 
     def random_batch_dataframe_generator(self, batch_size):
-# code
+        from scipy.misc import imread
 
-        yield df
+        self._load_dataframe()
+
+        while True:
+            batch = self._dataframe.sample(batch_size)
+
+            if not "image" in batch:
+                batch["image"] = batch.filename.apply(imread)
+
+            yield batch
+
 
     def random_batch_arrays_generator(self, batch_size):
-# code
+        import numpy as np
 
-        yield features, labels
+        for data in self.random_batch_dataframe_generator(batch_size):
+            features = np.stack(data.image.as_matrix())
+            labels = np.stack(data.class_id.as_matrix())
+
+            yield features, labels
+
+
+class MNISTTestSet(SetBase):
+
+    def __init__(self, dataset):
+        super(MNISTTestSet, self).__init__(dataset, "test-set")
+
+
+class MNISTTrainingSet(SetBase):
+
+    def __init__(self, dataset):
+        super(MNISTTrainingSet, self).__init__(dataset, "training-set")
