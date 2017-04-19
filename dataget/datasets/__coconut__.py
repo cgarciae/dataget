@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xb2c16f3c
+# type: ignore
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
+
+"""Built-in Coconut utilities."""
 
 # Coconut Header: --------------------------------------------------------
 
@@ -507,117 +509,3 @@ def fmap(func, obj):
         return "".join(args)
     return obj.__class__(args)
 _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coconut_map, _coconut_tee, _coconut_zip, reduce, takewhile, dropwhile = MatchError, count, enumerate, reversed, map, tee, zip, _coconut.functools.reduce, _coconut.itertools.takewhile, _coconut.itertools.dropwhile
-
-# Compiled Coconut: ------------------------------------------------------
-
-import click
-click.disable_unicode_literals_warning = True
-
-import os
-
-from dataget import ls as _ls
-from dataget import data
-from dataget import get_path
-
-@click.group()
-@click.option('--path', '-p', default=None)
-@click.option('--global_', '-g', is_flag=True)
-@click.pass_context
-def main(ctx, path, global_):
-    path = get_path(path=path, global_=global_)
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    ctx.obj = dict(path=path, global_=global_)
-
-
-@main.command()
-@click.option('--installed', '-i', is_flag=True)
-@click.pass_context
-def ls(ctx, installed):
-    path = ctx.obj['path']
-    global_ = ctx.obj['global_']
-
-    _ls(installed=installed, path=path, global_=global_)
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def reqs(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    (print)(data(dataset, ctx.obj["path"]).reqs(**kwargs))
-
-
-@main.command()
-@click.argument('dataset')
-@click.option('--clear', '-c', is_flag=True)
-@click.option('--remove-compressed', is_flag=True)
-@click.option('--dont-process', is_flag=True)
-@click.option('--remove-raw', is_flag=True)
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def get(ctx, dataset, clear, remove_compressed, dont_process, remove_raw, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    process = not dont_process
-
-    data(dataset, ctx.obj["path"]).get(clear=clear, remove_compressed=remove_compressed, process=process, remove_raw=remove_raw, **kwargs)
-
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def clear(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).clear(**kwargs)
-
-@main.command()
-@click.argument('dataset')
-@click.option('--clear', '-c', is_flag=True)
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def download(ctx, dataset, clear, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).download(clear=clear, **kwargs)
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def extract(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).extract(**kwargs)
-
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def remove_compressed(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).remove_compressed(**kwargs)
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def process(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).process(**kwargs)
-
-
-@main.command()
-@click.argument('dataset')
-@click.argument('kwargs', nargs=-1)
-@click.pass_context
-def remove_raw(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).remove_raw(**kwargs)
-
-
-
-
-def parse_kwargs(kwargs):
-    return ((dict)((_coconut.functools.partial(map, tuple))((_coconut.functools.partial(map, _coconut.operator.methodcaller("split", "=")))(kwargs))))

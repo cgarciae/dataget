@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x183d6b9f
+# __coconut_hash__ = 0x23663193
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -538,3 +538,10 @@ def get_file(file_url, path, filename=None, print_info=True):
     url_opener = urllib.URLopener()
     url_opener.retrieve(file_url, file_path, get_progress())
     url_opener.close()
+
+
+def maybe_mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    return path

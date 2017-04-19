@@ -6,7 +6,6 @@
 
 ## Python
 
-
 ## Contributing
 
 ### Template

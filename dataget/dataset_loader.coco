@@ -6,7 +6,12 @@ from dataget.dataset import DataSet
 
 
 def load_datasets(DATASETS, module_root, datasets_path):
-    datasets = os.listdir(datasets_path) |> filter$(.endswith(".py")) |> map$(.replace(".py", ""))
+    datasets = (
+        os.listdir(datasets_path)
+        |> filter$(.endswith(".py"))
+        |> filter$((x) -> not x.startswith("_"))
+        |> map$(.replace(".py", ""))
+    )
 
     for dataset in datasets:
         dataset_module_name = dataset.replace("-", "_")

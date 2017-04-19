@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xbe83bb2d
+# __coconut_hash__ = 0x19b6b52
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -519,7 +519,7 @@ from dataget.dataset import DataSet
 
 
 def load_datasets(DATASETS, module_root, datasets_path):
-    datasets = (_coconut.functools.partial(map, _coconut.operator.methodcaller("replace", ".py", "")))((_coconut.functools.partial(filter, _coconut.operator.methodcaller("endswith", ".py")))(os.listdir(datasets_path)))
+    datasets = ((_coconut.functools.partial(map, _coconut.operator.methodcaller("replace", ".py", "")))((_coconut.functools.partial(filter, lambda x: not x.startswith("_")))((_coconut.functools.partial(filter, _coconut.operator.methodcaller("endswith", ".py")))(os.listdir(datasets_path)))))
 
     for dataset in datasets:
         dataset_module_name = dataset.replace("-", "_")

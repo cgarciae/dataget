@@ -33,7 +33,7 @@ def ls(ctx, installed):
 @click.pass_context
 def reqs(ctx, dataset, kwargs):
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).reqs(**kwargs)
+    data(dataset, ctx.obj["path"]).reqs(**kwargs) |> print
 
 
 @main.command()
@@ -108,7 +108,7 @@ def remove_raw(ctx, dataset, kwargs):
 def parse_kwargs(kwargs):
     return (
         kwargs
-        |> map$(.split$(?, 1))
+        |> map$(.split("="))
         |> map$(tuple)
         |> dict
     )
