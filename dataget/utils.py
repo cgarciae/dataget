@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8ae1d062
+# __coconut_hash__ = 0x23663193
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,29 +510,38 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import urllib
+import os
 
-# This file is part of dataget.
-# https://github.com/cgarciae/dataget
+def get_progress():
+    def progress(count, blockSize, totalSize):
 
-# Licensed under the MIT license:
-# http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
+        new = int(count * blockSize * 100 / totalSize)
 
-from .version import __version__  # NOQA
+        if new % 5 == 0 and new != progress.last:
+            print("{}%".format(new))
+            progress.last = new
 
-from . import utils
-from . import dataset
-from .api import ls
-from .api import data
-from .api import get_path
-from .api import DATASETS
-from .dataset_loader import load_custom_datasets
-from .dataset_loader import load_plugin_datasets
+    progress.last = -1
+
+    return progress
+
+def get_file(file_url, path, filename=None, print_info=True):
+    if filename is None:
+        filename = file_url.split("/")[-1]
+
+    file_path = os.path.join(path, filename)
+
+    if print_info:
+        print("downloading {}".format(filename))
+
+    url_opener = urllib.URLopener()
+    url_opener.retrieve(file_url, file_path, get_progress())
+    url_opener.close()
 
 
+def maybe_mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-
-load_custom_datasets(DATASETS)
-load_plugin_datasets(DATASETS)
+    return path

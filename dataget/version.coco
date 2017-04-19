@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # This file is part of dataget.
 # https://github.com/cgarciae/dataget
 
@@ -5,5 +8,4 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
 
-include README.md *.rst *.txt LICENSE tox.ini .travis.yml Makefile .coveragerc conftest.py
-recursive-exclude tests *
+__version__ = '0.1.3'  # NOQA

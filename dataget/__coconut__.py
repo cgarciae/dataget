@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8ae1d062
+# type: ignore
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
+
+"""Built-in Coconut utilities."""
 
 # Coconut Header: --------------------------------------------------------
 
@@ -507,32 +509,3 @@ def fmap(func, obj):
         return "".join(args)
     return obj.__class__(args)
 _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coconut_map, _coconut_tee, _coconut_zip, reduce, takewhile, dropwhile = MatchError, count, enumerate, reversed, map, tee, zip, _coconut.functools.reduce, _coconut.itertools.takewhile, _coconut.itertools.dropwhile
-
-# Compiled Coconut: ------------------------------------------------------
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of dataget.
-# https://github.com/cgarciae/dataget
-
-# Licensed under the MIT license:
-# http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
-
-from .version import __version__  # NOQA
-
-from . import utils
-from . import dataset
-from .api import ls
-from .api import data
-from .api import get_path
-from .api import DATASETS
-from .dataset_loader import load_custom_datasets
-from .dataset_loader import load_plugin_datasets
-
-
-
-
-load_custom_datasets(DATASETS)
-load_plugin_datasets(DATASETS)

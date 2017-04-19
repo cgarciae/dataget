@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8ae1d062
+# __coconut_hash__ = 0x19b6b52
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,29 +510,60 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of dataget.
-# https://github.com/cgarciae/dataget
-
-# Licensed under the MIT license:
-# http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
-
-from .version import __version__  # NOQA
-
-from . import utils
-from . import dataset
-from .api import ls
-from .api import data
-from .api import get_path
-from .api import DATASETS
-from .dataset_loader import load_custom_datasets
-from .dataset_loader import load_plugin_datasets
+import os
+from platform import python_version
+from inspect import getmembers
+from inspect import isclass
+from dataget import get_path
+from dataget.dataset import DataSet
 
 
+def load_datasets(DATASETS, module_root, datasets_path):
+    datasets = ((_coconut.functools.partial(map, _coconut.operator.methodcaller("replace", ".py", "")))((_coconut.functools.partial(filter, lambda x: not x.startswith("_")))((_coconut.functools.partial(filter, _coconut.operator.methodcaller("endswith", ".py")))(os.listdir(datasets_path)))))
+
+    for dataset in datasets:
+        dataset_module_name = dataset.replace("-", "_")
+        module_name = "{}.{}".format(module_root, dataset_module_name)
+
+        dataset_module = (_coconut.functools.partial(get_dataset_module, module_name))((_coconut.functools.partial(os.path.join, datasets_path))("{}.py".format(dataset)))
+        [(dataset_class_name, dataset_class)] = getmembers(dataset_module, is_subclass_of_dataset)
+
+        DATASETS.update({dataset: dataset_class})
 
 
-load_custom_datasets(DATASETS)
-load_plugin_datasets(DATASETS)
+def load_custom_datasets(DATASETS):
+    datasets_path = "/".join(__file__.split("/")[:-1])
+    datasets_path = os.path.join(datasets_path, "datasets")
+
+    load_datasets(DATASETS, "datasets", datasets_path)
+
+
+def load_plugin_datasets(DATASETS):
+    datasets_path = get_path(global_=True)
+    datasets_path = os.path.join(datasets_path, "datasets")
+
+    if not os.path.exists(datasets_path):
+        os.makedirs(datasets_path)
+    else:
+        load_datasets(DATASETS, "datasets", datasets_path)
+
+
+def get_dataset_module(module_name, file_path):
+    if python_version() >= "3.5":
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+    elif python_version() >= "3":
+        from importlib.machinery import SourceFileLoader
+        module = SourceFileLoader(module_name, file_path).load_module()
+
+    else:
+        import imp
+        module = imp.load_source(module_name, file_path)
+
+    return module
+
+def is_subclass_of_dataset(x):
+    return isclass(x) and issubclass(x, DataSet) and x is not DataSet

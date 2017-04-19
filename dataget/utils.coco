@@ -1,0 +1,35 @@
+import urllib
+import os
+
+def get_progress():
+    def progress(count, blockSize, totalSize):
+
+        new = int( count * blockSize * 100 / totalSize )
+
+        if new % 5 == 0 and new != progress.last:
+            print("{}%".format(new))
+            progress.last = new
+
+    progress.last = -1
+
+    return progress
+
+def get_file(file_url, path, filename=None, print_info=True):
+    if filename is None:
+        filename = file_url.split("/")[-1]
+
+    file_path = os.path.join(path, filename)
+
+    if print_info:
+        print("downloading {}".format(filename))
+
+    url_opener = urllib.URLopener()
+    url_opener.retrieve(file_url, file_path, get_progress())
+    url_opener.close()
+
+
+def maybe_mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    return path

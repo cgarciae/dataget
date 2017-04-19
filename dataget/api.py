@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8ae1d062
+# __coconut_hash__ = 0xcda28765
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,29 +510,41 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import os
 
-# This file is part of dataget.
-# https://github.com/cgarciae/dataget
+DATASETS = {}
 
-# Licensed under the MIT license:
-# http://www.opensource.org/licenses/MIT-license
-# Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
+def get_path(path=None, global_=False):
+    if global_:
+        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else os.path.expanduser("~/.dataget")
+        path = os.path.join(path, "data")
+    elif not path:
+        path = os.path.join(os.getcwd(), ".dataget", "data")
 
-from .version import __version__  # NOQA
+    return path
 
-from . import utils
-from . import dataset
-from .api import ls
-from .api import data
-from .api import get_path
-from .api import DATASETS
-from .dataset_loader import load_custom_datasets
-from .dataset_loader import load_plugin_datasets
+def data(dataset_name, path=None, global_=False):
+
+    path = get_path(path=path, global_=global_)
+
+    dataset_class = DATASETS.get(dataset_name, None)
+    dataset = dataset_class(dataset_name, path)
+
+    if not dataset:
+        raise Exception("Dataset {} does not exist".format(dataset_name))
+
+    return dataset
 
 
+def ls(available=False, path=None, global_=False):
 
+    if available:
+        [print(s) for s in DATASETS.keys()]
 
-load_custom_datasets(DATASETS)
-load_plugin_datasets(DATASETS)
+    else:
+        path = get_path(path=path, global_=global_)
+
+        if not os.path.exists(path):
+            return
+
+        [print(s) for s in os.listdir(path) if (os.path.isdir)(os.path.join(path, s))]

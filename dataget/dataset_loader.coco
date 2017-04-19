@@ -1,0 +1,61 @@
+import os
+from platform import python_version
+from inspect import getmembers, isclass
+from dataget import get_path
+from dataget.dataset import DataSet
+
+
+def load_datasets(DATASETS, module_root, datasets_path):
+    datasets = (
+        os.listdir(datasets_path)
+        |> filter$(.endswith(".py"))
+        |> filter$((x) -> not x.startswith("_"))
+        |> map$(.replace(".py", ""))
+    )
+
+    for dataset in datasets:
+        dataset_module_name = dataset.replace("-", "_")
+        module_name = "{}.{}".format(module_root, dataset_module_name)
+
+        dataset_module = "{}.py".format(dataset) |> os.path.join$(datasets_path) |> get_dataset_module$(module_name)
+        [(dataset_class_name, dataset_class)] = getmembers(dataset_module, is_subclass_of_dataset)
+
+        DATASETS.update({dataset: dataset_class})
+
+
+def load_custom_datasets(DATASETS):
+    datasets_path = "/".join(__file__.split("/")[:-1])
+    datasets_path = os.path.join(datasets_path, "datasets")
+
+    load_datasets(DATASETS, "datasets", datasets_path)
+
+
+def load_plugin_datasets(DATASETS):
+    datasets_path = get_path(global_=True)
+    datasets_path = os.path.join(datasets_path, "datasets")
+
+    if not os.path.exists(datasets_path):
+        os.makedirs(datasets_path)
+    else:
+        load_datasets(DATASETS, "datasets", datasets_path)
+
+
+def get_dataset_module(module_name, file_path):
+    if python_version() >= "3.5":
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+    elif python_version() >= "3":
+        from importlib.machinery import SourceFileLoader
+        module = SourceFileLoader(module_name, file_path).load_module()
+
+    else:
+        import imp
+        module = imp.load_source(module_name, file_path)
+
+    return module
+
+def is_subclass_of_dataset(x):
+    return isclass(x) and issubclass(x, DataSet) and x is not DataSet
