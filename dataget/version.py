@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x14eccad1
+# __coconut_hash__ = 0x4c807310
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -520,4 +520,4 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
 
-__version__ = '0.1.1'  # NOQA
+__version__ = '0.1.3'  # NOQA
