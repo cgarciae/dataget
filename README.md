@@ -1,6 +1,20 @@
 # dataget
 
+`dataget` is a Bash and Python library that helps you download popular, organize and process popular machine learning datasets. Its goal is to make readily available as many ML datasets as posible to users of any language. For Python users it also had the added benefits of exposing an interface to access the `training-set` and `test-set` as `pandas` dataframes or `numpy` arrays, and also random batch generators of the previous for large datasets. See
+
+* [Bash Client](#bash)
+* [Python Library](#python)
+
+## Getting Started
+While `dataget` is intended for users of any language you need `python` and `pip` to install `dataget` itself and some dependencies required by each dataset.
+
+### Instalation
+```bash
+pip install dataget
+```
+
 ## Bash
+
 
 ### Hello World
 
@@ -10,7 +24,7 @@
 
 ### Template
 ```python
-from dataget.dataset import DataSet, TrainingSet, TestSet
+from dataget.dataset import DataSet, SubSet
 
 
 class GermanTrafficSignsDataset(DataSet):
@@ -57,66 +71,43 @@ class GermanTrafficSignsDataset(DataSet):
         # remove the raw data if needed
 
 
-class TrainingSetMyDataSet(TrainingSet):
+class MySetBase(SubSet):
+
+    #self.path
+
+    def dataframe(self):
+        # code
+        return df
 
 
-      def __init__(self, *args, **kwargs):
-          super(self.__class__, self).__init__(*args, **kwargs)
-
-          # self.path
-
-      def dataframe(self):
-          # code
-
-          return df
+    def arrays(self):
+        # code
+        return features, labels
 
 
-      def arrays(self):
-          # code
-
-          return features, labels
-
-
-      def random_batch_dataframe_generator(self, batch_size):
-          # code
-
-          yield df
+    def random_batch_dataframe_generator(self, batch_size):
+        # code
+        yield df
 
 
-      def random_batch_arrays_generator(self, batch_size):
-          # code
+    def random_batch_arrays_generator(self, batch_size):
+        # code
+        yield features, labels
 
-          yield features, labels
+
+class TrainingSetMyDataSet(MySetBase):
+
+
+       def __init__(self, dataset, **kwargs):
+           super(TrainingSetMyDataSet, self).__init__(dataset, "training-set", **kwargs)
+           #self.path
+
 
 class TestSetMyDataSet(TestSet):
 
-      def __init__(self, *args, **kwargs):
-          super(self.__class__, self).__init__(*args, **kwargs)
-
-          # self.path
-
-      def dataframe(self):
-          # code
-
-          return df
-
-
-      def arrays(self):
-          # code
-
-          return features, labels
-
-
-      def random_batch_dataframe_generator(self, batch_size):
-          # code
-
-          yield df
-
-
-      def random_batch_arrays_generator(self, batch_size):
-          # code
-
-          yield features, labels
+      def __init__(self, dataset, **kwargs):
+          super(TestSetMyDataSet, self).__init__(dataset, "test-set", **kwargs)
+          #self.path
 
 ```
 

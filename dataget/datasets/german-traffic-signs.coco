@@ -37,13 +37,8 @@ class GermanTrafficSignsDataset(DataSet):
 
 
     def _download(self, **kwargs):
-        print("downloading training-set.zip")
         get_file(TRAINING_SET_URL, self.path, "training-set.zip")
-
-        print("downloading test-set.zip")
         get_file(TEST_SET_URL, self.path, "test-set.zip")
-
-        print("downloading GT-final_test.csv.zip")
         get_file(TEST_CSV_URL, self.path, "GT-final_test.csv.zip")
 
 
