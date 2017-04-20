@@ -34,14 +34,14 @@ Options:
   --help           Show this message and exit.
 
 Commands:
-  clear
+  rm
   download
   extract
   get
   ls
   process
-  remove_compressed
-  remove_raw
+  rm_compressed
+  rm_raw
   reqs
 ```
 
@@ -52,16 +52,16 @@ Commands:
 
 Usage: dataget get [OPTIONS] DATASET [KWARGS]...
 
-  performs the operations download, extract, remove_compressed, processes
-  and remove_raw, in sequence. KWARGS must be in the form: key=value, and
+  performs the operations download, extract, rm_compressed, processes
+  and rm_raw, in sequence. KWARGS must be in the form: key=value, and
   are fowarded to all opeartions.
 
 Options:
-  -c, --clear        removes the dataset's folder (if it exists) before
+  -c, --rm        removes the dataset's folder (if it exists) before
                      downloading
-  --keep-compressed  keeps the compressed files: skips remove_compressed
+  --keep-compressed  keeps the compressed files: skips rm_compressed
   --dont-process     skips process
-  --keep-raw         keeps the raw/unprocessed files: skips remove_raw
+  --keep-raw         keeps the raw/unprocessed files: skips rm_raw
   --help             Show this message and exit.
 ```
 This is the primary command you will use, it will perform the common operations needed to get the data in a usable format. By default it will create a `.dataget` folder in the current directory unless specified by the `dataget -g` flag. The data will live in `.dataget/data/{dataset}`. The following example
@@ -72,9 +72,9 @@ is *roughly* equivalent to
 ```bash
 dataget download -c mnist
 dataget extract mnist
-dataget remove_compressed mnist
+dataget rm_compressed mnist
 dataget process mnist dims=20x20 format=png
-dataget remove_raw mnist
+dataget rm_raw mnist
 ```
 
 ### ls
@@ -143,7 +143,7 @@ class MyDataSet(DataSet):
         # extract the data
         pass
 
-    def _remove_compressed(self, **kwargs):
+    def _rm_compressed(self, **kwargs):
         # remove the compressed files
         pass
 
@@ -151,7 +151,7 @@ class MyDataSet(DataSet):
         # process the data if needed
         pass
 
-    def _remove_raw(self, **kwargs):
+    def _rm_raw(self, **kwargs):
         # remove the raw data if needed
         pass
 

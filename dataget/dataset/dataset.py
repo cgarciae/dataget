@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xec680a4
+# __coconut_hash__ = 0xc5dc3bb4
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -535,10 +535,10 @@ class DataSet(object):
         self.test_set.make_dirs()
 
 
-    def get(self, clear=False, remove_compressed=True, process=True, remove_raw=True, **kwargs):
-# clear
-        if clear:
-            self.clear()
+    def get(self, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
+# rm
+        if rm:
+            self.rm()
 
 # return if path exists, dataset downloaded already, else create path
         if not self.is_empty():
@@ -548,25 +548,25 @@ class DataSet(object):
         self.download(**kwargs).extract(**kwargs)
 
 # clean
-        if remove_compressed:
-            self.remove_compressed(**kwargs)
+        if rm_compressed:
+            self.rm_compressed(**kwargs)
 
 # process
         if process:
             self.process(**kwargs)
 
-            if remove_raw:
-                self.remove_raw()
+            if rm_raw:
+                self.rm_raw()
 
         return self
 
 
-    def download(self, clear=False, **kwargs):
+    def download(self, rm=False, **kwargs):
         print("===DOWNLOAD===")
 
-# clear
-        if clear:
-            self.clear()
+# rm
+        if rm:
+            self.rm()
 
         if not self.is_empty():
             return self
@@ -588,10 +588,10 @@ class DataSet(object):
 
         return self
 
-    def remove_compressed(self, **kwargs):
+    def rm_compressed(self, **kwargs):
         print("===RM-COMPRESSED===")
 
-        self._remove_compressed(**kwargs)
+        self._rm_compressed(**kwargs)
 
         print("")
 
@@ -606,20 +606,31 @@ class DataSet(object):
 
         return self
 
-    def remove_raw(self, **kwargs):
+    def rm_raw(self, **kwargs):
         print("===RM-RAW===")
 
-        self._remove_raw(**kwargs)
+        self._rm_raw(**kwargs)
 
         print("")
 
         return self
 
 
-    def clear(self):
+    def rm(self):
 
         if os.path.exists(self.path):
+            (print)((_coconut.operator.itemgetter(-1))(self.path.split("/")))
             shutil.rmtree(self.path)
+
+        return self
+
+    def rm_subsets(self):
+
+        if os.path.exists(self.training_set.path):
+            shutil.rmtree(self.training_set.path)
+
+        if os.path.exists(self.test_set.path):
+            shutil.rmtree(self.test_set.path)
 
         return self
 
@@ -651,7 +662,7 @@ class DataSet(object):
         pass
 
 
-    def _remove_compressed(self):
+    def _rm_compressed(self):
         print("removing compressed files")
 
         for file in os.listdir(self.path):
@@ -661,12 +672,19 @@ class DataSet(object):
             if not os.path.isdir(file):
                 os.remove(file)
 
+    def remove_all_file_with_extension(self, extension):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
+                if file.endswith(".{}".format(extension)):
+                    os.remove(file)
+
     @abstractmethod
     def _process(self):
         pass
 
     @abstractmethod
-    def _remove_raw(self):
+    def _rm_raw(self):
         pass
 
     @abstractmethod

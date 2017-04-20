@@ -1,14 +1,18 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 import os, sys, urllib, stat, zipfile, time
-from dataget.dataset import DataSet, SubSet
+
 from dataget.utils import get_file
+from dataget.api import register_dataset
+from dataget.dataset import ImageDataSet
 
 TRAINING_SET_URL = "http://cbcl.mit.edu/software-datasets/heisele/download/download.html"
 
-class MitFaceRecSet(DataSet):
+
+@register_dataset
+class MitFaceRec(ImageDataSet):
 
     def __init__(self, *args, **kwargs):
-        super(MitFaceRecSet, self).__init__(*args, **kwargs)
+        super(MitFaceRec, self).__init__(*args, **kwargs)
 
         # self.path
         # self.training_set
@@ -18,21 +22,17 @@ class MitFaceRecSet(DataSet):
         # self.test_set.path
         # self.test_set.make_dirs()
 
-
     @property
-    def training_set_class(self):
-        return MySetBase
+    def _raw_extension(self):
+        return "pgm"
 
-    @property
-    def test_set_class(self):
-        return MySetBase
 
     @property
     def help(self):
         return "" # information for the help command
 
     def reqs(self, **kwargs):
-        return "selenium numpy pillow pandas" # e.g. "numpy pandas pillow"
+        return super(MitFaceRec, self).reqs() + " selenium" # e.g. "numpy pandas pillow"
 
 
     def _download(self, **kwargs):
@@ -98,6 +98,8 @@ class MitFaceRecSet(DataSet):
         os.remove(os.path.join(self.path,"chromedriver.zip"))
 
 
+    def _process(self, dims="128x128", format="jpg", **kwargs):
+        super(MitFaceRec, self)._process(dims=dims, format=format, **kwargs)
 
     def _extract(self, **kwargs):
         # extract the data
@@ -113,7 +115,7 @@ class MitFaceRecSet(DataSet):
             for file in files:
                 file = os.path.join(root, file)
 
-                if file.endswith(".pgm"):
+                if file.endswith(self.raw_extension):
 
                     direct = file.split('/')
 
@@ -128,68 +130,3 @@ class MitFaceRecSet(DataSet):
                     i+=1
 
         os.rmdir(os.path.join(self.path,"test"))
-
-    def _remove_compressed(self, **kwargs):
-        os.remove(os.path.join(self.path,"MIT-CBCL-facerec-database.zip"))
-
-    def _process(self, dims="128x128", format="jpg", **kwargs):
-        from PIL import Image
-
-        dims = dims.split('x')
-        dims = tuple(map(int, dims))
-
-        print("Image dims: {}, Image format: {}".format(dims, format))
-
-        CLASS = None
-
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                file = os.path.join(root, file)
-
-                if file.endswith(".pgm"):
-
-                    new_file = file.replace(".pgm", ".{}".format(format))
-
-                    with Image.open(file) as im :
-                        im = im.resize(dims)
-                        im.save(new_file, quality=100)
-
-                    dirs = file.split("/")
-                    _class = dirs[-2]
-                    current_set =  dirs[-3]
-
-                    if _class != CLASS:
-                        CLASS = _class
-                        print("formating {} {}".format(current_set, _class))
-
-    def _remove_raw(self, **kwargs):
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                file = os.path.join(root, file)
-                if file.endswith(".pgm"):
-                    os.remove(file)
-
-
-class MySetBase(SubSet):
-
-    #self.path
-    #self.make_dirs()
-
-    def dataframe(self):
-        # code
-        return df
-
-
-    def arrays(self):
-        # code
-        return features, labels
-
-
-    def random_batch_dataframe_generator(self, batch_size):
-        # code
-        yield df
-
-
-    def random_batch_arrays_generator(self, batch_size):
-        # code
-        yield features, labels

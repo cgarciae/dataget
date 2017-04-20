@@ -4,21 +4,25 @@ import os
 import shutil
 from dataget.utils import get_file
 from dataget.dataset import DataSet, SubSet
-
+from dataget.api import register_dataset
 
 TRAINING_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Training_Images.zip"
 TEST_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_Images.zip"
 TEST_CSV_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_GT.zip"
 
-
-class GermanTrafficSignsDataset(DataSet):
+@register_dataset
+class GermanTrafficSigns(DataSet):
 
     def __init__(self, *args, **kwargs):
-        super(GermanTrafficSignsDataset, self).__init__(*args, **kwargs)
+        super(GermanTrafficSigns, self).__init__(*args, **kwargs)
 
         self._training_images_path = os.path.join(self.training_set.path, "GTSRB/Final_Training/Images")
         self._test_images_path = os.path.join(self.test_set.path, "GTSRB/Final_Test/Images")
 
+
+    @property
+    def _raw_extension(self):
+        return "ppm"
 
     @property
     def training_set_class(self):
@@ -33,7 +37,7 @@ class GermanTrafficSignsDataset(DataSet):
         return "TODO"
 
     def reqs(self, **kwargs):
-        return "pillow pandas numpy"
+        return super(GermanTrafficSigns self).reqs() + ""
 
 
     def _download(self, **kwargs):
@@ -86,13 +90,6 @@ class GermanTrafficSignsDataset(DataSet):
         os.rename(old_dir, new_dir)
         os.path.join(self.test_set.path, "GTSRB") |> shutil.rmtree
 
-
-    def _remove_compressed(self, **kwargs):
-        print("removing compressed")
-        os.remove(self.training_set.path + ".zip")
-        os.remove(self.test_set.path + ".zip")
-        os.remove(self.path + "/GT-final_test.csv.zip")
-
     def _process(self, dims="32x32", format="jpg", **kwargs):
         import os, sys
         from PIL import Image
@@ -108,9 +105,9 @@ class GermanTrafficSignsDataset(DataSet):
             for file in files:
                 file = os.path.join(root, file)
 
-                if file.endswith(".ppm"):
+                if file.endswith(self.raw_extension):
 
-                    new_file = file.replace(".ppm", ".{}".format(format))
+                    new_file = file.replace(self.raw_extension, ".{}".format(format))
 
                     with Image.open(file) as im:
                         im = im.resize(dims)
@@ -127,18 +124,11 @@ class GermanTrafficSignsDataset(DataSet):
                     with open(file, 'r') as f:
                         csv = f.read()
 
-                    csv = csv.replace(".ppm", ".{}".format(format))
+                    csv = csv.replace(self.raw_extension, ".{}".format(format))
 
                     with open(file, 'w') as f:
                         f.write(csv)
 
-
-    def _remove_raw(self, **kwargs):
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                file = os.path.join(root, file)
-                if file.endswith(".ppm"):
-                    os.remove(file)
 
 
 

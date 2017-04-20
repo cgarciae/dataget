@@ -1,6 +1,15 @@
 import os
+from .utils import upper_to_dashed
+
 
 DATASETS = {}
+
+def register_dataset(cls):
+
+    name = upper_to_dashed(cls.__name__)
+    DATASETS.update({name: cls})
+
+    return cls
 
 def get_path(path=None, global_=False):
     if global_:

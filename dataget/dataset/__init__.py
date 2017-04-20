@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8a22e99c
+# __coconut_hash__ = 0x7a68b39e
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -512,3 +512,5 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 from .dataset import DataSet
 from .dataset import SubSet
+from .image_dataset import ImageDataSet
+from .image_dataset import ImageSubSet

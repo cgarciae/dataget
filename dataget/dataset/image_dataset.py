@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x1c3a413b
+# __coconut_hash__ = 0x919d5dbd
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,108 +510,142 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-from dataget.dataset import ImageDataSet
-from dataget.utils import get_file
-from dataget.utils import maybe_mkdir
-from dataget.api import register_dataset
-import gzip
+from abc import abstractproperty
+from .dataset import DataSet
+from .dataset import SubSet
 import os
 
-TRAIN_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
-TRAIN_LABELS_URL = "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz"
-TEST_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz"
-TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
+class ImageDataSet(DataSet):
 
-def ungzip(src_name, dest_name):
-    print("extracting {}".format(dest_name))
-
-    with gzip.open(src_name, 'rb') as infile :
-        with open(dest_name, 'wb') as outfile :
-            for line in infile:
-                outfile.write(line)
-
-
-def arrays_to_images(path, images, labels, dims, format):
-    from PIL import Image
-
-    last = -1
-    n = len(labels)
-
-    for i, (array_img, label) in (enumerate)((zip)(*(images, labels))):
-
-        label = str(label)
-        class_path = (maybe_mkdir)(os.path.join(path, label))
-
-        with Image.fromarray(array_img) as im :
-            im = im.resize(dims)
-            im.save(os.path.join(class_path, "{}.{}".format(i, format)), quality=100)
-
-        percent = int(float(i + 1) / n * 100)
-        if percent % 10 == 0 and percent != last:
-            print("{}%".format(percent))
-            last = percent
-
-
-@register_dataset
-class Mnist(ImageDataSet):
-
-    def __init__(self, *args, **kwargs):
-        super(Mnist, self).__init__(*args, **kwargs)
-
-# self.path
-# self.training_set
-# self.training_set.path
-# self.test_set
-# self.test_set.path
-
-
-    @property
+    @abstractproperty
     def _raw_extension(self):
         pass
 
     @property
-    def help(self):
-        return ""  # information for the help command
+    @_coconut_tco
+    def raw_extension(self):
+        raise _coconut_tail_call(".{}".format, self._raw_extension)
+
+    @property
+    def training_set_class(self):
+        return ImageSubSet
+
+    @property
+    def test_set_class(self):
+        return ImageSubSet
 
     def reqs(self, **kwargs):
-        return super(MNIST, self).reqs() + " " + "idx2numpy"  # e.g. "numpy pandas pillow"
+        return "pillow pandas numpy"
 
-    def _download(self, **kwargs):
-        get_file(TRAIN_FEATURES_URL, self.path, "train-features.gz")
-        get_file(TRAIN_LABELS_URL, self.path, "train-labels.gz")
-        get_file(TEST_FEATURES_URL, self.path, "test-features.gz")
-        get_file(TEST_LABELS_URL, self.path, "test-labels.gz")
-
-    def _extract(self, **kwargs):
-
-
-        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.training_set.path, "train-features.idx"))
-
-        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.training_set.path, "train-labels.idx"))
-
-        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.test_set.path, "test-features.idx"))
-
-        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.test_set.path, "test-labels.idx"))
-
-
-    def _process(self, dims="28x28", format="jpg", **kwargs):
-        from idx2numpy import convert_from_file
+    def _process(self, dims="32x32", format="jpg", **kwargs):
+        from PIL import Image
 
         dims = dims.split('x')
         dims = tuple(map(int, dims))
 
-        print("Image dims: {}, format: {}".format(dims, format))
+        print("Image dims: {}, Image format: {}".format(dims, format))
 
-        print("processing training-set")
-        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.training_set.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.training_set.path, "train-labels.idx")), dims=dims, format=format)
+        CLASS = None
 
-        print("processing test-set")
-        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.test_set.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.test_set.path, "test-labels.idx")), dims=dims, format=format)
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
 
+                if file.endswith(self.raw_extension):
+
+                    new_file = file.replace(self.raw_extension, ".{}".format(format))
+
+                    with Image.open(file) as im :
+                        im = im.resize(dims)
+                        im.save(new_file, quality=100)
+
+                    dirs = file.split("/")
+                    _class = dirs[-2]
+
+                    if _class != CLASS:
+                        CLASS = _class
+                        print("formating {_class}".format(_class=_class))
+
+                elif file.endswith(".csv"):
+                    import pandas as pd
+
+                    df = pd.read_csv(file)
+                    df['filename'] = df['filename'].replace({self.raw_extension: format})
+
+                    self.process_dataframe(df, dims=dims, format=format, **kwargs)
+
+                    df.to_csv(file)
 
     def _rm_raw(self, **kwargs):
-        print("removing raw")
-        (os.remove)(os.path.join(self.training_set.path, "train-features.idx"))
-        (os.remove)(os.path.join(self.training_set.path, "train-labels.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-features.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-labels.idx"))
+        self.remove_all_file_with_extension(self._raw_extension)
+
+
+class ImageSubSet(SubSet):
+
+    def __init__(self, *args, **kwargs):
+        super(ImageSubSet, self).__init__(*args, **kwargs)
+        self._dataframe = None
+        self._features = None
+        self._labels = None
+
+
+    def _dict_generator(self):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                if root != self.path:
+                    class_id = (int)((_coconut.operator.itemgetter(-1))(root.split("/")))
+
+                    yield dict(filename=os.path.join(root, file), class_id=class_id)
+        print("Done")
+
+    def _load_dataframe(self):
+        if self._dataframe is None:
+            import pandas as pd
+            self._dataframe = pd.DataFrame(self._dict_generator())
+
+
+    def dataframe(self):
+        from scipy.misc import imread
+
+        self._load_dataframe()
+
+        if not "image" in self._dataframe:
+            self._dataframe["image"] = self._dataframe.filename.apply(imread)
+
+        return self._dataframe
+
+
+    def arrays(self):
+        import numpy as np
+
+        if self._features is None or self._labels is None:
+            dataframe = self.dataframe()
+
+            self._features = np.stack(dataframe.image.as_matrix())
+            self._labels = np.stack(dataframe.class_id.as_matrix())
+
+        return self._features, self._labels
+
+
+    def random_batch_dataframe_generator(self, batch_size):
+        from scipy.misc import imread
+
+        self._load_dataframe()
+
+        while True:
+            batch = self._dataframe.sample(batch_size)
+
+            if not "image" in batch:
+                batch["image"] = batch.filename.apply(imread)
+
+            yield batch
+
+
+    def random_batch_arrays_generator(self, batch_size):
+        import numpy as np
+
+        for data in self.random_batch_dataframe_generator(batch_size):
+            features = np.stack(data.image.as_matrix())
+            labels = np.stack(data.class_id.as_matrix())
+
+            yield features, labels

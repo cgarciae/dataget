@@ -1,5 +1,6 @@
 import urllib
 import os
+import re
 
 def get_progress():
     def progress(count, blockSize, totalSize):
@@ -33,3 +34,9 @@ def maybe_mkdir(path):
         os.makedirs(path)
 
     return path
+
+def split_upper(txt):
+    return [ a for a in re.split(r'([A-Z][a-z]*\d*)', txt) if a ]
+
+def upper_to_dashed(txt):
+    return txt |> split_upper |> map$(.lower()) |> "-".join

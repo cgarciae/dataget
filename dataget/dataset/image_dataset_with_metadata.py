@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8a22e99c
+# __coconut_hash__ = 0x27e1ad93
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,5 +510,25 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-from .dataset import DataSet
-from .dataset import SubSet
+from abc import abstractmethod
+from .image_dataset import ImageDataSet
+from .image_dataset import ImageSubSet
+import os
+
+
+class ImageDataSetWithMetadata(ImageDataSet):
+
+    @abstractmethod
+    def process_dataframe(self, dataframe, **kwargs):
+        pass
+
+
+
+class ImageSubSetWithMetadata(ImageSubSet):
+
+    def _load_dataframe(self):
+        import pandas as pd
+
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
