@@ -21,11 +21,11 @@ class YaleFaceRecSet(DataSet):
 
     @property
     def training_set_class(self):
-        return TrainingSetMyDataSet
+        return MySetBase
 
     @property
     def test_set_class(self):
-        return TestSetMyDataSet
+        return MySetBase
 
     @property
     def help(self):
@@ -142,20 +142,3 @@ class MySetBase(SubSet):
     def random_batch_arrays_generator(self, batch_size):
         # code
         yield features, labels
-
-
-class TrainingSetMyDataSet(MySetBase):
-
-
-       def __init__(self, dataset, **kwargs):
-           super(TrainingSetMyDataSet, self).__init__(dataset, "training-set", **kwargs)
-           #self.path
-           #self.make_dirs()
-
-
-class TestSetMyDataSet(MySetBase):
-
-      def __init__(self, dataset, **kwargs):
-          super(TestSetMyDataSet, self).__init__(dataset, "test-set", **kwargs)
-          #self.path
-          #self.make_dirs()
