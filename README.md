@@ -14,10 +14,83 @@ pip install dataget
 ```
 
 ## Bash
+### mnist example
+```bash
+pip install $(dataget reqs mnist)
+```
 
+```bash
+dataget get -c mnist dims=20x20 format=jpg
+```
+### commands
+```bash
+> dataget --help
 
-### Hello World
+Usage: dataget [OPTIONS] COMMAND [ARGS]...
 
+Options:
+  -p, --path TEXT
+  -g, --global_
+  --help           Show this message and exit.
+
+Commands:
+  clear
+  download
+  extract
+  get
+  ls
+  process
+  remove_compressed
+  remove_raw
+  reqs
+```
+
+### get
+
+```
+> dataget get --help
+
+Usage: dataget get [OPTIONS] DATASET [KWARGS]...
+
+  performs the operations download, extract, remove_compressed, processes
+  and remove_raw, in sequence. KWARGS must be in the form: key=value, and
+  are fowarded to all opeartions.
+
+Options:
+  -c, --clear        removes the dataset's folder (if it exists) before
+                     downloading
+  --keep-compressed  keeps the compressed files: skips remove_compressed
+  --dont-process     skips process
+  --keep-raw         keeps the raw/unprocessed files: skips remove_raw
+  --help             Show this message and exit.
+```
+This is the primary command you will use, it will perform the common operations needed to get the data in a usable format. By default it will create a `.dataget` folder in the current directory unless specified by the `dataget -g` flag. The data will live in `.dataget/data/{dataset}`. The following example
+```bash
+dataget get -c mnist dims=20x20 format=png
+```
+is *roughly* equivalent to
+```bash
+dataget download -c mnist
+dataget extract mnist
+dataget remove_compressed mnist
+dataget process mnist dims=20x20 format=png
+dataget remove_raw mnist
+```
+
+### ls
+```bash
+dataget ls
+```
+```bash
+dataget ls -a
+```
+### -g
+```bash
+dataget -g get mnist
+```
+```bash
+dataget -g ls
+```
 ## Python
 
 ## Contributing
@@ -25,18 +98,21 @@ pip install dataget
 ### Template
 ```python
 from dataget.dataset import DataSet, SubSet
+from dataget.utils import get_file
+import os, urllib, zipfile, sys, gzip
 
-
-class GermanTrafficSignsDataset(DataSet):
+class MyDataSet(DataSet):
 
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
+        super(MyDataSet, self).__init__(*args, **kwargs)
 
         # self.path
         # self.training_set
         # self.training_set.path
+        # self.training_set.make_dirs()
         # self.test_set
         # self.test_set.path
+        # self.test_set.make_dirs()
 
 
     @property
@@ -57,23 +133,30 @@ class GermanTrafficSignsDataset(DataSet):
 
     def _download(self, **kwargs):
         # download the data, propably a compressed format
+        self.training_set.make_dirs()
+        self.test_set.make_dirs()
 
     def _extract(self, **kwargs):
         # extract the data
+        pass
 
     def _remove_compressed(self, **kwargs):
         # remove the compressed files
+        pass
 
     def _process(self, **kwargs):
         # process the data if needed
+        pass
 
     def _remove_raw(self, **kwargs):
         # remove the raw data if needed
+        pass
 
 
 class MySetBase(SubSet):
 
     #self.path
+    #self.make_dirs()
 
     def dataframe(self):
         # code
@@ -101,13 +184,15 @@ class TrainingSetMyDataSet(MySetBase):
        def __init__(self, dataset, **kwargs):
            super(TrainingSetMyDataSet, self).__init__(dataset, "training-set", **kwargs)
            #self.path
+           #self.make_dirs()
 
 
-class TestSetMyDataSet(TestSet):
+class TestSetMyDataSet(MySetBase):
 
       def __init__(self, dataset, **kwargs):
           super(TestSetMyDataSet, self).__init__(dataset, "test-set", **kwargs)
           #self.path
+          #self.make_dirs()
 
 ```
 

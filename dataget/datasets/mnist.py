@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x35ae0996
+# __coconut_hash__ = 0x62468b9b
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -589,13 +589,13 @@ class MNIST(DataSet):
         self.training_set.make_dirs()
         self.test_set.make_dirs()
 
-        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.path, "train-features.idx"))
+        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.training_set.path, "train-features.idx"))
 
-        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.path, "train-labels.idx"))
+        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.training_set.path, "train-labels.idx"))
 
-        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.path, "test-features.idx"))
+        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.test_set.path, "test-features.idx"))
 
-        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.path, "test-labels.idx"))
+        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.test_set.path, "test-labels.idx"))
 
 
     def _remove_compressed(self, **kwargs):
@@ -615,18 +615,18 @@ class MNIST(DataSet):
         print("Image dims: {}, format: {}".format(dims, format))
 
         print("processing training-set")
-        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.path, "train-labels.idx")), dims=dims, format=format)
+        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.training_set.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.training_set.path, "train-labels.idx")), dims=dims, format=format)
 
         print("processing test-set")
-        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.path, "test-labels.idx")), dims=dims, format=format)
+        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.test_set.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.test_set.path, "test-labels.idx")), dims=dims, format=format)
 
 
     def _remove_raw(self, **kwargs):
         print("removing raw")
-        (os.remove)(os.path.join(self.path, "train-features.idx"))
-        (os.remove)(os.path.join(self.path, "train-labels.idx"))
-        (os.remove)(os.path.join(self.path, "test-features.idx"))
-        (os.remove)(os.path.join(self.path, "test-labels.idx"))
+        (os.remove)(os.path.join(self.training_set.path, "train-features.idx"))
+        (os.remove)(os.path.join(self.training_set.path, "train-labels.idx"))
+        (os.remove)(os.path.join(self.test_set.path, "test-features.idx"))
+        (os.remove)(os.path.join(self.test_set.path, "test-labels.idx"))
 
 
 
