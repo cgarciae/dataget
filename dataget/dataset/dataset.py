@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x3578aa7e
+# __coconut_hash__ = 0xec680a4
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -510,192 +510,193 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 
 # Compiled Coconut: ------------------------------------------------------
 
-from dataget.dataset import DataSet
-from dataget.dataset import SubSet
-from dataget.utils import get_file
-from dataget.utils import maybe_mkdir
-import gzip
 import os
-
-TRAIN_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
-TRAIN_LABELS_URL = "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz"
-TEST_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz"
-TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
-
-def ungzip(src_name, dest_name):
-    print("extracting {}".format(dest_name))
-
-    with gzip.open(src_name, 'rb') as infile :
-        with open(dest_name, 'wb') as outfile :
-            for line in infile:
-                outfile.write(line)
+import shutil
+from abc import ABCMeta
+from abc import abstractmethod
+from abc import abstractproperty
 
 
-def arrays_to_images(path, images, labels, dims, format):
-    from PIL import Image
+class DataSet(object):
+    __metaclass__ = ABCMeta
 
-    last = -1
-    n = len(labels)
-
-    for i, (array_img, label) in (enumerate)((zip)(*(images, labels))):
-
-        label = str(label)
-        class_path = (maybe_mkdir)(os.path.join(path, label))
-
-        with Image.fromarray(array_img) as im :
-            im = im.resize(dims)
-            im.save(os.path.join(class_path, "{}.{}".format(i, format)), quality=100)
-
-        percent = int(float(i + 1) / n * 100)
-        if percent % 10 == 0 and percent != last:
-            print("{}%".format(percent))
-            last = percent
+    def __init__(self, name, home_path):
+        self.name = name
+        self.path = os.path.join(home_path, self.name)
+        self.training_set = self.training_set_class(self, "training-set")
+        self.test_set = self.test_set_class(self, "test-set")
 
 
-class MNIST(DataSet):
+    def make_dirs(self):
+        if os.path.exists(self.path):
+            os.makedirs(self.path)
 
-    def __init__(self, *args, **kwargs):
-        super(MNIST, self).__init__(*args, **kwargs)
-
-# self.path
-# self.training_set
-# self.training_set.path
-# self.test_set
-# self.test_set.path
+        self.training_set.make_dirs()
+        self.test_set.make_dirs()
 
 
-    @property
+    def get(self, clear=False, remove_compressed=True, process=True, remove_raw=True, **kwargs):
+# clear
+        if clear:
+            self.clear()
+
+# return if path exists, dataset downloaded already, else create path
+        if not self.is_empty():
+            return self
+
+# get data
+        self.download(**kwargs).extract(**kwargs)
+
+# clean
+        if remove_compressed:
+            self.remove_compressed(**kwargs)
+
+# process
+        if process:
+            self.process(**kwargs)
+
+            if remove_raw:
+                self.remove_raw()
+
+        return self
+
+
+    def download(self, clear=False, **kwargs):
+        print("===DOWNLOAD===")
+
+# clear
+        if clear:
+            self.clear()
+
+        if not self.is_empty():
+            return self
+
+        self.make_dirs()
+
+        self._download(**kwargs)
+
+        print("")
+
+        return self
+
+    def extract(self, **kwargs):
+        print("===EXTRACT===")
+
+        self._extract(**kwargs)
+
+        print("")
+
+        return self
+
+    def remove_compressed(self, **kwargs):
+        print("===RM-COMPRESSED===")
+
+        self._remove_compressed(**kwargs)
+
+        print("")
+
+        return self
+
+    def process(self, **kwargs):
+        print("===PROCESS===")
+
+        self._process(**kwargs)
+
+        print("")
+
+        return self
+
+    def remove_raw(self, **kwargs):
+        print("===RM-RAW===")
+
+        self._remove_raw(**kwargs)
+
+        print("")
+
+        return self
+
+
+    def clear(self):
+
+        if os.path.exists(self.path):
+            shutil.rmtree(self.path)
+
+        return self
+
+    def is_empty(self):
+        if not os.path.exists(self.path):
+            return True
+        else:
+            return not os.listdir(self.path)
+
+
+    @abstractproperty
     def training_set_class(self):
-        return SetBase
+        pass
 
-    @property
+    @abstractproperty
     def test_set_class(self):
-        return SetBase
+        pass
 
-    @property
+    @abstractproperty
     def help(self):
-        return ""  # information for the help command
+        pass
 
+    @abstractmethod
+    def _download(self):
+        pass
+
+    @abstractmethod
+    def _extract(self):
+        pass
+
+
+    def _remove_compressed(self):
+        print("removing compressed files")
+
+        for file in os.listdir(self.path):
+
+            file = os.path.join(self.path, file)
+
+            if not os.path.isdir(file):
+                os.remove(file)
+
+    @abstractmethod
+    def _process(self):
+        pass
+
+    @abstractmethod
+    def _remove_raw(self):
+        pass
+
+    @abstractmethod
     def reqs(self, **kwargs):
-        return "idx2numpy pillow"  # e.g. "numpy pandas pillow"
-
-    def _download(self, **kwargs):
-        get_file(TRAIN_FEATURES_URL, self.path, "train-features.gz")
-        get_file(TRAIN_LABELS_URL, self.path, "train-labels.gz")
-        get_file(TEST_FEATURES_URL, self.path, "test-features.gz")
-        get_file(TEST_LABELS_URL, self.path, "test-labels.gz")
-
-    def _extract(self, **kwargs):
+        pass
 
 
-        ungzip(os.path.join(self.path, "train-features.gz"), os.path.join(self.training_set.path, "train-features.idx"))
+class SubSet(object):
+    __metaclass__ = ABCMeta
 
-        ungzip(os.path.join(self.path, "train-labels.gz"), os.path.join(self.training_set.path, "train-labels.idx"))
+    def __init__(self, dataset, name):
+        self.dataset = dataset
+        self.path = os.path.join(dataset.path, name)
 
-        ungzip(os.path.join(self.path, "test-features.gz"), os.path.join(self.test_set.path, "test-features.idx"))
+    def make_dirs(self):
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
 
-        ungzip(os.path.join(self.path, "test-labels.gz"), os.path.join(self.test_set.path, "test-labels.idx"))
-
-
-    def _remove_compressed(self, **kwargs):
-# remove the compressed files
-        print("removing compressed")
-        (os.remove)(os.path.join(self.path, "train-features.gz"))
-        (os.remove)(os.path.join(self.path, "train-labels.gz"))
-        (os.remove)(os.path.join(self.path, "test-features.gz"))
-        (os.remove)(os.path.join(self.path, "test-labels.gz"))
-
-    def _process(self, dims="28x28", format="jpg", **kwargs):
-        from idx2numpy import convert_from_file
-
-        dims = dims.split('x')
-        dims = tuple(map(int, dims))
-
-        print("Image dims: {}, format: {}".format(dims, format))
-
-        print("processing training-set")
-        arrays_to_images(path=self.training_set.path, images=(convert_from_file)(os.path.join(self.training_set.path, "train-features.idx")), labels=(convert_from_file)(os.path.join(self.training_set.path, "train-labels.idx")), dims=dims, format=format)
-
-        print("processing test-set")
-        arrays_to_images(path=self.test_set.path, images=(convert_from_file)(os.path.join(self.test_set.path, "test-features.idx")), labels=(convert_from_file)(os.path.join(self.test_set.path, "test-labels.idx")), dims=dims, format=format)
-
-
-    def _remove_raw(self, **kwargs):
-        print("removing raw")
-        (os.remove)(os.path.join(self.training_set.path, "train-features.idx"))
-        (os.remove)(os.path.join(self.training_set.path, "train-labels.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-features.idx"))
-        (os.remove)(os.path.join(self.test_set.path, "test-labels.idx"))
-
-
-
-
-class SetBase(SubSet):
-
-    def __init__(self, *args, **kwargs):
-        super(SetBase, self).__init__(*args, **kwargs)
-        self._dataframe = None
-        self._features = None
-        self._labels = None
-
-
-    def _dict_generator(self):
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                if root != self.path:
-                    class_id = (int)((_coconut.operator.itemgetter(-1))(root.split("/")))
-
-                    yield dict(filename=os.path.join(root, file), class_id=class_id)
-        print("Done")
-
-    def _load_dataframe(self):
-        if self._dataframe is None:
-            import pandas as pd
-            self._dataframe = pd.DataFrame(self._dict_generator())
-
-
+    @abstractmethod
     def dataframe(self):
-        from scipy.misc import imread
+        pass
 
-        self._load_dataframe()
-
-        if not "image" in self._dataframe:
-            self._dataframe["image"] = self._dataframe.filename.apply(imread)
-
-        return self._dataframe
-
-
+    @abstractmethod
     def arrays(self):
-        import numpy as np
+        pass
 
-        if self._features is None or self._labels is None:
-            dataframe = self.dataframe()
-
-            self._features = np.stack(dataframe.image.as_matrix())
-            self._labels = np.stack(dataframe.class_id.as_matrix())
-
-        return self._features, self._labels
-
-
+    @abstractmethod
     def random_batch_dataframe_generator(self, batch_size):
-        from scipy.misc import imread
+        pass
 
-        self._load_dataframe()
-
-        while True:
-            batch = self._dataframe.sample(batch_size)
-
-            if not "image" in batch:
-                batch["image"] = batch.filename.apply(imread)
-
-            yield batch
-
-
+    @abstractmethod
     def random_batch_arrays_generator(self, batch_size):
-        import numpy as np
-
-        for data in self.random_batch_dataframe_generator(batch_size):
-            features = np.stack(data.image.as_matrix())
-            labels = np.stack(data.class_id.as_matrix())
-
-            yield features, labels
+        pass

@@ -58,11 +58,11 @@ class MNIST(DataSet):
 
     @property
     def training_set_class(self):
-        return MNISTTrainingSet
+        return SetBase
 
     @property
     def test_set_class(self):
-        return MNISTTestSet
+        return SetBase
 
     @property
     def help(self):
@@ -78,8 +78,7 @@ class MNIST(DataSet):
         get_file(TEST_LABELS_URL, self.path, "test-labels.gz")
 
     def _extract(self, **kwargs):
-        self.training_set.make_dirs()
-        self.test_set.make_dirs()
+
 
         ungzip(
             os.path.join(self.path, "train-features.gz"),
@@ -219,15 +218,3 @@ class SetBase(SubSet):
             labels = np.stack(data.class_id.as_matrix())
 
             yield features, labels
-
-
-class MNISTTestSet(SetBase):
-
-    def __init__(self, dataset):
-        super(MNISTTestSet, self).__init__(dataset, "test-set")
-
-
-class MNISTTrainingSet(SetBase):
-
-    def __init__(self, dataset):
-        super(MNISTTrainingSet, self).__init__(dataset, "training-set")
