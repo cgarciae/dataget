@@ -78,13 +78,16 @@ dataget remove_raw mnist
 ```
 
 ### ls
+List all installed datasets
 ```bash
 dataget ls
 ```
+List all `dataget` datasets available for download
 ```bash
 dataget ls -a
 ```
 ### -g
+Use `dataget -g` to perform operations on the global 
 ```bash
 dataget -g get mnist
 ```
