@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xe747df57
+# __coconut_hash__ = 0x25f87027
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -548,7 +548,7 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
     def _download(self, **kwargs):
         pool = Pool()
 
-        pool.apply_async(get_file, (TEST_CSV_URL, self.path, "GT-final_test.csv.zip"))
+        pool.apply_async(get_file, (TEST_CSV_URL, self.path, "test-set.csv.zip"))
         pool.apply_async(get_file, (TRAINING_SET_URL, self.path, "training-set.zip"))
         pool.apply_async(get_file, (TEST_SET_URL, self.path, "test-set.zip"))
 
@@ -557,37 +557,87 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
 
 
     def _extract_training_set(self, **kwargs):
-
+        print("extracting training-set.zip")
         with zipfile.ZipFile(os.path.join(self.path, "training-set.zip"), 'r') as zip_ref :
             for file in zip_ref.namelist():
-# skip directories
-                if not os.path.basename(file):
 
+
+# skip directories
+                if os.path.basename(file):
 
                     if file.endswith(".csv") or file.endswith(self.raw_extension):
                         structure = (_coconut.operator.methodcaller("split", "/"))(file)
                         filename = structure[-1]
-                        class_id = (str)((int)(dirs[-2]))
-                        path = os.path.join(self.training_set.path, class_id, filename)
+                        class_id = (str)((int)(structure[-2]))
 
-                    if file.endswith(".csv"):
-                        filename = "{}.csv".format(class_id)
+
+                        if not (os.path.exists)(os.path.join(self.training_set.path, class_id)):
+                            (os.makedirs)(os.path.join(self.training_set.path, class_id))
+
+                        if file.endswith(".csv"):
+                            filename = "{}.csv".format(class_id)
 
 
 # copy file (taken from zipfile's extract)
-                    source = zip_ref.open(file)
-                    target = open(os.path.join(self.path, file), "wb")
+                        path = os.path.join(self.training_set.path, class_id, filename)
+                        source = zip_ref.open(file)
+                        target = open(path, "wb")
 
-                    with source, target :
-                        shutil.copyfileobj(source, target)
+                        with source, target :
+                            shutil.copyfileobj(source, target)
+
+                        if file.endswith(".csv"):
+                            with open(path, "r") as f :
+                                txt = f.read().replace(";", ",")
+
+                            with open(path, "w") as f :
+                                f.write(txt)
 
 
     def _extract_test_set(self, **kwargs):
-        pass
+        print("extracting test-set.zip")
+        with zipfile.ZipFile(os.path.join(self.path, "test-set.zip"), 'r') as zip_ref :
+            for file in zip_ref.namelist():
+# skip directories
+                if os.path.basename(file):
+
+                    if file.endswith(self.raw_extension):
+                        structure = (_coconut.operator.methodcaller("split", "/"))(file)
+                        filename = structure[-1]
+                        path = os.path.join(self.test_set.path, filename)
+
+# copy file (taken from zipfile's extract)
+                        source = zip_ref.open(file)
+                        target = open(path, "wb")
+
+                        with source, target :
+                            shutil.copyfileobj(source, target)
+
+        print("extracting test-set.csv.zip")
+        with (_coconut_partial(zipfile.ZipFile, {1: 'r'}, 2))(os.path.join(self.path, "test-set.csv.zip")) as zip_ref :
+            path = os.path.join(self.test_set.path, "test-set.csv")
+
+# copy file (taken from zipfile's extract)
+            source = zip_ref.open("GT-final_test.csv")
+            target = open(path, "wb")
+
+            with source, target :
+                shutil.copyfileobj(source, target)
+
+            with (_coconut_partial(open, {1: "r"}, 2))(os.path.join(self.test_set.path, "test-set.csv")) as f :
+                txt = f.read().replace(";", ",")
+
+            with (_coconut_partial(open, {1: "w"}, 2))(os.path.join(self.test_set.path, "test-set.csv")) as f :
+                f.write(txt)
+
+
+        self._structure_folder_from_csv(self.training_set.path)
+
 
 
     def _extract(self, **kwargs):
         self._extract_training_set(**kwargs)
+# self._extract_test_set(**kwargs)
 
 
 #############

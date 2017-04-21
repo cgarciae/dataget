@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xc5dc3bb4
+# __coconut_hash__ = 0x3b11c35f
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -528,7 +528,7 @@ class DataSet(object):
 
 
     def make_dirs(self):
-        if os.path.exists(self.path):
+        if not os.path.exists(self.path):
             os.makedirs(self.path)
 
         self.training_set.make_dirs()
@@ -581,6 +581,7 @@ class DataSet(object):
 
     def extract(self, **kwargs):
         print("===EXTRACT===")
+        self.make_dirs()
 
         self._extract(**kwargs)
 
