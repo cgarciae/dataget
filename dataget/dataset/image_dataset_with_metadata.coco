@@ -10,6 +10,15 @@ class ImageDataSetWithMetadata(ImageDataSet):
         pass
 
 
+    @property
+    def training_set_class(self):
+        return ImageSubSetWithMetadata
+
+    @property
+    def test_set_class(self):
+        return ImageSubSetWithMetadata
+
+
 
 class ImageSubSetWithMetadata(ImageSubSet):
 
@@ -22,7 +31,7 @@ class ImageSubSetWithMetadata(ImageSubSet):
 
                 if file.endswith(".csv"):
                     df = pd.read_csv(file)
-                    df["filename"] = root + "/" df["filename"]
+                    df["filename"] = root + "/" + df["filename"]
 
                     yield df
 

@@ -36,8 +36,8 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
     def _download(self, **kwargs):
         pool = Pool()
 
-        pool.apply_async(get_file, (TEST_CSV_URL, self.path, "test-set.csv.zip"))
         pool.apply_async(get_file, (TRAINING_SET_URL, self.path, "training-set.zip"))
+        pool.apply_async(get_file, (TEST_CSV_URL, self.path, "test-set.csv.zip"))
         pool.apply_async(get_file, (TEST_SET_URL, self.path, "test-set.zip"))
 
         pool.close()
@@ -45,6 +45,8 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
 
 
     def _extract_training_set(self, **kwargs):
+        import pandas as pd
+
         print("extracting training-set.zip")
         with zipfile.ZipFile(os.path.join(self.path, "training-set.zip"), 'r') as zip_ref:
             for file in zip_ref.namelist():
@@ -75,11 +77,11 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                             shutil.copyfileobj(source, target)
 
                         if file.endswith(".csv"):
-                            with open(path, "r") as f:
-                                txt = f.read().replace(";", ",")
+                            df = pd.read_csv(path, sep=";")
+                            df.columns = df.columns |> map$(.lower()) |> list
+                            df.rename(columns={'classid':'class_id'}, inplace=True)
+                            df.to_csv(path, index=False)
 
-                            with open(path, "w") as f:
-                                f.write(txt)
 
 
     def _extract_test_set(self, **kwargs):
@@ -119,104 +121,51 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 f.write(txt)
 
 
-        self._structure_folder_from_csv(self.training_set.path)
+
+        self._structure_folder_from_csv(self.test_set.path)
+
+        #remove old csv
+        os.path.join(self.test_set.path, "test-set.csv") |> os.remove
 
 
     def _structure_folder_from_csv(self, dir_path):
-        
+        import pandas as pd
+
+        print("organizing test-set")
+
+        csv_files = os.listdir(dir_path) |> filter$(.endswith(".csv")) |> map$(os.path.join$(dir_path))
+
+        df = csv_files |> map$(pd.read_csv) |> pd.concat
+        df.columns = df.columns |> map$(.lower()) |> list
+        df.rename(columns={'classid':'class_id'}, inplace=True)
+
+        groups = df.groupby(["class_id"])
+
+        for class_id, group in groups:
+            group = group.copy()
+            class_path = os.path.join(dir_path, str(class_id))
+            group_csv_path = os.path.join(class_path, str(class_id)) + ".csv"
+
+            for i, row in group.iterrows():
+                file_path = os.path.join(class_path, row.filename)
+                current_file_path = os.path.join(dir_path, row.filename)
+
+                if not os.path.exists(class_path):
+                    os.makedirs(class_path)
+
+                # move files
+                os.rename(current_file_path, file_path)
+
+
+            #create group csv
+            group.to_csv(group_csv_path, index=False)
 
 
 
     def _extract(self, **kwargs):
         self._extract_training_set(**kwargs)
-        # self._extract_test_set(**kwargs)
-
-
-        #############
-        #### OLD ####
-        #############
-        # print("extracting training-set.zip")
-        # zip_ref = zipfile.ZipFile(self.training_set.path + ".zip", 'r')
-        # zip_ref.extractall(self.training_set.path)
-        # zip_ref.close()
-        #
-        #
-        # print("extracting test-set.zip")
-        # zip_ref = zipfile.ZipFile(self.test_set.path + ".zip", 'r')
-        # zip_ref.extractall(self.test_set.path)
-        # zip_ref.close()
-        # os.remove(self.test_set.path + "/GTSRB/Final_Test/Images/GT-final_test.test.csv")
-        #
-        #
-        # print("extracting GT-final_test.csv.zip")
-        # zip_ref = zipfile.ZipFile(self.path + "/GT-final_test.csv.zip", 'r')
-        # zip_ref.extract("GT-final_test.csv", self.test_set.path + "/GTSRB/Final_Test/Images")
-        # zip_ref.close()
-        #
-        # print("organizing files")
-        # for dir in os.listdir(self._training_images_path):
-        #     old_dir = os.path.join(self._training_images_path, dir)
-        #     new_dir = os.path.join(self.training_set.path, dir)
-        #
-        #     os.rename(old_dir, new_dir)
-        #
-        # for dir in os.listdir(self._test_images_path):
-        #     old_dir = os.path.join(self._test_images_path, dir)
-        #     new_dir = os.path.join(self.test_set.path, dir)
-        #
-        #     os.rename(old_dir, new_dir)
-        #
-        # #training images readme
-        # old_dir = os.path.join(self.training_set.path, "GTSRB/Readme-Images.txt")
-        # new_dir = os.path.join(self.training_set.path, "Readme-Images.txt")
-        # os.rename(old_dir, new_dir)
-        # os.path.join(self.training_set.path, "GTSRB") |> shutil.rmtree
-        #
-        # #training images readme
-        # old_dir = os.path.join(self.test_set.path, "GTSRB/Readme-Images-Final-test.txt")
-        # new_dir = os.path.join(self.test_set.path, "Readme-Images.txt")
-        # os.rename(old_dir, new_dir)
-        # os.path.join(self.test_set.path, "GTSRB") |> shutil.rmtree
-
-    def _process(self, dims="32x32", format="jpg", **kwargs):
-        import os, sys
-        from PIL import Image
-
-        dims = dims.split('x')
-        dims = tuple(map(int, dims))
-
-        print("Image dims: {}, Image format: {}".format(dims, format))
-
-        CLASS = None
-
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                file = os.path.join(root, file)
-
-                if file.endswith(self.raw_extension):
-
-                    new_file = file.replace(self.raw_extension, ".{}".format(format))
-
-                    with Image.open(file) as im:
-                        im = im.resize(dims)
-                        im.save(new_file, quality=100)
-
-                    dirs = file.split("/")
-                    _class = dirs[-2]
-
-                    if _class != CLASS:
-                        CLASS = _class
-                        print("formating {_class}".format(_class = _class))
-
-                elif file.endswith(".csv"):
-                    with open(file, 'r') as f:
-                        csv = f.read()
-
-                    csv = csv.replace(self.raw_extension, ".{}".format(format))
-
-                    with open(file, 'w') as f:
-                        f.write(csv)
+        self._extract_test_set(**kwargs)
 
 
     def process_dataframe(self, dataframe, **kwargs):
-        pass
+        print(dataframe.iloc[0].class_id)

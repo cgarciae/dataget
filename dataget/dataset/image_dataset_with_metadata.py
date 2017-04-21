@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x27e1ad93
+# __coconut_hash__ = 0x531c2e4
 
 # Compiled with Coconut version 1.2.2-post_dev12 [Colonel]
 
@@ -523,12 +523,32 @@ class ImageDataSetWithMetadata(ImageDataSet):
         pass
 
 
+    @property
+    def training_set_class(self):
+        return ImageSubSetWithMetadata
+
+    @property
+    def test_set_class(self):
+        return ImageSubSetWithMetadata
+
+
 
 class ImageSubSetWithMetadata(ImageSubSet):
 
-    def _load_dataframe(self):
+    def _dataframe_generator(self):
         import pandas as pd
 
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 file = os.path.join(root, file)
+
+                if file.endswith(".csv"):
+                    df = pd.read_csv(file)
+                    df["filename"] = root + "/" + df["filename"]
+
+                    yield df
+
+    def _load_dataframe(self):
+        if self._dataframe is None:
+            import pandas as pd
+            self._dataframe = pd.concat(self._dataframe_generator())

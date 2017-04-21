@@ -47,20 +47,23 @@ class ImageDataSet(DataSet):
 
                     dirs = file.split("/")
                     _class = dirs[-2]
+                    _set = dirs[-3]
 
                     if _class != CLASS:
                         CLASS = _class
-                        print("formating {_class}".format(_class = _class))
+                        print("formating {} {}".format(_set, _class))
 
                 elif file.endswith(".csv"):
                     import pandas as pd
 
                     df = pd.read_csv(file)
-                    df['filename'] =  df['filename'].replace({self.raw_extension: format})
+                    df['filename'] =  df['filename'].str.replace(self.raw_extension, "." + format)
+
+                    print("formatting {}".format(file))
 
                     self.process_dataframe(df, dims=dims, format=format, **kwargs)
 
-                    df.to_csv(file)
+                    df.to_csv(file, index=False)
 
     def _rm_raw(self, **kwargs):
         self.remove_all_file_with_extension(self._raw_extension)
@@ -85,7 +88,6 @@ class ImageSubSet(SubSet):
                         filename = os.path.join(root, file),
                         class_id = class_id
                     )
-        print("Done")
 
     def _load_dataframe(self):
         if self._dataframe is None:
