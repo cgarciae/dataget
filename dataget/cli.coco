@@ -7,17 +7,19 @@ from dataget.api import ls as _ls, data, get_path
 
 @click.group()
 @click.option('--path', '-p', default=None)
-@click.option('--global_', '-g', is_flag=True)
+@click.option('-g', is_flag=True, help="Use global path: DATAGET_HOME env variable or ~/.dataget by default.")
 @click.pass_context
-def main(ctx, path, global_):
-    path = get_path(path=path, global_= global_)
-    ctx.obj = dict(path = path, global_=global_)
+def main(ctx, path, g):
+    path = get_path(path=path, global_= g)
+    ctx.obj = dict(path = path, global_=g)
 
 
 @main.command()
-@click.option('--available', '-a', is_flag=True)
+@click.option('--available', '-a', is_flag=True, help="List all available dataget datasets for download.")
 @click.pass_context
 def ls(ctx, available):
+    "List installed datasets on path"
+
     path = ctx.obj['path']
     global_ = ctx.obj['global_']
 
@@ -28,79 +30,104 @@ def ls(ctx, available):
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
 def reqs(ctx, dataset, kwargs):
+    "Get the dataset's pip requirements"
+
     kwargs = parse_kwargs(kwargs)
     data(dataset, ctx.obj["path"]).reqs(**kwargs) |> print
 
 
 @main.command()
 @click.argument('dataset')
-@click.option('--clear', '-c', is_flag=True)
-@click.option('--dont-remove-compressed', is_flag=True)
-@click.option('--dont-process', is_flag=True)
-@click.option('--dont-remove-raw', is_flag=True)
+@click.option('--rm', '-r', is_flag=True, help="removes the dataset's folder (if it exists) before downloading")
+@click.option('--keep-compressed', is_flag=True, help="keeps the compressed files: skips rm_compressed")
+@click.option('--dont-process', is_flag=True, help="skips process")
+@click.option('--keep-raw', is_flag=True, help="keeps the raw/unprocessed files: skips rm_raw")
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def get(ctx, dataset, clear, dont_remove_compressed, dont_process, dont_remove_raw, kwargs):
+def get(ctx, dataset, rm, keep_compressed, dont_process, keep_raw, kwargs):
+    "performs the operations download, extract, rm_compressed, processes and rm_raw, in sequence. KWARGS must be in the form: key=value, and are fowarded to all opeartions."
+
     kwargs = parse_kwargs(kwargs)
 
     process = not dont_process
-    remove_raw = not dont_remove_raw
-    remove_compressed = not dont_remove_compressed
+    rm_raw = not keep_raw
+    rm_compressed = not keep_compressed
 
-    data(dataset, ctx.obj["path"]).get(clear=clear, remove_compressed=remove_compressed, process=process, remove_raw=remove_raw, **kwargs)
+    data(dataset, ctx.obj["path"]).get(rm=rm, rm_compressed=rm_compressed, process=process, rm_raw=rm_raw, **kwargs)
 
 
 @main.command()
 @click.argument('dataset')
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def clear(ctx, dataset, kwargs):
+def rm(ctx, dataset, kwargs):
+    "removes the dataset's folder if it exists"
+
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).clear(**kwargs)
+    data(dataset, ctx.obj["path"]).rm(**kwargs)
+
+@main.command("rm-subsets")
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def rm_subsets(ctx, dataset, kwargs):
+    "removes the dataset's training-set and test-set folders if they exists"
+
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).rm_subsets(**kwargs)
 
 @main.command()
 @click.argument('dataset')
-@click.option('--clear', '-c', is_flag=True)
+@click.option('--rm', '-r', is_flag=True, help="removes the dataset's folder if it exists before downloading")
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def download(ctx, dataset, clear, kwargs):
+def download(ctx, dataset, rm, kwargs):
+    "downloads the dataset's compressed files"
+
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).download(clear=clear, **kwargs)
+    data(dataset, ctx.obj["path"]).download(rm=rm, **kwargs)
 
 @main.command()
 @click.argument('dataset')
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
 def extract(ctx, dataset, kwargs):
+    "extracts the files from the compressed archives"
+
     kwargs = parse_kwargs(kwargs)
     data(dataset, ctx.obj["path"]).extract(**kwargs)
 
 
-@main.command()
+@main.command("rm-compressed")
 @click.argument('dataset')
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def remove_compressed(ctx, dataset, kwargs):
+def rm_compressed(ctx, dataset, kwargs):
+    "removes the compressed files"
+
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).remove_compressed(**kwargs)
+    data(dataset, ctx.obj["path"]).rm_compressed(**kwargs)
 
 @main.command()
 @click.argument('dataset')
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
 def process(ctx, dataset, kwargs):
+    "processes the data to a friendly format"
+
     kwargs = parse_kwargs(kwargs)
     data(dataset, ctx.obj["path"]).process(**kwargs)
 
 
-@main.command()
+@main.command("rm-raw")
 @click.argument('dataset')
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def remove_raw(ctx, dataset, kwargs):
-    kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).remove_raw(**kwargs)
+def rm_raw(ctx, dataset, kwargs):
+    "removes the raw unprocessed data"
 
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, ctx.obj["path"]).rm_raw(**kwargs)
 
 
 

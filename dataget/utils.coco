@@ -1,13 +1,14 @@
 import urllib
 import os
+import re
 
-def get_progress():
+def get_progress(filename):
     def progress(count, blockSize, totalSize):
 
         new = int( count * blockSize * 100 / totalSize )
 
         if new % 5 == 0 and new != progress.last:
-            print("{}%".format(new))
+            print("{} {}%".format(filename, new))
             progress.last = new
 
     progress.last = -1
@@ -24,7 +25,7 @@ def get_file(file_url, path, filename=None, print_info=True):
         print("downloading {}".format(filename))
 
     url_opener = urllib.URLopener()
-    url_opener.retrieve(file_url, file_path, get_progress())
+    url_opener.retrieve(file_url, file_path, get_progress(filename))
     url_opener.close()
 
 
@@ -33,3 +34,9 @@ def maybe_mkdir(path):
         os.makedirs(path)
 
     return path
+
+def split_upper(txt):
+    return [ a for a in re.split(r'([A-Z][a-z]*\d*)', txt) if a ]
+
+def upper_to_dashed(txt):
+    return txt |> split_upper |> map$(.lower()) |> "-".join

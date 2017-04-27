@@ -16,6 +16,11 @@ from .api import ls, data, get_path, DATASETS
 from .dataset_loader import load_custom_datasets, load_plugin_datasets
 
 
+def print_hello():
+    import time
+    time.sleep(1)
+    print("HELLO WORLD")
+    time.sleep(1)
 
 
 load_custom_datasets(DATASETS)

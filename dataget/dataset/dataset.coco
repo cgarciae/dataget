@@ -11,14 +11,22 @@ class DataSet(object):
     def __init__(self, name, home_path):
         self.name = name
         self.path = os.path.join(home_path, self.name)
-        self.training_set = self.training_set_class(self)
-        self.test_set = self.test_set_class(self)
+        self.training_set = self.training_set_class(self, "training-set")
+        self.test_set = self.test_set_class(self, "test-set")
 
 
-    def get(self, clear=False, remove_compressed=True, process=True, remove_raw=True, **kwargs):
-        # clear
-        if clear:
-            self.clear()
+    def make_dirs(self):
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+        self.training_set.make_dirs()
+        self.test_set.make_dirs()
+
+
+    def get(self, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
+        # rm
+        if rm:
+            self.rm()
 
         # return if path exists, dataset downloaded already, else create path
         if not self.is_empty():
@@ -28,64 +36,95 @@ class DataSet(object):
         self.download(**kwargs).extract(**kwargs)
 
         # clean
-        if remove_compressed:
-            self.remove_compressed(**kwargs)
+        if rm_compressed:
+            self.rm_compressed(**kwargs)
 
         # process
         if process:
             self.process(**kwargs)
 
-            if remove_raw:
-                self.remove_raw()
+            if rm_raw:
+                self.rm_raw()
 
         return self
 
 
-    def download(self, clear=False, **kwargs):
-        # clear
-        if clear:
-            self.clear()
+    def download(self, rm=False, **kwargs):
+        print("===DOWNLOAD===")
+
+        # rm
+        if rm:
+            self.rm()
 
         if not self.is_empty():
             return self
-        elif not self.path_exists():
-            os.makedirs(self.path)
+
+        self.make_dirs()
 
         self._download(**kwargs)
+
+        print("")
 
         return self
 
     def extract(self, **kwargs):
+        print("===EXTRACT===")
+        self.make_dirs()
+
         self._extract(**kwargs)
+
+        print("")
 
         return self
 
-    def remove_compressed(self, **kwargs):
-        self._remove_compressed(**kwargs)
+    def rm_compressed(self, **kwargs):
+        print("===RM-COMPRESSED===")
+
+        self._rm_compressed(**kwargs)
+
+        print("")
 
         return self
 
     def process(self, **kwargs):
+        print("===PROCESS===")
+
         self._process(**kwargs)
 
-        return self
-
-    def remove_raw(self, **kwargs):
-        self._remove_raw(**kwargs)
+        print("")
 
         return self
 
+    def rm_raw(self, **kwargs):
+        print("===RM-RAW===")
 
-    def clear(self):
-        shutil.rmtree(self.path)
+        self._rm_raw(**kwargs)
+
+        print("")
 
         return self
 
-    def path_exists(self):
-        return os.path.exists(self.path)
+
+    def rm(self):
+
+        if os.path.exists(self.path):
+            self.path.split("/") |> .[-1] |> print
+            shutil.rmtree(self.path)
+
+        return self
+
+    def rm_subsets(self):
+
+        if os.path.exists(self.training_set.path):
+            shutil.rmtree(self.training_set.path)
+
+        if os.path.exists(self.test_set.path):
+            shutil.rmtree(self.test_set.path)
+
+        return self
 
     def is_empty(self):
-        if not self.path_exists():
+        if not os.path.exists(self.path):
             return True
         else:
             return not os.listdir(self.path)
@@ -111,16 +150,30 @@ class DataSet(object):
     def _extract(self):
         pass
 
-    @abstractmethod
-    def _remove_compressed(self):
-        pass
+
+    def _rm_compressed(self):
+        print("removing compressed files")
+
+        for file in os.listdir(self.path):
+
+            file = os.path.join(self.path, file)
+
+            if not os.path.isdir(file):
+                os.remove(file)
+
+    def remove_all_file_with_extension(self, extension):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
+                if file.endswith(".{}".format(extension)):
+                    os.remove(file)
 
     @abstractmethod
     def _process(self):
         pass
 
     @abstractmethod
-    def _remove_raw(self):
+    def _rm_raw(self):
         pass
 
     @abstractmethod
@@ -154,14 +207,3 @@ class SubSet(object):
     @abstractmethod
     def random_batch_arrays_generator(self, batch_size):
         pass
-
-class TrainingSet(SubSet):
-
-    def __init__(self, dataset):
-        super(TrainingSet, self).__init__(dataset, "training-set")
-
-
-class TestSet(SubSet):
-
-    def __init__(self, dataset):
-        super(TestSet, self).__init__(dataset, "test-set")
