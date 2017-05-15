@@ -2,6 +2,7 @@ import os
 from platform import python_version
 from dataget import get_path
 from dataget.dataset import DataSet
+import platform
 
 
 def load_datasets(DATASETS, module_root, datasets_path):
@@ -25,11 +26,13 @@ def load_datasets(DATASETS, module_root, datasets_path):
 
 
 def load_custom_datasets(DATASETS):
+    splitter = "/" if not platform.system() == "Windows" else "\\"
+
     datasets_path = (
         __file__
-        |> .split("/")
+        |> .split(splitter)
         |> .[:-1] #get all but the last
-        |> "/".join
+        |> splitter.join
         |> os.path.join$(?, "datasets")
     )
 
@@ -37,7 +40,8 @@ def load_custom_datasets(DATASETS):
 
 
 def load_plugin_datasets(DATASETS):
-    datasets_path = get_path(global_=True) |> os.path.join$(?, "datasets")
+    datasets_path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else  os.path.join("~", ".dataget") |> os.path.expanduser
+    datasets_path = os.path.join(datasets_path, "datasets")
 
     load_datasets(DATASETS, "datasets", datasets_path)
 

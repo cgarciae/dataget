@@ -6,6 +6,7 @@ from dataget.utils import get_file
 from dataget.dataset import ImageDataSetWithMetadata
 from dataget.api import register_dataset
 from multiprocessing import Pool
+from dataget.utils import OS_SPLITTER
 
 TRAINING_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Training_Images.zip"
 TEST_SET_URL = "http://benchmark.ini.rub.de/Dataset/GTSRB_Final_Test_Images.zip"
@@ -56,7 +57,7 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(".csv") or file.endswith(self.raw_extension):
-                        structure = file |> .split("/")
+                        structure = file |> .split(OS_SPLITTER)
                         filename = structure[-1]
                         class_id = structure[-2] |> int |> str
 
@@ -92,7 +93,7 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(self.raw_extension):
-                        structure = file |> .split("/")
+                        structure = file |> .split(OS_SPLITTER)
                         filename = structure[-1]
                         path = os.path.join(self.test_set.path, filename)
 
