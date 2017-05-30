@@ -1,6 +1,7 @@
 from abc import abstractproperty
 from .dataset import DataSet, SubSet
 import os
+from dataget.utils import OS_SPLITTER
 
 class ImageDataSet(DataSet):
 
@@ -45,7 +46,7 @@ class ImageDataSet(DataSet):
                         im = im.resize(dims)
                         im.save(new_file, quality=100)
 
-                    dirs = file.split("/")
+                    dirs = file.split(OS_SPLITTER)
                     _class = dirs[-2]
                     _set = dirs[-3]
 
@@ -82,7 +83,7 @@ class ImageSubSet(SubSet):
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 if root != self.path:
-                    class_id = root.split("/") |> .[-1]  |> int
+                    class_id = root.split(OS_SPLITTER) |> .[-1]  |> int
 
                     yield dict(
                         filename = os.path.join(root, file),

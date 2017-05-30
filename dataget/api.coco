@@ -13,7 +13,7 @@ def register_dataset(cls):
 
 def get_path(path=None, global_=False):
     if global_:
-        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else  os.path.expanduser("~/.dataget")
+        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else  os.path.join("~", ".dataget") |> os.path.expanduser
         path = os.path.join(path, "data")
     elif not path:
         path = os.path.join(os.getcwd(), ".dataget", "data")

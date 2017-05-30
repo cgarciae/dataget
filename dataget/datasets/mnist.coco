@@ -67,7 +67,7 @@ class Mnist(ImageDataSet):
         return "" # information for the help command
 
     def reqs(self, **kwargs):
-        return super(MNIST, self).reqs() + " " + "idx2numpy" # e.g. "numpy pandas pillow"
+        return super(Mnist, self).reqs() + " " + "idx2numpy" # e.g. "numpy pandas pillow"
 
     def _download(self, **kwargs):
         get_file(TRAIN_FEATURES_URL, self.path, "train-features.gz")

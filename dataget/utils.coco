@@ -1,6 +1,9 @@
 import urllib
 import os
 import re
+import platform
+
+OS_SPLITTER = "/" if not platform.system() == "Windows" else "\\"
 
 def get_progress(filename):
     def progress(count, blockSize, totalSize):
