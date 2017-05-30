@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 # type: ignore
 
-# Compiled with Coconut version 1.2.3-post_dev2 [Colonel]
+# Compiled with Coconut version 1.2.3-post_dev1 [Colonel]
 
 """Built-in Coconut utilities."""
 
-# Coconut Header: --------------------------------------------------------------
+# Coconut Header: --------------------------------------------------------
 
 from __future__ import print_function, absolute_import, unicode_literals, division
 import sys as _coconut_sys
@@ -288,7 +288,7 @@ class concurrent_map(map):
     __slots__ = ()
     def __iter__(self):
         from concurrent.futures import ThreadPoolExecutor
-        from multiprocessing import cpu_count  # cpu_count() * 5 is the default Python 3.5 thread count
+        from multiprocessing import cpu_count  # cpu_count() * 5 is the default Python 3 thread count
         with ThreadPoolExecutor(cpu_count() * 5) as executor:
             return _coconut.iter(_coconut.tuple(executor.map(self._func, *self._iters)))
     def __repr__(self):
