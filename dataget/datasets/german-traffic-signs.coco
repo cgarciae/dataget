@@ -57,7 +57,10 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(".csv") or file.endswith(self.raw_extension):
-                        structure = file |> .split(OS_SPLITTER)
+                        # print(file)
+                        # print(self.path)
+                        # os.path.join(self.path, file) |> print
+                        structure = file |> .split("/")
                         filename = structure[-1]
                         class_id = structure[-2] |> int |> str
 
@@ -93,7 +96,7 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(self.raw_extension):
-                        structure = file |> .split(OS_SPLITTER)
+                        structure = file |> .split("/")
                         filename = structure[-1]
                         path = os.path.join(self.test_set.path, filename)
 
@@ -169,4 +172,5 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
 
 
     def process_dataframe(self, dataframe, **kwargs):
-        print(dataframe.iloc[0].class_id)
+        # print(dataframe.iloc[0].class_id)
+        pass

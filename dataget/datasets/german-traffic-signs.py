@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xd6e363ea
+# __coconut_hash__ = 0xca721a4b
 
-# Compiled with Coconut version 1.2.2-post_dev18 [Colonel]
+# Compiled with Coconut version 1.2.3-post_dev2 [Colonel]
 
-# Coconut Header: --------------------------------------------------------
+# Coconut Header: --------------------------------------------------------------
 
 from __future__ import print_function, absolute_import, unicode_literals, division
 import sys as _coconut_sys
@@ -286,7 +286,7 @@ class concurrent_map(map):
     __slots__ = ()
     def __iter__(self):
         from concurrent.futures import ThreadPoolExecutor
-        from multiprocessing import cpu_count  # cpu_count() * 5 is the default Python 3 thread count
+        from multiprocessing import cpu_count  # cpu_count() * 5 is the default Python 3.5 thread count
         with ThreadPoolExecutor(cpu_count() * 5) as executor:
             return _coconut.iter(_coconut.tuple(executor.map(self._func, *self._iters)))
     def __repr__(self):
@@ -508,8 +508,7 @@ def fmap(func, obj):
         return "".join(args)
     return obj.__class__(args)
 _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coconut_map, _coconut_tee, _coconut_zip, reduce, takewhile, dropwhile = MatchError, count, enumerate, reversed, map, tee, zip, _coconut.functools.reduce, _coconut.itertools.takewhile, _coconut.itertools.dropwhile
-
-# Compiled Coconut: ------------------------------------------------------
+# Compiled Coconut: ------------------------------------------------------------
 
 import urllib
 import zipfile
@@ -570,7 +569,10 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(".csv") or file.endswith(self.raw_extension):
-                        structure = (_coconut.operator.methodcaller("split", OS_SPLITTER))(file)
+# print(file)
+# print(self.path)
+# os.path.join(self.path, file) |> print
+                        structure = (_coconut.operator.methodcaller("split", "/"))(file)
                         filename = structure[-1]
                         class_id = (str)((int)(structure[-2]))
 
@@ -606,7 +608,7 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
                 if os.path.basename(file):
 
                     if file.endswith(self.raw_extension):
-                        structure = (_coconut.operator.methodcaller("split", OS_SPLITTER))(file)
+                        structure = (_coconut.operator.methodcaller("split", "/"))(file)
                         filename = structure[-1]
                         path = os.path.join(self.test_set.path, filename)
 
@@ -682,4 +684,5 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
 
 
     def process_dataframe(self, dataframe, **kwargs):
-        print(dataframe.iloc[0].class_id)
+# print(dataframe.iloc[0].class_id)
+        pass
