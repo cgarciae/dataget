@@ -27,4 +27,4 @@ _coconut_sys.path.remove(_coconut_file_path)
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
 
-__version__ = '0.1.4'  # NOQA
+__version__ = '0.1.5'  # NOQA
