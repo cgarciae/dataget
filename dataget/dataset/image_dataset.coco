@@ -2,6 +2,13 @@ from abc import abstractproperty
 from .dataset import DataSet, SubSet
 import os
 from dataget.utils import OS_SPLITTER
+from dataget.utils import read_pillow_image
+
+#####
+
+
+
+####
 
 class ImageDataSet(DataSet):
 
@@ -97,12 +104,13 @@ class ImageSubSet(SubSet):
 
 
     def dataframe(self):
-        from scipy.misc import imread
+        import numpy as np
+        from PIL import Image
 
         self._load_dataframe()
 
         if not "image" in self._dataframe:
-            self._dataframe["image"] = self._dataframe.filename.apply(imread)
+            self._dataframe["image"] = read_pillow_image(Image, np) |> self._dataframe.filename.apply
 
         return self._dataframe
 
@@ -120,7 +128,8 @@ class ImageSubSet(SubSet):
 
 
     def random_batch_dataframe_generator(self, batch_size):
-        from scipy.misc import imread
+        import numpy as np
+        from PIL import Image
 
         self._load_dataframe()
 
@@ -128,7 +137,7 @@ class ImageSubSet(SubSet):
             batch = self._dataframe.sample(batch_size)
 
             if not "image" in batch:
-                batch["image"] = batch.filename.apply(imread)
+                batch["image"] = read_pillow_image(Image, np) |> batch.filename.apply
 
             yield batch
 

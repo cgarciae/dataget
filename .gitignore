@@ -1,5 +1,6 @@
 #dataget/**/*.py
 dataget/**/*.pyc
+.dataget
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
