@@ -6,7 +6,7 @@ from dataget.utils import get_file
 from dataget.api import register_dataset
 import tarfile
 import numpy as np
-from PIL import Image
+
 
 TRAINING_SET_URL = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 
@@ -39,7 +39,7 @@ class Cifar10(ImageDataSet):
         return "" # information for the help command
 
     def reqs(self, **kwargs):
-        return super(MitFaceRec, self).reqs() + "" # e.g. "numpy pandas pillow"
+        return super(Cifar10, self).reqs() + "" # e.g. "numpy pandas pillow"
 
 
     def _download(self, **kwargs):
@@ -48,6 +48,7 @@ class Cifar10(ImageDataSet):
 
 
     def _extract(self, **kwargs):
+        from PIL import Image
         # extract the data
         print("Extracting zip")
 
