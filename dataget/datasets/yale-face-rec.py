@@ -52,7 +52,7 @@ class YaleFaceRec(ImageDataSet):
 
                 if file.endswith(self.raw_extension):
 
-                    direct = file.split('/')
+                    direct = file.split(os.sep)
 
                     img = direct[-1].split('_')
 
@@ -61,14 +61,14 @@ class YaleFaceRec(ImageDataSet):
                     mkdir2 = os.path.join(self.path, "test-set",str(int(img[0][-2::])))
 
                     if not os.path.exists(mkdir):
-                        os.mkdir(mkdir, 0755 );
+                        os.mkdir(mkdir)
                     if not os.path.exists(mkdir2):
-                        os.mkdir(mkdir2, 0755 );
+                        os.mkdir(mkdir2)
                     if not ("Ambient" in img[-1]):
                         if (i%5 == 0):
-                            os.rename(file,mkdir2+'/'+direct[-1])
+                            os.rename(file,os.path.join(mkdir2,direct[-1]))
                         else:
-                            os.rename(file,mkdir+'/'+direct[-1])
+                            os.rename(file,os.path.join(mkdir,direct[-1]))
                     i+=1
 
         shutil.rmtree(os.path.join(self.path,"CroppedYale"))
