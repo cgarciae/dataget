@@ -117,7 +117,7 @@ class MitFaceRec(ImageDataSet):
 
                 if file.endswith(self.raw_extension):
 
-                    direct = file.split('/')
+                    direct = file.split(os.sep)
 
                     clase = direct[-1].split('_')
 
@@ -125,8 +125,8 @@ class MitFaceRec(ImageDataSet):
                     if (i%10 == 0):
                         mkdir = os.path.join(self.path, "test-set",str(int(clase[0])) )
                     if not os.path.exists(mkdir):
-                        os.mkdir(mkdir, 0755 );
-                    os.rename(file,mkdir+'/'+direct[-1])
+                        os.mkdir(mkdir)
+                    os.rename(file,os.path.join(mkdir,direct[-1]))
                     i+=1
 
         os.rmdir(os.path.join(self.path,"test"))
