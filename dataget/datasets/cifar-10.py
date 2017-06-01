@@ -39,7 +39,7 @@ class Cifar10(ImageDataSet):
         return "" # information for the help command
 
     def reqs(self, **kwargs):
-        return super(MitFaceRec, self).reqs() + "" # e.g. "numpy pandas pillow"
+        return super(Cifar10, self).reqs() + "" # e.g. "numpy pandas pillow"
 
 
     def _download(self, **kwargs):
