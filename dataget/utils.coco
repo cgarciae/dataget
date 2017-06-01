@@ -43,3 +43,11 @@ def split_upper(txt):
 
 def upper_to_dashed(txt):
     return txt |> split_upper |> map$(.lower()) |> "-".join
+
+
+def read_pillow_image(Image, np):
+    def _read_pillow_image(filename):
+        with Image.open(filename) as im:
+            return np.asarray(im, dtype=np.uint8)
+
+    return _read_pillow_image
