@@ -73,7 +73,7 @@ class Cifar10(ImageDataSet):
             for i in range(N):
                 mkdir = os.path.join(dirname,str(labels[i]))
                 if not os.path.exists(mkdir):
-                    os.mkdir(mkdir,0755)
+                    os.mkdir(mkdir)
                 rgbArray = np.zeros((SZ,SZ,3), 'uint8')
                 rgbArray[..., 0] = imgs[i,0:SZ*SZ]. reshape(32,32)
                 rgbArray[..., 1] = imgs[i,SZ*SZ:SZ*SZ*2].reshape(32,32)
