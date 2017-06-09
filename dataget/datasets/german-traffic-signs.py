@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x5759cb16
+# __coconut_hash__ = 0x58feeb11
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -54,15 +54,9 @@ class GermanTrafficSigns(ImageDataSetWithMetadata):
 
 
     def _download(self, **kwargs):
-        pool = Pool()
-
-        pool.apply_async(get_file, (TRAINING_SET_URL, self.path, "training-set.zip"))
-        pool.apply_async(get_file, (TEST_CSV_URL, self.path, "test-set.csv.zip"))
-        pool.apply_async(get_file, (TEST_SET_URL, self.path, "test-set.zip"))
-
-        pool.close()
-        pool.join()
-
+        get_file(TRAINING_SET_URL, self.path, "training-set.zip")
+        get_file(TEST_CSV_URL, self.path, "test-set.csv.zip")
+        get_file(TEST_SET_URL, self.path, "test-set.zip")
 
     def _extract_training_set(self, **kwargs):
         import pandas as pd
