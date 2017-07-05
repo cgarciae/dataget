@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xaee2507
+# __coconut_hash__ = 0x7cdaf75d
 
-# Compiled with Coconut version 1.2.3 [Colonel]
+# Compiled with Coconut version 1.2.3-post_dev1 [Colonel]
 
 # Coconut Header: --------------------------------------------------------
 
@@ -31,10 +31,14 @@ def register_dataset(cls):
     return cls
 
 def get_path(path=None, global_=False):
-    if global_:
+    if path:
+        return path
+    elif global_:
         path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else (os.path.expanduser)(os.path.join("~", ".dataget"))
         path = os.path.join(path, "data")
-    elif not path:
+    elif os.environ.get("DATAGET_HOME", None):
+        path = (_coconut_partial(os.path.join, {1: "data"}, 2))(os.environ.get("DATAGET_HOME"))
+    else:
         path = os.path.join(os.getcwd(), ".dataget", "data")
 
     return path

@@ -12,10 +12,14 @@ def register_dataset(cls):
     return cls
 
 def get_path(path=None, global_=False):
-    if global_:
+    if path:
+        return path
+    elif global_:
         path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else  os.path.join("~", ".dataget") |> os.path.expanduser
         path = os.path.join(path, "data")
-    elif not path:
+    elif os.environ.get("DATAGET_HOME", None):
+        path = os.environ.get("DATAGET_HOME") |> os.path.join$(?, "data")
+    else:
         path = os.path.join(os.getcwd(), ".dataget", "data")
 
     return path

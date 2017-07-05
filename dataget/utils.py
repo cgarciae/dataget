@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x852a1c74
+# __coconut_hash__ = 0x82a933b6
 
-# Compiled with Coconut version 1.2.3 [Colonel]
+# Compiled with Coconut version 1.2.3-post_dev1 [Colonel]
 
 # Coconut Header: --------------------------------------------------------
 
@@ -60,9 +60,8 @@ def maybe_mkdir(path):
 def split_upper(txt):
     return [a for a in re.split(r'([A-Z][a-z]*\d*)', txt) if a]
 
-@_coconut_tco
 def upper_to_dashed(txt):
-    raise _coconut_tail_call(("-".join), (_coconut.functools.partial(map, _coconut.operator.methodcaller("lower")))((split_upper)(txt)))
+    return ("-".join)((_coconut.functools.partial(map, _coconut.operator.methodcaller("lower")))((split_upper)(txt)))
 
 
 def read_pillow_image(Image, np):
