@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x113daf54
+# __coconut_hash__ = 0xbad2e0f1
 
-# Compiled with Coconut version 1.2.3 [Colonel]
+# Compiled with Coconut version 1.2.3-post_dev1 [Colonel]
 
 # Coconut Header: --------------------------------------------------------
 
@@ -37,9 +37,8 @@ class ImageDataSet(DataSet):
         pass
 
     @property
-    @_coconut_tco
     def raw_extension(self):
-        raise _coconut_tail_call(".{}".format, self._raw_extension)
+        return ".{}".format(self._raw_extension)
 
     @property
     def training_set_class(self):
