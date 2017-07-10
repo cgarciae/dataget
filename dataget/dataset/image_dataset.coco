@@ -1,6 +1,6 @@
 from abc import abstractproperty
 from .dataset import DataSet, SubSet
-import os
+import os, random
 from dataget.utils import OS_SPLITTER
 from dataget.utils import read_pillow_image
 
@@ -27,6 +27,7 @@ class ImageDataSet(DataSet):
     @property
     def test_set_class(self):
         return ImageSubSet
+
 
     def reqs(self, **kwargs):
         return "pillow pandas numpy"
@@ -75,6 +76,12 @@ class ImageDataSet(DataSet):
 
     def _rm_raw(self, **kwargs):
         self.remove_all_file_with_extension(self._raw_extension)
+
+    @property
+    def n_classes(self):
+        return self.training_set.path |> os.listdir |> len
+
+
 
 
 class ImageSubSet(SubSet):
@@ -150,3 +157,21 @@ class ImageSubSet(SubSet):
             labels = np.stack(data.class_id.as_matrix())
 
             yield features, labels
+
+
+    def class_sample(self, class_id, n_samples = 10):
+        import numpy as np
+        from PIL import Image
+
+        if class_id >= self.dataset.n_classes or class_id < 0:
+            raise Exception("Not a valid class. Classes go from 0 to N-1")
+        self._load_dataframe()
+
+        df = self._dataframe
+
+        df = df[df.class_id==class_id]
+        df = df.sample(n_samples)
+
+        df["image"] = read_pillow_image(Image, np) |> df.filename.apply
+
+        return np.stack(df.image.as_matrix())
