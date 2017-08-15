@@ -46,6 +46,14 @@ def load_plugin_datasets(DATASETS):
     load_datasets(DATASETS, "datasets", datasets_path)
 
 
+def load_local_datasets(DATASETS):
+
+    datasets_path = os.getcwd() |> os.path.join$(?, ".dataget", "datasets")
+
+    if os.path.exists(datasets_path):
+        load_datasets(DATASETS, "datasets", datasets_path)
+
+
 def load_module(module_name, file_path):
     if python_version() >= "3.5":
         import importlib.util

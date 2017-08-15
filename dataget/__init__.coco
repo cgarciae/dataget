@@ -13,15 +13,9 @@ from .version import __version__  # NOQA
 from . import utils
 from . import dataset
 from .api import ls, data, get_path, DATASETS
-from .dataset_loader import load_custom_datasets, load_plugin_datasets
-
-
-def print_hello():
-    import time
-    time.sleep(1)
-    print("HELLO WORLD")
-    time.sleep(1)
+from .dataset_loader import load_custom_datasets, load_plugin_datasets, load_local_datasets
 
 
 load_custom_datasets(DATASETS)
 load_plugin_datasets(DATASETS)
+load_local_datasets(DATASETS)
