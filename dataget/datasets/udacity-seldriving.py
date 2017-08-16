@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x809750bb
+# __coconut_hash__ = 0xc2019adc
 
 # Compiled with Coconut version 1.2.3-post_dev5 [Colonel]
 
@@ -529,10 +529,34 @@ def fmap(func, obj):
 _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coconut_map, _coconut_tee, _coconut_zip, reduce, takewhile, dropwhile = MatchError, count, enumerate, reversed, map, tee, zip, _coconut.functools.reduce, _coconut.itertools.takewhile, _coconut.itertools.dropwhile
 # Compiled Coconut: ------------------------------------------------------------
 
-from .dataset import DataSet
-from .dataset import SubSet
-from .image_dataset import ImageDataSet
-from .image_dataset import ImageSubSet
-from .image_dataset_with_metadata import ImageDataSetWithMetadata
-from .image_dataset_with_metadata import ImageSubSetWithMetadata
-from .image_navigation import ImageNavigationDataSet
+import urllib
+import zipfile
+import os
+from dataget.utils import get_file
+from dataget.api import register_dataset
+from multiprocessing import Pool
+from dataget.dataset import ImageNavigationDataSet
+
+
+URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip"
+
+@register_dataset
+class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
+
+    @property
+    def _raw_extension(self):
+        return "jpg"
+
+    @property
+    def help(self):
+        return "TODO"
+
+    def reqs(self, **kwargs):
+        return super(UdacitySelfdrivingSimulator, self).reqs() + "odo"
+
+
+    def _download(self, **kwargs):
+        get_file(URL, self.path, "dataset.zip")
+
+    def _extract(self, **kwargs):
+        pass

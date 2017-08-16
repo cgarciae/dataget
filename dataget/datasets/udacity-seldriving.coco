@@ -1,0 +1,31 @@
+import urllib
+import zipfile
+import os
+from dataget.utils import get_file
+from dataget.api import register_dataset
+from multiprocessing import Pool
+from dataget.dataset import ImageNavigationDataSet
+
+
+URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip"
+
+@register_dataset
+class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
+
+    @property
+    def _raw_extension(self):
+        return "jpg"
+
+    @property
+    def help(self):
+        return "TODO"
+
+    def reqs(self, **kwargs):
+        return super(UdacitySelfdrivingSimulator, self).reqs() + "odo"
+
+
+    def _download(self, **kwargs):
+        get_file(URL, self.path, "dataset.zip")
+
+    def _extract(self, **kwargs):
+        pass

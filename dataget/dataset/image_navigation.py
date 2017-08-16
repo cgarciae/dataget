@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x809750bb
+# __coconut_hash__ = 0x1a8092ef
 
 # Compiled with Coconut version 1.2.3-post_dev5 [Colonel]
 
@@ -529,10 +529,175 @@ def fmap(func, obj):
 _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coconut_map, _coconut_tee, _coconut_zip, reduce, takewhile, dropwhile = MatchError, count, enumerate, reversed, map, tee, zip, _coconut.functools.reduce, _coconut.itertools.takewhile, _coconut.itertools.dropwhile
 # Compiled Coconut: ------------------------------------------------------------
 
+from abc import abstractproperty
 from .dataset import DataSet
 from .dataset import SubSet
-from .image_dataset import ImageDataSet
-from .image_dataset import ImageSubSet
-from .image_dataset_with_metadata import ImageDataSetWithMetadata
-from .image_dataset_with_metadata import ImageSubSetWithMetadata
-from .image_navigation import ImageNavigationDataSet
+import os
+import random
+from dataget.utils import OS_SPLITTER
+from dataget.utils import read_pillow_image
+
+#####
+
+
+
+####
+
+class ImageNavigationDataSet(DataSet):
+
+    @abstractproperty
+    def _raw_extension(self):
+        pass
+
+    @property
+    def raw_extension(self):
+        return ".{}".format(self._raw_extension)
+
+    @property
+    def training_set_class(self):
+        return ImageNavigationSubSet
+
+    @property
+    def test_set_class(self):
+        return ImageNavigationSubSet
+
+
+    def reqs(self, **kwargs):
+        return "pillow pandas numpy"
+
+    def _process(self, dims="32x32", format="jpg", **kwargs):
+        from PIL import Image
+
+        dims = dims.split('x')
+        dims = tuple(map(int, dims))
+
+        print("Image dims: {}, Image format: {}".format(dims, format))
+
+        CLASS = None
+
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                file = os.path.join(root, file)
+
+                if file.endswith(self.raw_extension):
+
+                    new_file = file.replace(self.raw_extension, ".{}".format(format))
+
+                    with Image.open(file) as im:
+                        im = im.resize(dims)
+                        im.save(new_file, quality=100)
+
+                    dirs = file.split(OS_SPLITTER)
+                    _class = dirs[-2]
+                    _set = dirs[-3]
+
+                    if _class != CLASS:
+                        CLASS = _class
+                        print("formating {} {}".format(_set, _class))
+
+                elif file.endswith(".csv"):
+                    import pandas as pd
+
+                    df = pd.read_csv(file)
+                    df['filename'] = df['filename'].str.replace(self.raw_extension, "." + format)
+
+                    print("formatting {}".format(file))
+
+                    self.process_dataframe(df, dims=dims, format=format, **kwargs)
+
+                    df.to_csv(file, index=False)
+
+    def _rm_raw(self, **kwargs):
+        self.remove_all_file_with_extension(self._raw_extension)
+
+
+
+
+class ImageNavigationSubSet(SubSet):
+
+    def __init__(self, *args, **kwargs):
+        super(ImageNavigationSubSet, self).__init__(*args, **kwargs)
+        self._dataframe = None
+        self._features = None
+        self._labels = None
+
+
+    def _dict_generator(self):
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                if root != self.path:
+                    class_id = (int)((_coconut.operator.itemgetter(-1))(root.split(OS_SPLITTER)))
+
+                    yield dict(filename=os.path.join(root, file), class_id=class_id)
+
+    def _load_dataframe(self):
+        if self._dataframe is None:
+            import pandas as pd
+            self._dataframe = pd.DataFrame(self._dict_generator())
+
+
+    def dataframe(self):
+        import numpy as np
+        from PIL import Image
+
+        self._load_dataframe()
+
+        if not "image" in self._dataframe:
+            self._dataframe["image"] = (self._dataframe.filename.apply)(read_pillow_image(Image, np))
+
+        return self._dataframe
+
+
+    def arrays(self):
+        import numpy as np
+
+        if self._features is None or self._labels is None:
+            dataframe = self.dataframe()
+
+            self._features = np.stack(dataframe.image.as_matrix())
+            self._labels = np.stack(dataframe.class_id.as_matrix())
+
+        return self._features, self._labels
+
+
+    def random_batch_dataframe_generator(self, batch_size):
+        import numpy as np
+        from PIL import Image
+
+        self._load_dataframe()
+
+        while True:
+            batch = self._dataframe.sample(batch_size)
+
+            if not "image" in batch:
+                batch["image"] = (batch.filename.apply)(read_pillow_image(Image, np))
+
+            yield batch
+
+
+    def random_batch_arrays_generator(self, batch_size):
+        import numpy as np
+
+        for data in self.random_batch_dataframe_generator(batch_size):
+            features = np.stack(data.image.as_matrix())
+            labels = np.stack(data.class_id.as_matrix())
+
+            yield features, labels
+
+
+    def class_sample(self, class_id, n_samples=10):
+        import numpy as np
+        from PIL import Image
+
+        if class_id >= self.dataset.n_classes or class_id < 0:
+            raise Exception("Not a valid class. Classes go from 0 to N-1")
+        self._load_dataframe()
+
+        df = self._dataframe
+
+        df = df[df.class_id == class_id]
+        df = df.sample(n_samples)
+
+        df["image"] = (df.filename.apply)(read_pillow_image(Image, np))
+
+        return np.stack(df.image.as_matrix())
