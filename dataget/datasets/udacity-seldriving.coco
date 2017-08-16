@@ -24,49 +24,74 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
     def reqs(self, **kwargs):
         return super(UdacitySelfdrivingSimulator, self).reqs() + " odo"
 
-
     def _download(self, **kwargs):
         get_file(URL, self.path, "dataset.zip")
 
-    def _extract(self, **kwargs):
+    def _extract(self, train_size = 0.8, **kwargs):
         from odo import odo
         from pandas import DataFrame
         import pandas as pd
+        import numpy as np
 
         print("Extracting zip")
         with zipfile.ZipFile(os.path.join(self.path,"dataset.zip"), 'r') as zip_ref:
             zip_ref.extractall(self.path)
 
-        print("Moving data")
         os.path.join(self.path, "data", "IMG") |> shutil.move$(?, self.path)
         os.path.join(self.path, "data", "driving_log.csv") |> shutil.move$(?, self.path)
+
+
+        print("Loading Data")
+        csv_path = os.path.join(self.path, "driving_log.csv")
+        df = odo(csv_path, DataFrame, dshape =
+            'var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}'
+        )
+        df = normalize_dataframe(df)
+        df["filename"] = df["filename"].str.replace("IMG/", "")
+
+
+        msk = np.random.rand(len(df)) < train_size
+
+        train = df[msk]
+        test = df[~msk]
+
+        print("Moving Files")
+        move_files(train['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'training-set'))
+        move_files(test['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'test-set'))
+
+        os.path.join(self.path, "training-set", "data.csv") |> odo$(train, ?)
+        os.path.join(self.path, "test-set", "data.csv") |> odo$(test, ?)
+
 
         print("Removing folders")
         os.path.join(self.path, "__MACOSX") |> shutil.rmtree
         os.path.join(self.path, "data") |> shutil.rmtree
+        os.path.join(self.path, "IMG") |> shutil.rmtree
 
-        df = odo("../../.dataget/data/udacity-selfdriving-simulator/driving_log.csv", DataFrame, dshape =
-            'var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}'
-        )
 
-        df_L = df.copy()
-        df_C = df.copy()
-        df_R = df.copy()
+def move_files(files, folder_orig, folder_dst):
+    for file in files:
+        os.rename(os.path.join(folder_orig, file), os.path.join(folder_dst, file))
 
-        df_L["camera"] = 0
-        df_C["camera"] = 1
-        df_R["camera"] = 2
+def normalize_dataframe(df):
+    import pandas as pd
 
-        df_L["filename"] = df_L["left"]
-        df_C["filename"] = df_C["center"]
-        df_R["filename"] = df_R["right"]
+    df_L = df.copy()
+    df_C = df.copy()
+    df_R = df.copy()
 
-        df_L = df_L.drop(["left", "center", "right"], axis = 1)
-        df_C = df_C.drop(["left", "center", "right"], axis = 1)
-        df_R = df_R.drop(["left", "center", "right"], axis = 1)
+    df_L["camera"] = 0
+    df_C["camera"] = 1
+    df_R["camera"] = 2
 
-        df = pd.concat([df_L, df_C, df_R])
+    df_L["filename"] = df_L["left"]
+    df_C["filename"] = df_C["center"]
+    df_R["filename"] = df_R["right"]
 
-        
+    df_L = df_L.drop(["left", "center", "right"], axis = 1)
+    df_C = df_C.drop(["left", "center", "right"], axis = 1)
+    df_R = df_R.drop(["left", "center", "right"], axis = 1)
 
-        os.getcwd()
+    df = pd.concat([df_L, df_C, df_R])
+
+    return df

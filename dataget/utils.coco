@@ -29,9 +29,6 @@ def get_file(file_url, path, filename=None, print_info=True):
     if print_info:
         print("downloading {}".format(filename))
 
-    # url_opener = urllib.URLopener()
-    # url_opener.retrieve(file_url, file_path, get_progress(filename))
-    # url_opener.close()
     urllib.request.urlretrieve(file_url, file_path, get_progress(filename))
 
 
@@ -54,3 +51,8 @@ def read_pillow_image(Image, np):
             return np.asarray(im, dtype=np.uint8)
 
     return _read_pillow_image
+
+
+def move_files(files, folder_orig, folder_dst):
+    for file in files:
+        os.rename(os.path.join(folder_orig, file), os.path.join(folder_dst, file))
