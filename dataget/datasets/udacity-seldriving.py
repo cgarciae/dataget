@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xc2019adc
+# __coconut_hash__ = 0x80bc88c6
 
 # Compiled with Coconut version 1.2.3-post_dev5 [Colonel]
 
@@ -532,6 +532,7 @@ _coconut_MatchError, _coconut_count, _coconut_enumerate, _coconut_reversed, _coc
 import urllib
 import zipfile
 import os
+import shutil
 from dataget.utils import get_file
 from dataget.api import register_dataset
 from multiprocessing import Pool
@@ -552,11 +553,49 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         return "TODO"
 
     def reqs(self, **kwargs):
-        return super(UdacitySelfdrivingSimulator, self).reqs() + "odo"
+        return super(UdacitySelfdrivingSimulator, self).reqs() + " odo"
 
 
     def _download(self, **kwargs):
         get_file(URL, self.path, "dataset.zip")
 
     def _extract(self, **kwargs):
-        pass
+        from odo import odo
+        from pandas import DataFrame
+        import pandas as pd
+
+        print("Extracting zip")
+        with zipfile.ZipFile(os.path.join(self.path, "dataset.zip"), 'r') as zip_ref:
+            zip_ref.extractall(self.path)
+
+        print("Moving data")
+        (_coconut_partial(shutil.move, {1: self.path}, 2))(os.path.join(self.path, "data", "IMG"))
+        (_coconut_partial(shutil.move, {1: self.path}, 2))(os.path.join(self.path, "data", "driving_log.csv"))
+
+        print("Removing folders")
+        (shutil.rmtree)(os.path.join(self.path, "__MACOSX"))
+        (shutil.rmtree)(os.path.join(self.path, "data"))
+
+        df = odo("../../.dataget/data/udacity-selfdriving-simulator/driving_log.csv", DataFrame, dshape='var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}')
+
+        df_L = df.copy()
+        df_C = df.copy()
+        df_R = df.copy()
+
+        df_L["camera"] = 0
+        df_C["camera"] = 1
+        df_R["camera"] = 2
+
+        df_L["filename"] = df_L["left"]
+        df_C["filename"] = df_C["center"]
+        df_R["filename"] = df_R["right"]
+
+        df_L = df_L.drop(["left", "center", "right"], axis=1)
+        df_C = df_C.drop(["left", "center", "right"], axis=1)
+        df_R = df_R.drop(["left", "center", "right"], axis=1)
+
+        df = pd.concat([df_L, df_C, df_R])
+
+
+
+        os.getcwd()
