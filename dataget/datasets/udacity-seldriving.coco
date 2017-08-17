@@ -2,7 +2,7 @@ import urllib
 import zipfile
 import os
 import shutil
-from dataget.utils import get_file
+from dataget.utils import get_file, move_files
 from dataget.api import register_dataset
 from multiprocessing import Pool
 from dataget.dataset import ImageNavigationDataSet
@@ -12,6 +12,14 @@ URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/
 
 @register_dataset
 class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
+
+    @property
+    def features(self):
+        pass
+
+    @property
+    def labels(self):
+        pass
 
     @property
     def _raw_extension(self):
@@ -47,7 +55,9 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
             'var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}'
         )
         df = normalize_dataframe(df)
-        df["filename"] = df["filename"].str.replace("IMG/", "")
+        df["filename"] = df["filename"].str.replace("IMG/", "").str.strip()
+
+        df.iloc[0].filename
 
 
         msk = np.random.rand(len(df)) < train_size
@@ -68,10 +78,6 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         os.path.join(self.path, "data") |> shutil.rmtree
         os.path.join(self.path, "IMG") |> shutil.rmtree
 
-
-def move_files(files, folder_orig, folder_dst):
-    for file in files:
-        os.rename(os.path.join(folder_orig, file), os.path.join(folder_dst, file))
 
 def normalize_dataframe(df):
     import pandas as pd

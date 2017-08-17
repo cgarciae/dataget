@@ -6,10 +6,8 @@ from dataget.utils import OS_SPLITTER
 
 class ImageDataSetWithMetadata(ImageDataSet):
 
-    @abstractmethod
     def process_dataframe(self, dataframe, **kwargs):
-        pass
-
+        return dataframe
 
     @property
     def training_set_class(self):

@@ -1,16 +1,17 @@
-from abc import abstractproperty
+from abc import abstractproperty, abstractmethod
 from .dataset import DataSet, SubSet
 import os, random
-from dataget.utils import OS_SPLITTER
 from dataget.utils import read_pillow_image
 
-#####
-
-
-
-####
-
 class ImageNavigationDataSet(DataSet):
+
+    @abstractproperty
+    def features(self):
+        pass
+
+    @abstractproperty
+    def labels(self):
+        pass
 
     @abstractproperty
     def _raw_extension(self):
@@ -54,14 +55,6 @@ class ImageNavigationDataSet(DataSet):
                         im = im.resize(dims)
                         im.save(new_file, quality=100)
 
-                    dirs = file.split(OS_SPLITTER)
-                    _class = dirs[-2]
-                    _set = dirs[-3]
-
-                    if _class != CLASS:
-                        CLASS = _class
-                        print("formating {} {}".format(_set, _class))
-
                 elif file.endswith(".csv"):
                     import pandas as pd
 
@@ -89,21 +82,20 @@ class ImageNavigationSubSet(SubSet):
         self._labels = None
 
 
-    def _dict_generator(self):
-        for root, dirs, files in os.walk(self.path):
-            for file in files:
-                if root != self.path:
-                    class_id = root.split(OS_SPLITTER) |> .[-1]  |> int
+    def process_dataframe(self, df, **kwargs):
+        return df
 
-                    yield dict(
-                        filename = os.path.join(root, file),
-                        class_id = class_id
-                    )
 
     def _load_dataframe(self):
         if self._dataframe is None:
             import pandas as pd
-            self._dataframe = pd.DataFrame(self._dict_generator())
+            from odo import odo
+
+            df = os.path.join(self.path, "data.csv") |> odo$(?, pd.DataFrame)
+            df["filename"] = self.path + os.sep + df["filename"]
+
+            self._dataframe = df
+
 
 
     def dataframe(self):
@@ -124,8 +116,8 @@ class ImageNavigationSubSet(SubSet):
         if self._features is None or self._labels is None:
             dataframe = self.dataframe()
 
-            self._features = np.stack(dataframe.image.as_matrix())
-            self._labels = np.stack(dataframe.class_id.as_matrix())
+            self._features = np.stack(dataframe[self.dataset.features].as_matrix())
+            self._labels = np.stack(dataframe[self.dataset.labels].as_matrix())
 
         return self._features, self._labels
 
@@ -149,25 +141,8 @@ class ImageNavigationSubSet(SubSet):
         import numpy as np
 
         for data in self.random_batch_dataframe_generator(batch_size):
-            features = np.stack(data.image.as_matrix())
-            labels = np.stack(data.class_id.as_matrix())
+
+            features = np.stack(data[self.dataset.features].as_matrix())
+            labels = np.stack(data[self.dataset.labels].as_matrix())
 
             yield features, labels
-
-
-    def class_sample(self, class_id, n_samples = 10):
-        import numpy as np
-        from PIL import Image
-
-        if class_id >= self.dataset.n_classes or class_id < 0:
-            raise Exception("Not a valid class. Classes go from 0 to N-1")
-        self._load_dataframe()
-
-        df = self._dataframe
-
-        df = df[df.class_id==class_id]
-        df = df.sample(n_samples)
-
-        df["image"] = read_pillow_image(Image, np) |> df.filename.apply
-
-        return np.stack(df.image.as_matrix())

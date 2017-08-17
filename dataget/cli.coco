@@ -41,10 +41,11 @@ def reqs(ctx, dataset, kwargs):
 @click.option('--rm', '-r', is_flag=True, help="removes the dataset's folder (if it exists) before downloading")
 @click.option('--keep-compressed', is_flag=True, help="keeps the compressed files: skips rm_compressed")
 @click.option('--dont-process', is_flag=True, help="skips process")
+@click.option('--dont-download', is_flag=True, help="skips download")
 @click.option('--keep-raw', is_flag=True, help="keeps the raw/unprocessed files: skips rm_raw")
 @click.argument('kwargs', nargs=-1)
 @click.pass_context
-def get(ctx, dataset, rm, keep_compressed, dont_process, keep_raw, kwargs):
+def get(ctx, dataset, rm, keep_compressed, dont_process, dont_download, keep_raw, kwargs):
     "performs the operations download, extract, rm_compressed, processes and rm_raw, in sequence. KWARGS must be in the form: key=value, and are fowarded to all opeartions."
 
     kwargs = parse_kwargs(kwargs)
@@ -52,8 +53,9 @@ def get(ctx, dataset, rm, keep_compressed, dont_process, keep_raw, kwargs):
     process = not dont_process
     rm_raw = not keep_raw
     rm_compressed = not keep_compressed
+    download = not dont_download
 
-    data(dataset, ctx.obj["path"]).get(rm=rm, rm_compressed=rm_compressed, process=process, rm_raw=rm_raw, **kwargs)
+    data(dataset, ctx.obj["path"]).get(download=download, rm=rm, rm_compressed=rm_compressed, process=process, rm_raw=rm_raw, **kwargs)
 
 
 @main.command()

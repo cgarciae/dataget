@@ -5,7 +5,7 @@ from six.moves import urllib
 
 
 
-OS_SPLITTER = "/" if not platform.system() == "Windows" else "\\"
+OS_SPLITTER = os.sep
 
 def get_progress(filename):
     def progress(count, blockSize, totalSize):

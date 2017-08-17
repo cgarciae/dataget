@@ -23,7 +23,7 @@ class DataSet(object):
         self.test_set.make_dirs()
 
 
-    def get(self, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
+    def get(self, download=True, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
         # rm
         if rm:
             self.rm()
@@ -33,7 +33,10 @@ class DataSet(object):
             return self
 
         # get data
-        self.download(**kwargs).extract(**kwargs)
+        if download:
+            self.download(**kwargs)
+
+        self.extract(**kwargs)
 
         # clean
         if rm_compressed:
