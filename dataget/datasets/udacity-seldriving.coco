@@ -15,11 +15,11 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
     @property
     def features(self):
-        pass
+        return ["image", "speed", "camera"]
 
     @property
     def labels(self):
-        pass
+        return ["steering", "throttle", "brake"]
 
     @property
     def _raw_extension(self):

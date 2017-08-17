@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x75841c54
+# __coconut_hash__ = 0xa871fbf6
 
 # Compiled with Coconut version 1.2.3-post_dev5 [Colonel]
 
@@ -547,11 +547,11 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
     @property
     def features(self):
-        pass
+        return ["image", "speed", "camera"]
 
     @property
     def labels(self):
-        pass
+        return ["steering", "throttle", "brake"]
 
     @property
     def _raw_extension(self):
