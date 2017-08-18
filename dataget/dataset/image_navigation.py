@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x125ef97
+# __coconut_hash__ = 0x53a44270
 
 # Compiled with Coconut version 1.2.3-post_dev5 [Colonel]
 
@@ -650,8 +650,8 @@ class ImageNavigationSubSet(SubSet):
         if self._features is None or self._labels is None:
             dataframe = self.dataframe()
 
-            self._features = np.stack(dataframe[self.dataset.features].as_matrix())
-            self._labels = np.stack(dataframe[self.dataset.labels].as_matrix())
+            self._features = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.features)
+            self._labels = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.labels)
 
         return self._features, self._labels
 
@@ -676,7 +676,7 @@ class ImageNavigationSubSet(SubSet):
 
         for data in self.random_batch_dataframe_generator(batch_size):
 
-            features = np.stack(data[self.dataset.features].as_matrix())
-            labels = np.stack(data[self.dataset.labels].as_matrix())
+            features = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.features)
+            labels = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.labels)
 
             yield features, labels
