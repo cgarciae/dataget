@@ -98,6 +98,19 @@ class ImageNavigationSubSet(SubSet):
 
 
 
+    def pure_dataframe(self):
+
+        self._load_dataframe()
+
+        return self._dataframe
+
+
+    def set_dataframe(self, dataframe):
+
+        self._dataframe = dataframe
+
+        return self
+
     def dataframe(self):
         import numpy as np
         from PIL import Image

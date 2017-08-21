@@ -154,7 +154,7 @@ class DataSet(object):
         pass
 
 
-    def _rm_compressed(self):
+    def _rm_compressed(self, **kwargs):
         print("removing compressed files")
 
         for file in os.listdir(self.path):
@@ -194,6 +194,8 @@ class SubSet(object):
     def make_dirs(self):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
+
+
 
     @abstractmethod
     def dataframe(self):
