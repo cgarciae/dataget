@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xeab03c04
+# __coconut_hash__ = 0x31594c35
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -145,14 +145,14 @@ class ImageNavigationSubSet(SubSet):
         return self._dataframe
 
 
-    def arrays(self):
+    def arrays(self, extra_features=[], extra_labels=[]):
         import numpy as np
 
         if self._features is None or self._labels is None:
             dataframe = self.dataframe()
 
-            self._features = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.features)
-            self._labels = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.labels)
+            self._features = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.features + extra_features)
+            self._labels = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.labels + extra_labels)
 
         return self._features, self._labels
 
@@ -172,12 +172,12 @@ class ImageNavigationSubSet(SubSet):
             yield batch
 
 
-    def random_batch_arrays_generator(self, batch_size):
+    def random_batch_arrays_generator(self, batch_size, extra_features=[], extra_labels=[]):
         import numpy as np
 
         for data in self.random_batch_dataframe_generator(batch_size):
 
-            features = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.features)
-            labels = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.labels)
+            features = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.features + extra_features)
+            labels = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.labels + extra_labels)
 
             yield features, labels

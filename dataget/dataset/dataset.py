@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xab6d49da
+# __coconut_hash__ = 0x23001678
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -57,16 +57,16 @@ class DataSet(object):
 
         self.extract(**kwargs)
 
-# clean
-        if rm_compressed:
-            self.rm_compressed(**kwargs)
-
 # process
         if process:
             self.process(**kwargs)
 
             if rm_raw:
                 self.rm_raw()
+
+# clean
+        if rm_compressed:
+            self.rm_compressed(**kwargs)
 
         return self
 

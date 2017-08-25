@@ -38,16 +38,16 @@ class DataSet(object):
 
         self.extract(**kwargs)
 
-        # clean
-        if rm_compressed:
-            self.rm_compressed(**kwargs)
-
         # process
         if process:
             self.process(**kwargs)
 
             if rm_raw:
                 self.rm_raw()
+
+        # clean
+        if rm_compressed:
+            self.rm_compressed(**kwargs)
 
         return self
 
