@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xe78552f0
+# __coconut_hash__ = 0x6f7c8cdc
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -118,7 +118,12 @@ class ImageSubSet(SubSet):
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 if root != self.path:
-                    class_id = (int)((_coconut.operator.itemgetter(-1))(root.split(OS_SPLITTER)))
+                    class_id = (_coconut.operator.itemgetter(-1))(root.split(OS_SPLITTER))
+
+                    try:
+                        class_id = int(class_id)
+                    except:
+                        pass
 
                     yield dict(filename=os.path.join(root, file), class_id=class_id)
 

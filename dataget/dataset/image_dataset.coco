@@ -97,7 +97,12 @@ class ImageSubSet(SubSet):
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 if root != self.path:
-                    class_id = root.split(OS_SPLITTER) |> .[-1]  |> int
+                    class_id = root.split(OS_SPLITTER) |> .[-1]
+
+                    try:
+                        class_id = int(class_id)
+                    except:
+                        pass
 
                     yield dict(
                         filename = os.path.join(root, file),
