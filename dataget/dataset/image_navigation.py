@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x1f1968bc
+# __coconut_hash__ = 0x1cbdee3e
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -519,7 +519,14 @@ import os
 import random
 from dataget.utils import read_pillow_image
 
+
 class ImageNavigationDataSet(DataSet):
+
+    def __init__(self, *args, **kwargs):
+
+        self._camera_steering_correction = kwargs.pop("camera_steering_correction", 0.2)
+
+        super(ImageNavigationDataSet, self).__init__(*args, **kwargs)
 
     @abstractproperty
     def features(self):
@@ -615,7 +622,14 @@ class ImageNavigationSubSet(SubSet):
             df = (_coconut_partial(odo, {1: pd.DataFrame}, 2))(os.path.join(self.path, "data.csv"))
             df["filename"] = self.path + os.sep + df["filename"]
 
+
+#correct side camera angles
+            df.loc[df.camera == 0, "steering"] = df[df.camera == 0].steering + self._camera_steering_correction
+            df.loc[df.camera == 2, "steering"] = df[df.camera == 2].steering - self._camera_steering_correction
+
             self._dataframe = df
+
+
 
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x7ee4b044
+# __coconut_hash__ = 0xaaccdda8
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -43,12 +43,12 @@ def get_path(path=None, global_=False):
 
     return path
 
-def data(dataset_name, path=None, global_=False):
+def data(dataset_name, path=None, global_=False, **kwargs):
 
     path = get_path(path=path, global_=global_)
 
     dataset_class = DATASETS.get(dataset_name, None)
-    dataset = dataset_class(dataset_name, path)
+    dataset = dataset_class(dataset_name, path, **kwargs)
 
     if not dataset:
         raise Exception("Dataset {} does not exist".format(dataset_name))
