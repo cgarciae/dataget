@@ -19,7 +19,7 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
     @property
     def labels(self):
-        return ["steering", "throttle", "brake"]
+        return ["steering", "throttle", "brake", "original_steering"]
 
     @property
     def _raw_extension(self):

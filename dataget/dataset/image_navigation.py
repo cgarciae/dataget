@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x1cbdee3e
+# __coconut_hash__ = 0x81dd23a2
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -525,7 +525,6 @@ class ImageNavigationDataSet(DataSet):
     def __init__(self, *args, **kwargs):
 
         self._camera_steering_correction = kwargs.pop("camera_steering_correction", 0.2)
-
         super(ImageNavigationDataSet, self).__init__(*args, **kwargs)
 
     @abstractproperty
@@ -553,8 +552,10 @@ class ImageNavigationDataSet(DataSet):
         return ImageNavigationSubSet
 
 
+
     def reqs(self, **kwargs):
         return "pillow pandas numpy"
+
 
     def _process(self, dims="32x32", format="jpg", **kwargs):
         from PIL import Image
@@ -563,6 +564,7 @@ class ImageNavigationDataSet(DataSet):
         dims = tuple(map(int, dims))
 
         print("Image dims: {}, Image format: {}".format(dims, format))
+
 
         CLASS = None
 
@@ -596,14 +598,15 @@ class ImageNavigationDataSet(DataSet):
 
 
     def process_dataframe(self, df, **kwargs):
-        return df
 
+        return df
 
 
 
 class ImageNavigationSubSet(SubSet):
 
     def __init__(self, *args, **kwargs):
+
         super(ImageNavigationSubSet, self).__init__(*args, **kwargs)
         self._dataframe = None
         self._features = None
@@ -618,41 +621,28 @@ class ImageNavigationSubSet(SubSet):
         if self._dataframe is None:
             import pandas as pd
             from odo import odo
+            import numpy as np
 
             df = (_coconut_partial(odo, {1: pd.DataFrame}, 2))(os.path.join(self.path, "data.csv"))
             df["filename"] = self.path + os.sep + df["filename"]
 
-
 #correct side camera angles
-            df.loc[df.camera == 0, "steering"] = df[df.camera == 0].steering + self._camera_steering_correction
-            df.loc[df.camera == 2, "steering"] = df[df.camera == 2].steering - self._camera_steering_correction
+            df["original_steering"] = df.steering
+            df.loc[df.camera == 0, "steering"] = df[df.camera == 0].steering + self.dataset._camera_steering_correction
+            df.loc[df.camera == 2, "steering"] = df[df.camera == 2].steering - self.dataset._camera_steering_correction
 
+
+# set fields
             self._dataframe = df
 
 
-
-
-
-    def pure_dataframe(self):
-
-        self._load_dataframe()
-
-        return self._dataframe
-
-
-    def set_dataframe(self, dataframe):
-
-        self._dataframe = dataframe
-
-        return self
-
-    def dataframe(self):
+    def dataframe(self, load_images=True):
         import numpy as np
         from PIL import Image
 
         self._load_dataframe()
 
-        if not "image" in self._dataframe:
+        if load_images and not "image" in self._dataframe:
             self._dataframe["image"] = (self._dataframe.filename.apply)(read_pillow_image(Image, np))
 
         return self._dataframe
@@ -664,33 +654,50 @@ class ImageNavigationSubSet(SubSet):
         if self._features is None or self._labels is None:
             dataframe = self.dataframe()
 
-            self._features = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.features + extra_features)
-            self._labels = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.labels + extra_labels)
+            self._features = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.features + extra_features if name in dataframe)
+            self._labels = dict(((name), (np.stack(dataframe[name].as_matrix()))) for name in self.dataset.labels + extra_labels if name in dataframem)
 
         return self._features, self._labels
 
 
-    def random_batch_dataframe_generator(self, batch_size):
+    def random_batch_dataframe_generator(self, batch_size, load_images=True, filter_zeros=None):
         import numpy as np
+        import pandas as pd
         from PIL import Image
 
         self._load_dataframe()
 
         while True:
-            batch = self._dataframe.sample(batch_size)
+            df = self._dataframe
 
-            if not "image" in batch:
+            if filter_zeros is not None:
+                n_batches = filter_zeros.get("n_batches", 10)
+                prop = filter_zeros.get("prop", 0.1)
+
+                batches = [df.sample(batch_size) for i in range(n_batches)]
+                batch = pd.concat(batches)
+
+                n = len(batch)
+                msk = np.random.uniform(size=(n,)) < prop
+
+                batch = batch[(batch.original_steering != 0) | msk]
+                batch = batch.sample(batch_size, replace=True)
+
+            else:
+                batch = df.sample(batch_size)
+
+            if load_images and not "image" in batch:
                 batch["image"] = (batch.filename.apply)(read_pillow_image(Image, np))
 
             yield batch
 
 
-    def random_batch_arrays_generator(self, batch_size, extra_features=[], extra_labels=[]):
+    def random_batch_arrays_generator(self, batch_size, extra_features=[], extra_labels=[], **kwargs):
         import numpy as np
 
-        for data in self.random_batch_dataframe_generator(batch_size):
+        for data in self.random_batch_dataframe_generator(batch_size, **kwargs):
 
-            features = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.features + extra_features)
-            labels = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.labels + extra_labels)
+            features = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.features + extra_features if name in data)
+            labels = dict(((name), (np.stack(data[name].as_matrix()))) for name in self.dataset.labels + extra_labels if name in data)
 
             yield features, labels
