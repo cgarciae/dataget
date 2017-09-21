@@ -57,8 +57,7 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         df = normalize_dataframe(df)
         df["filename"] = df["filename"].str.replace("IMG/", "").str.strip()
 
-        df.iloc[0].filename
-
+        # df.iloc[0].filename
 
         msk = np.random.rand(len(df)) < train_size
 
