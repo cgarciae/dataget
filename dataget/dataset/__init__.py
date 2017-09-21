@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x9c0f8b12
+# __coconut_hash__ = 0x3014f0fd
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -24,3 +24,4 @@ from .image_dataset import ImageSubSet
 from .image_dataset_with_metadata import ImageDataSetWithMetadata
 from .image_dataset_with_metadata import ImageSubSetWithMetadata
 from .image_navigation import ImageNavigationDataSet
+from .image_navigation import ImageNavigationSubSet
