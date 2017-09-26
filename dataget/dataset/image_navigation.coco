@@ -144,7 +144,7 @@ class ImageNavigationSubSet(SubSet):
         return self._features, self._labels
 
 
-    def random_batch_dataframe_generator(self, batch_size, load_images = True, filter_zeros = None):
+    def random_batch_dataframe_generator(self, batch_size, load_images = True):
         import numpy as np
         import pandas as pd
         from PIL import Image
@@ -154,21 +154,7 @@ class ImageNavigationSubSet(SubSet):
         while True:
             df = self._dataframe
 
-            if filter_zeros is not None:
-                n_batches = filter_zeros.get("n_batches", 10)
-                prop = filter_zeros.get("prop", 0.1)
-
-                batches = [ df.sample(batch_size) for i in range(n_batches) ]
-                batch = pd.concat(batches)
-
-                n = len(batch)
-                msk = np.random.uniform(size=(n,)) < prop
-
-                batch = batch[ (batch.original_steering != 0) | msk ]
-                batch = batch.sample(batch_size, replace = True)
-
-            else:
-                batch = df.sample(batch_size)
+            batch = df.sample(batch_size)
 
             if load_images and not "image" in batch:
                 batch["image"] = read_pillow_image(Image, np) |> batch.filename.apply

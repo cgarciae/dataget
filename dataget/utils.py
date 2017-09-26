@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4e51ddc
+# __coconut_hash__ = 0xa5321268
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -74,4 +74,7 @@ def read_pillow_image(Image, np):
 
 def move_files(files, folder_orig, folder_dst):
     for file in files:
-        os.rename(os.path.join(folder_orig, file), os.path.join(folder_dst, file))
+        move_file(file, folder_orig, folder_dst)
+
+def move_file(filename, folder_orig, folder_dst):
+    os.rename(os.path.join(folder_orig, filename), os.path.join(folder_dst, filename))
