@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x23001678
+# __coconut_hash__ = 0x1ed28a9
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -42,6 +42,10 @@ class DataSet(object):
         self.test_set.make_dirs()
 
 
+    def before_op(self, **kwargs):
+        pass
+
+
     def get(self, download=True, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
 # rm
         if rm:
@@ -74,12 +78,14 @@ class DataSet(object):
     def download(self, rm=False, **kwargs):
         print("===DOWNLOAD===")
 
+
 # rm
         if rm:
             self.rm()
 
         if not self.is_empty():
             return self
+        self.before_op(**kwargs)
 
         self.make_dirs()
 
@@ -90,7 +96,9 @@ class DataSet(object):
         return self
 
     def extract(self, **kwargs):
+
         print("===EXTRACT===")
+        self.before_op(**kwargs)
         self.make_dirs()
 
         self._extract(**kwargs)
@@ -102,6 +110,7 @@ class DataSet(object):
     def rm_compressed(self, **kwargs):
         print("===RM-COMPRESSED===")
 
+        self.before_op(**kwargs)
         self._rm_compressed(**kwargs)
 
         print("")
@@ -111,6 +120,7 @@ class DataSet(object):
     def process(self, **kwargs):
         print("===PROCESS===")
 
+        self.before_op(**kwargs)
         self._process(**kwargs)
 
         print("")
@@ -119,7 +129,7 @@ class DataSet(object):
 
     def rm_raw(self, **kwargs):
         print("===RM-RAW===")
-
+        self.before_op(**kwargs)
         self._rm_raw(**kwargs)
 
         print("")
@@ -127,7 +137,8 @@ class DataSet(object):
         return self
 
 
-    def rm(self):
+    def rm(self, **kwargs):
+        self.before_op(**kwargs)
 
         if os.path.exists(self.path):
             (print)((_coconut.operator.itemgetter(-1))(self.path.split("/")))
@@ -135,7 +146,8 @@ class DataSet(object):
 
         return self
 
-    def rm_subsets(self):
+    def rm_subsets(self, **kwargs):
+        self.before_op(**kwargs)
 
         if os.path.exists(self.training_set.path):
             shutil.rmtree(self.training_set.path)
@@ -208,13 +220,15 @@ class SubSet(object):
 
     def __init__(self, dataset, name):
         self.dataset = dataset
-        self.path = os.path.join(dataset.path, name)
+        self._name = name
 
     def make_dirs(self):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
-
+    @property
+    def path(self):
+        return os.path.join(dataset.path, self._name)
 
     @abstractmethod
     def dataframe(self):
