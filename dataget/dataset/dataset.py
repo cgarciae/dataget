@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x1ed28a9
+# __coconut_hash__ = 0x7381e617
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -47,6 +47,8 @@ class DataSet(object):
 
 
     def get(self, download=True, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
+        self.before_op(**kwargs)
+
 # rm
         if rm:
             self.rm()
@@ -76,8 +78,8 @@ class DataSet(object):
 
 
     def download(self, rm=False, **kwargs):
+        self.before_op(**kwargs)
         print("===DOWNLOAD===")
-
 
 # rm
         if rm:
@@ -85,7 +87,7 @@ class DataSet(object):
 
         if not self.is_empty():
             return self
-        self.before_op(**kwargs)
+
 
         self.make_dirs()
 
@@ -96,9 +98,10 @@ class DataSet(object):
         return self
 
     def extract(self, **kwargs):
+        self.before_op(**kwargs)
 
         print("===EXTRACT===")
-        self.before_op(**kwargs)
+
         self.make_dirs()
 
         self._extract(**kwargs)
@@ -108,9 +111,9 @@ class DataSet(object):
         return self
 
     def rm_compressed(self, **kwargs):
+        self.before_op(**kwargs)
         print("===RM-COMPRESSED===")
 
-        self.before_op(**kwargs)
         self._rm_compressed(**kwargs)
 
         print("")
@@ -118,9 +121,10 @@ class DataSet(object):
         return self
 
     def process(self, **kwargs):
+        self.before_op(**kwargs)
+
         print("===PROCESS===")
 
-        self.before_op(**kwargs)
         self._process(**kwargs)
 
         print("")
@@ -128,8 +132,9 @@ class DataSet(object):
         return self
 
     def rm_raw(self, **kwargs):
-        print("===RM-RAW===")
         self.before_op(**kwargs)
+        print("===RM-RAW===")
+
         self._rm_raw(**kwargs)
 
         print("")
