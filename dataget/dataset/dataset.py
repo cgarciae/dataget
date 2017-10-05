@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x7381e617
+# __coconut_hash__ = 0xdc812f79
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -51,7 +51,7 @@ class DataSet(object):
 
 # rm
         if rm:
-            self.rm()
+            self.rm(**kwargs)
 
 # return if path exists, dataset downloaded already, else create path
         if not self.is_empty():
@@ -83,7 +83,7 @@ class DataSet(object):
 
 # rm
         if rm:
-            self.rm()
+            self.rm(**kwargs)
 
         if not self.is_empty():
             return self
@@ -233,7 +233,7 @@ class SubSet(object):
 
     @property
     def path(self):
-        return os.path.join(dataset.path, self._name)
+        return os.path.join(self.dataset.path, self._name)
 
     @abstractmethod
     def dataframe(self):
