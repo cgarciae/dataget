@@ -49,7 +49,7 @@ class DataSet(object):
             self.process(**kwargs)
 
             if rm_raw:
-                self.rm_raw()
+                self.rm_raw(**kwargs)
 
         # clean
         if rm_compressed:
