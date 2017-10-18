@@ -200,6 +200,9 @@ class DataSet(object):
     def reqs(self, **kwargs):
         pass
 
+    def __len__(self):
+        return len(self.training_set) + len(self.test_set)
+
 
 class SubSet(object):
     __metaclass__ = ABCMeta

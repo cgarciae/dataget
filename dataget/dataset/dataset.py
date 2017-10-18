@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x230f5655
+# __coconut_hash__ = 0x1f60223a
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -218,6 +218,9 @@ class DataSet(object):
     @abstractmethod
     def reqs(self, **kwargs):
         pass
+
+    def __len__(self):
+        return len(self.training_set) + len(self.test_set)
 
 
 class SubSet(object):
