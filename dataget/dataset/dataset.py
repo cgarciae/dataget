@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x1f60223a
+# __coconut_hash__ = 0x3730e05d
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -219,8 +219,8 @@ class DataSet(object):
     def reqs(self, **kwargs):
         pass
 
-    def __len__(self):
-        return len(self.training_set) + len(self.test_set)
+    def size(self):
+        return self.training_set.size() + self.test_set.size()
 
 
 class SubSet(object):
@@ -258,6 +258,6 @@ class SubSet(object):
     def _load_dataframe(self):
         pass
 
-    def __len__(self):
+    def size(self):
         self._load_dataframe()
         return len(self._dataframe)
