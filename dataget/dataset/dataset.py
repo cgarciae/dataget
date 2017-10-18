@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xf72b436e
+# __coconut_hash__ = 0x230f5655
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -250,3 +250,11 @@ class SubSet(object):
     @abstractmethod
     def random_batch_arrays_generator(self, batch_size):
         pass
+
+    @abstractmethod
+    def _load_dataframe(self):
+        pass
+
+    def __len__(self):
+        self._load_dataframe()
+        return len(self._dataframe)
