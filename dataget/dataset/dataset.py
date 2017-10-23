@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x128ddb59
+# __coconut_hash__ = 0x9e83cd9b
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -32,6 +32,26 @@ class DataSet(object):
         self.path = os.path.join(home_path, self.name)
         self.training_set = self.training_set_class(self, "training-set")
         self.test_set = self.test_set_class(self, "test-set")
+
+        self._complete_set = None
+
+
+    @property
+    def complete_set(self):
+        import pandas as pd
+
+        if self._complete_set is None:
+            self.training_set._load_dataframe()
+            self.test_set._load_dataframe()
+
+            df_train = self.training_set._dataframe
+            df_test = self.test_set._dataframe
+            df_complete = pd.concat([df_train, df_test], axis=0)
+
+            self._complete_set = self.training_set_class(self, "complete-set")
+            self._complete_set._dataframe = df_complete
+
+        return self._complete_set
 
 
     def make_dirs(self):
