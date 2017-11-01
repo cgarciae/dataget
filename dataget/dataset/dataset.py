@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x9e83cd9b
+# __coconut_hash__ = 0x8a7cc1d
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -22,6 +22,36 @@ import shutil
 from abc import ABCMeta
 from abc import abstractmethod
 from abc import abstractproperty
+from copy import copy
+import pandas as pd
+
+
+def merge(*datasets, **kwargs):
+
+    if len(datasets) < 2:
+        raise Exception("Please merge atleast 2 datasets, got {}".format(len(datasets)))
+
+# get subsets
+    training_sets = (list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("training_set")))(datasets))
+    test_sets = (list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("test_set")))(datasets))
+
+# load subsets
+    for set in training_sets + test_sets:
+        set._load_dataframe(**kwargs)
+
+# get dataframes
+    df_train = (_coconut_partial(pd.concat, {}, 1, axis=0))((list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("_dataframe")))(training_sets)))
+    df_test = (_coconut_partial(pd.concat, {}, 1, axis=0))((list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("_dataframe")))(test_sets)))
+
+# get base class copy
+    base_dataset = (copy)(datasets[0])
+    base_dataset.training_set._dataframe = df_train
+    base_dataset.test_set._dataframe = df_test
+
+    return base_dataset
+
+
+
 
 
 class DataSet(object):

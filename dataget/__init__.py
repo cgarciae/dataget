@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xa701a417
+# __coconut_hash__ = 0x7727375f
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -31,6 +31,7 @@ from .version import __version__  # NOQA
 
 from . import utils
 from . import dataset
+from .dataset import merge
 from .api import ls
 from .api import data
 from .api import get_path

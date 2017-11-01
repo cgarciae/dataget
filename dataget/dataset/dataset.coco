@@ -3,6 +3,36 @@ import shutil
 from abc import ABCMeta
 from abc import abstractmethod
 from abc import abstractproperty
+from copy import copy
+import pandas as pd
+
+
+def merge(*datasets, **kwargs):
+
+    if len(datasets) < 2:
+        raise Exception("Please merge atleast 2 datasets, got {}".format(len(datasets)))
+
+    # get subsets
+    training_sets = datasets |> map$(.training_set) |> list
+    test_sets = datasets |> map$(.test_set) |> list
+
+    # load subsets
+    for set in training_sets + test_sets:
+        set._load_dataframe(**kwargs)
+
+    # get dataframes
+    df_train = training_sets |> map$(._dataframe) |> list |> pd.concat$(?, axis = 0)
+    df_test = test_sets |> map$(._dataframe) |> list |> pd.concat$(?, axis = 0)
+
+    # get base class copy
+    base_dataset = datasets[0] |> copy
+    base_dataset.training_set._dataframe = df_train
+    base_dataset.test_set._dataframe = df_test
+
+    return base_dataset
+
+
+
 
 
 class DataSet(object):

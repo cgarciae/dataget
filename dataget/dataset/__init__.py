@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x3014f0fd
+# __coconut_hash__ = 0xf4c21522
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -19,6 +19,7 @@ _coconut_sys.path.remove(_coconut_file_path)
 
 from .dataset import DataSet
 from .dataset import SubSet
+from .dataset import merge
 from .image_dataset import ImageDataSet
 from .image_dataset import ImageSubSet
 from .image_dataset_with_metadata import ImageDataSetWithMetadata

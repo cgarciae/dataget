@@ -12,6 +12,7 @@ from .version import __version__  # NOQA
 
 from . import utils
 from . import dataset
+from .dataset import merge
 from .api import ls, data, get_path, DATASETS
 from .dataset_loader import load_custom_datasets, load_plugin_datasets, load_local_datasets
 
