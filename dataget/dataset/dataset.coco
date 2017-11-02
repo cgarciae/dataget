@@ -47,13 +47,13 @@ class DataSet(object):
         self._complete_set = None
 
 
-    @property
-    def complete_set(self):
+
+    def complete_set(self, **kwargs):
         import pandas as pd
 
         if self._complete_set is None:
-            self.training_set._load_dataframe()
-            self.test_set._load_dataframe()
+            self.training_set._load_dataframe(**kwargs)
+            self.test_set._load_dataframe(**kwargs)
 
             df_train = self.training_set._dataframe
             df_test = self.test_set._dataframe
