@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4e84acb3
+# __coconut_hash__ = 0x8a7cc1d
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -66,13 +66,13 @@ class DataSet(object):
         self._complete_set = None
 
 
-
-    def complete_set(self, **kwargs):
+    @property
+    def complete_set(self):
         import pandas as pd
 
         if self._complete_set is None:
-            self.training_set._load_dataframe(**kwargs)
-            self.test_set._load_dataframe(**kwargs)
+            self.training_set._load_dataframe()
+            self.test_set._load_dataframe()
 
             df_train = self.training_set._dataframe
             df_test = self.test_set._dataframe
