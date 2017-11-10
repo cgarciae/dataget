@@ -6,6 +6,7 @@ from dataget.utils import get_file, move_files
 from dataget.api import register_dataset
 from multiprocessing import Pool
 from dataget.dataset import ImageNavigationDataSet
+import time
 
 
 URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip"
@@ -54,8 +55,17 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         df = odo(csv_path, DataFrame, dshape =
             'var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}'
         )
+
+        if "timestamp" not in df:
+            timestamp = time.time() * 1000 |> int
+            n = len(df)
+
+            df["timestamp"] = np.arange(n) * 100 + timestamp
+
         df = normalize_dataframe(df)
         df["filename"] = df["filename"].str.replace("IMG/", "").str.strip()
+
+
 
         # df.iloc[0].filename
 

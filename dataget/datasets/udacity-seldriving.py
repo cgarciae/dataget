@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xd5597c6
+# __coconut_hash__ = 0xa8386218
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -26,6 +26,7 @@ from dataget.utils import move_files
 from dataget.api import register_dataset
 from multiprocessing import Pool
 from dataget.dataset import ImageNavigationDataSet
+import time
 
 
 URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip"
@@ -72,8 +73,17 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         print("Loading Data")
         csv_path = os.path.join(self.path, "driving_log.csv")
         df = odo(csv_path, DataFrame, dshape='var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}')
+
+        if "timestamp" not in df:
+            timestamp = (int)(time.time() * 1000)
+            n = len(df)
+
+            df["timestamp"] = np.arange(n) * 100 + timestamp
+
         df = normalize_dataframe(df)
         df["filename"] = df["filename"].str.replace("IMG/", "").str.strip()
+
+
 
 # df.iloc[0].filename
 
