@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xaaccdda8
+# __coconut_hash__ = 0xa147694b
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -30,12 +30,14 @@ def register_dataset(cls):
 
     return cls
 
-def get_path(path=None, global_=False):
+def get_path(path=None, global_=False, path_root=None):
     if path:
         return path
-    elif global_:
-        path = os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else (os.path.expanduser)(os.path.join("~", ".dataget"))
+
+    elif global_ or path_root:
+        path = path_root if path_root else os.environ.get("DATAGET_HOME", None) if os.environ.get("DATAGET_HOME", None) else (os.path.expanduser)(os.path.join("~", ".dataget"))
         path = os.path.join(path, "data")
+
     elif os.environ.get("DATAGET_HOME", None):
         path = (_coconut_partial(os.path.join, {1: "data"}, 2))(os.environ.get("DATAGET_HOME"))
     else:
@@ -43,9 +45,9 @@ def get_path(path=None, global_=False):
 
     return path
 
-def data(dataset_name, path=None, global_=False, **kwargs):
+def data(dataset_name, path=None, global_=False, path_root=None, **kwargs):
 
-    path = get_path(path=path, global_=global_)
+    path = get_path(path=path, global_=global_, path_root=path_root)
 
     dataset_class = DATASETS.get(dataset_name, None)
     dataset = dataset_class(dataset_name, path, **kwargs)
@@ -56,13 +58,13 @@ def data(dataset_name, path=None, global_=False, **kwargs):
     return dataset
 
 
-def ls(available=False, path=None, global_=False):
+def ls(available=False, path=None, global_=False, path_root=None):
 
     if available:
         [print(s) for s in DATASETS.keys()]
 
     else:
-        path = get_path(path=path, global_=global_)
+        path = get_path(path=path, global_=global_, path_root=path_root)
 
         if not os.path.exists(path):
             return

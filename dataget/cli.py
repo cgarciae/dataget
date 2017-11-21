@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xd1ba8242
+# __coconut_hash__ = 0xc2475120
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -29,10 +29,11 @@ from dataget.api import get_path
 @click.group()
 @click.option('--path', '-p', default=None)
 @click.option('-g', is_flag=True, help="Use global path: DATAGET_HOME env variable or ~/.dataget by default.")
+@click.option('--path-root', default=None, help="Use global path: DATAGET_HOME env variable or ~/.dataget by default.")
 @click.pass_context
-def main(ctx, path, g):
-    path = get_path(path=path, global_=g)
-    ctx.obj = dict(path=path, global_=g)
+def main(ctx, path, g, path_root):
+    path = get_path(path=path, global_=g, path_root=path_root)
+    ctx.obj = dict(path=path, global_=g, path_root=path_root)
 
 
 @main.command()
@@ -44,7 +45,7 @@ def ls(ctx, available):
     path = ctx.obj['path']
     global_ = ctx.obj['global_']
 
-    _ls(available=available, path=path, global_=global_)
+    _ls(available=available, **ctx.obj)
 
 @main.command()
 @click.argument('dataset')
@@ -54,7 +55,7 @@ def reqs(ctx, dataset, kwargs):
     "Get the dataset's pip requirements"
 
     kwargs = parse_kwargs(kwargs)
-    (print)(data(dataset, ctx.obj["path"]).reqs(**kwargs))
+    (print)(data(dataset, **ctx.obj).reqs(**kwargs))
 
 
 @main.command()
@@ -76,7 +77,7 @@ def get(ctx, dataset, rm, keep_compressed, dont_process, dont_download, keep_raw
     rm_compressed = not keep_compressed
     download = not dont_download
 
-    data(dataset, ctx.obj["path"]).get(download=download, rm=rm, rm_compressed=rm_compressed, process=process, rm_raw=rm_raw, **kwargs)
+    data(dataset, **ctx.obj).get(download=download, rm=rm, rm_compressed=rm_compressed, process=process, rm_raw=rm_raw, **kwargs)
 
 
 @main.command()
@@ -87,7 +88,7 @@ def rm(ctx, dataset, kwargs):
     "removes the dataset's folder if it exists"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).rm(**kwargs)
+    data(dataset, **ctx.obj).rm(**kwargs)
 
 @main.command("rm-subsets")
 @click.argument('dataset')
@@ -97,7 +98,7 @@ def rm_subsets(ctx, dataset, kwargs):
     "removes the dataset's training-set and test-set folders if they exists"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).rm_subsets(**kwargs)
+    data(dataset, **ctx.obj).rm_subsets(**kwargs)
 
 @main.command()
 @click.argument('dataset')
@@ -108,7 +109,7 @@ def download(ctx, dataset, rm, kwargs):
     "downloads the dataset's compressed files"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).download(rm=rm, **kwargs)
+    data(dataset, **ctx.obj).download(rm=rm, **kwargs)
 
 @main.command()
 @click.argument('dataset')
@@ -118,7 +119,7 @@ def extract(ctx, dataset, kwargs):
     "extracts the files from the compressed archives"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).extract(**kwargs)
+    data(dataset, **ctx.obj).extract(**kwargs)
 
 
 @main.command("rm-compressed")
@@ -129,7 +130,7 @@ def rm_compressed(ctx, dataset, kwargs):
     "removes the compressed files"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).rm_compressed(**kwargs)
+    data(dataset, **ctx.obj).rm_compressed(**kwargs)
 
 @main.command()
 @click.argument('dataset')
@@ -139,7 +140,7 @@ def process(ctx, dataset, kwargs):
     "processes the data to a friendly format"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).process(**kwargs)
+    data(dataset, **ctx.obj).process(**kwargs)
 
 
 @main.command("rm-raw")
@@ -150,7 +151,7 @@ def rm_raw(ctx, dataset, kwargs):
     "removes the raw unprocessed data"
 
     kwargs = parse_kwargs(kwargs)
-    data(dataset, ctx.obj["path"]).rm_raw(**kwargs)
+    data(dataset, **ctx.obj).rm_raw(**kwargs)
 
 
 
