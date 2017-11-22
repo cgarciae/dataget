@@ -29,6 +29,9 @@ def merge(*datasets, **kwargs):
     base_dataset.training_set._dataframe = df_train
     base_dataset.test_set._dataframe = df_test
 
+    #reset state
+    base_dataset._complete_set = None
+
     return base_dataset
 
 

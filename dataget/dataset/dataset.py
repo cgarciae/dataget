@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x8a7cc1d
+# __coconut_hash__ = 0xd4ccc235
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -47,6 +47,9 @@ def merge(*datasets, **kwargs):
     base_dataset = (copy)(datasets[0])
     base_dataset.training_set._dataframe = df_train
     base_dataset.test_set._dataframe = df_test
+
+#reset state
+    base_dataset._complete_set = None
 
     return base_dataset
 
