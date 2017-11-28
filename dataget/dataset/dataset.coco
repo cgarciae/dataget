@@ -299,7 +299,7 @@ class SubSet(object):
         self._load_dataframe()
         return len(self._dataframe)
 
-    def random_batch_dataframe_generator(self, batch_size):
+    def batch_dataframe_generator(self, batch_size):
 
         self._load_dataframe()
 

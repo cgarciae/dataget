@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4fcf91e2
+# __coconut_hash__ = 0x69fa46ab
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -318,7 +318,7 @@ class SubSet(object):
         self._load_dataframe()
         return len(self._dataframe)
 
-    def random_batch_dataframe_generator(self, batch_size):
+    def batch_dataframe_generator(self, batch_size):
 
         self._load_dataframe()
 
