@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xd4ccc235
+# __coconut_hash__ = 0x4fcf91e2
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -308,6 +308,7 @@ class SubSet(object):
     def random_batch_arrays_generator(self, batch_size):
         pass
 
+
     @abstractmethod
     def _load_dataframe(self):
         pass
@@ -316,3 +317,19 @@ class SubSet(object):
     def size(self):
         self._load_dataframe()
         return len(self._dataframe)
+
+    def random_batch_dataframe_generator(self, batch_size):
+
+        self._load_dataframe()
+
+        i = 0
+        while i < self.size:
+
+            _from = i
+            _to = min(i + batch_size, total)
+
+            idx = list(range(_from, _to))
+
+            yield self._df.iloc[idx]
+
+            i += batch_size
