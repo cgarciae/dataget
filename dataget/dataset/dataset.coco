@@ -304,7 +304,9 @@ class SubSet(object):
         self._load_dataframe()
 
         i = 0
-        while i < self.size:
+        total = self.size
+
+        while i < total:
 
             _from = i
             _to = min(i + batch_size, total)

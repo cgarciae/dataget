@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x69fa46ab
+# __coconut_hash__ = 0xb76ba9fe
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -323,7 +323,9 @@ class SubSet(object):
         self._load_dataframe()
 
         i = 0
-        while i < self.size:
+        total = self.size
+
+        while i < total:
 
             _from = i
             _to = min(i + batch_size, total)
