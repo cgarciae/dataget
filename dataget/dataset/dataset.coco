@@ -313,6 +313,6 @@ class SubSet(object):
 
             idx = list(range(_from, _to))
 
-            yield self._df.iloc[idx]
+            yield self._dataframe.iloc[idx]
 
             i += batch_size

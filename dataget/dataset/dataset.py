@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xb76ba9fe
+# __coconut_hash__ = 0xacc4ec60
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -332,6 +332,6 @@ class SubSet(object):
 
             idx = list(range(_from, _to))
 
-            yield self._df.iloc[idx]
+            yield self._dataframe.iloc[idx]
 
             i += batch_size
