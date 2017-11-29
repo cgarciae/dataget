@@ -104,10 +104,9 @@ class ImageNavigationSubSet(SubSet):
     def _load_dataframe(self):
         if self._dataframe is None:
             import pandas as pd
-            from odo import odo
             import numpy as np
 
-            df = os.path.join(self.path, "data.csv") |> odo$(?, pd.DataFrame)
+            df = os.path.join(self.path, "data.csv") |> pd.DataFrame.read_csv
             df["filename"] = self.path + os.sep + df["filename"]
 
             #correct side camera angles

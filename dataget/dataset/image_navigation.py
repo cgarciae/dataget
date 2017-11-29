@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x2414b850
+# __coconut_hash__ = 0x3a408171
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -126,10 +126,9 @@ class ImageNavigationSubSet(SubSet):
     def _load_dataframe(self):
         if self._dataframe is None:
             import pandas as pd
-            from odo import odo
             import numpy as np
 
-            df = (_coconut_partial(odo, {1: pd.DataFrame}, 2))(os.path.join(self.path, "data.csv"))
+            df = (pd.DataFrame.read_csv)(os.path.join(self.path, "data.csv"))
             df["filename"] = self.path + os.sep + df["filename"]
 
 #correct side camera angles
