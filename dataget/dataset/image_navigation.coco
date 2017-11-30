@@ -106,7 +106,7 @@ class ImageNavigationSubSet(SubSet):
             import pandas as pd
             import numpy as np
 
-            df = os.path.join(self.path, "data.csv") |> pd.DataFrame.read_csv
+            df = os.path.join(self.path, "data.csv") |> pd.read_csv
             df["filename"] = self.path + os.sep + df["filename"]
 
             #correct side camera angles

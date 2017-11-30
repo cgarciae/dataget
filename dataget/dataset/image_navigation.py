@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x3a408171
+# __coconut_hash__ = 0xad66ae18
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -128,7 +128,7 @@ class ImageNavigationSubSet(SubSet):
             import pandas as pd
             import numpy as np
 
-            df = (pd.DataFrame.read_csv)(os.path.join(self.path, "data.csv"))
+            df = (pd.read_csv)(os.path.join(self.path, "data.csv"))
             df["filename"] = self.path + os.sep + df["filename"]
 
 #correct side camera angles
