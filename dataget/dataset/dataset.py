@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xacc4ec60
+# __coconut_hash__ = 0x352309df
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -287,6 +287,15 @@ class SubSet(object):
     def make_dirs(self):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
+
+
+    @property
+    def df(self):
+        return self._dataframe
+
+    @df.setter
+    def df(self, dataframe):
+        self._dataframe = dataframe
 
     @property
     def path(self):

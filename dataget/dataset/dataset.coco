@@ -269,6 +269,15 @@ class SubSet(object):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
+
+    @property
+    def df(self):
+        return self._dataframe
+
+    @df.setter
+    def df(self, dataframe):
+        self._dataframe = dataframe
+
     @property
     def path(self):
         return os.path.join(self.dataset.path, self._name)
