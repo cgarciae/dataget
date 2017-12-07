@@ -39,6 +39,17 @@ def reqs(ctx, dataset, kwargs):
 
 @main.command()
 @click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def size(ctx, dataset, kwargs):
+    "Show dataset size"
+
+    kwargs = parse_kwargs(kwargs)
+    data(dataset, **ctx.obj).get(**kwargs).complete_set.size |> print
+
+
+@main.command()
+@click.argument('dataset')
 @click.option('--rm', '-r', is_flag=True, help="removes the dataset's folder (if it exists) before downloading")
 @click.option('--keep-compressed', is_flag=True, help="keeps the compressed files: skips rm_compressed")
 @click.option('--dont-process', is_flag=True, help="skips process")

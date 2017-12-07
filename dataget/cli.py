@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xc2475120
+# __coconut_hash__ = 0x976095a
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -56,6 +56,17 @@ def reqs(ctx, dataset, kwargs):
 
     kwargs = parse_kwargs(kwargs)
     (print)(data(dataset, **ctx.obj).reqs(**kwargs))
+
+
+@main.command()
+@click.argument('dataset')
+@click.argument('kwargs', nargs=-1)
+@click.pass_context
+def size(ctx, dataset, kwargs):
+    "Show dataset size"
+
+    kwargs = parse_kwargs(kwargs)
+    (print)(data(dataset, **ctx.obj).get(**kwargs).complete_set.size)
 
 
 @main.command()
