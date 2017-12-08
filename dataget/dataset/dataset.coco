@@ -272,6 +272,8 @@ class SubSet(object):
 
     @property
     def df(self):
+        self._load_dataframe()
+
         return self._dataframe
 
     @df.setter

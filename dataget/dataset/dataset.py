@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x352309df
+# __coconut_hash__ = 0x59f2fde6
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -291,6 +291,8 @@ class SubSet(object):
 
     @property
     def df(self):
+        self._load_dataframe()
+
         return self._dataframe
 
     @df.setter
