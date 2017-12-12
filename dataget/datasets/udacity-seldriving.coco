@@ -31,13 +31,12 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         return "TODO"
 
     def reqs(self, **kwargs):
-        return super(UdacitySelfdrivingSimulator, self).reqs() + " odo"
+        return super(UdacitySelfdrivingSimulator, self).reqs() + ""
 
     def _download(self, **kwargs):
         get_file(URL, self.path, "dataset.zip")
 
     def _extract(self, train_size = 0.8, **kwargs):
-        from odo import odo
         from pandas import DataFrame
         import pandas as pd
         import numpy as np
@@ -52,9 +51,7 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
         print("Loading Data")
         csv_path = os.path.join(self.path, "driving_log.csv")
-        df = odo(csv_path, DataFrame, dshape =
-            'var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}'
-        )
+        df = pd.read_csv(csv_path)
 
         if "timestamp" not in df:
             timestamp = time.time() * 1000 |> int
@@ -78,14 +75,20 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         move_files(train['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'training-set'))
         move_files(test['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'test-set'))
 
-        os.path.join(self.path, "training-set", "data.csv") |> odo$(train, ?)
-        os.path.join(self.path, "test-set", "data.csv") |> odo$(test, ?)
+        os.path.join(self.path, "training-set", "data.csv") |> train.to_csv$(?, index = False)
+        os.path.join(self.path, "test-set", "data.csv") |> test.to_csv$(?, index = False)
 
 
         print("Removing folders")
         os.path.join(self.path, "__MACOSX") |> shutil.rmtree
         os.path.join(self.path, "data") |> shutil.rmtree
         os.path.join(self.path, "IMG") |> shutil.rmtree
+
+    def _process(self, **kwargs):
+        print("This class wont process the data... :|")
+
+    def _rm_raw(self, **kwargs):
+        print("This class wont remove raw... :|")
 
 
 def normalize_dataframe(df):

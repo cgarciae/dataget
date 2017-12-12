@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xa8386218
+# __coconut_hash__ = 0x5d54e95c
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -51,13 +51,12 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         return "TODO"
 
     def reqs(self, **kwargs):
-        return super(UdacitySelfdrivingSimulator, self).reqs() + " odo"
+        return super(UdacitySelfdrivingSimulator, self).reqs() + ""
 
     def _download(self, **kwargs):
         get_file(URL, self.path, "dataset.zip")
 
     def _extract(self, train_size=0.8, **kwargs):
-        from odo import odo
         from pandas import DataFrame
         import pandas as pd
         import numpy as np
@@ -72,7 +71,7 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
         print("Loading Data")
         csv_path = os.path.join(self.path, "driving_log.csv")
-        df = odo(csv_path, DataFrame, dshape='var * {center: string, left: string, right: string, steering: float64, throttle: float64, brake: float64, speed: float64}')
+        df = pd.read_csv(csv_path)
 
         if "timestamp" not in df:
             timestamp = (int)(time.time() * 1000)
@@ -96,14 +95,20 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
         move_files(train['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'training-set'))
         move_files(test['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'test-set'))
 
-        (_coconut_partial(odo, {0: train}, 2))(os.path.join(self.path, "training-set", "data.csv"))
-        (_coconut_partial(odo, {0: test}, 2))(os.path.join(self.path, "test-set", "data.csv"))
+        (_coconut_partial(train.to_csv, {}, 1, index=False))(os.path.join(self.path, "training-set", "data.csv"))
+        (_coconut_partial(test.to_csv, {}, 1, index=False))(os.path.join(self.path, "test-set", "data.csv"))
 
 
         print("Removing folders")
         (shutil.rmtree)(os.path.join(self.path, "__MACOSX"))
         (shutil.rmtree)(os.path.join(self.path, "data"))
         (shutil.rmtree)(os.path.join(self.path, "IMG"))
+
+    def _process(self, **kwargs):
+        print("This class wont process the data... :|")
+
+    def _rm_raw(self, **kwargs):
+        print("This class wont remove raw... :|")
 
 
 def normalize_dataframe(df):
