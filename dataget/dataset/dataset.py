@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x2e68afb7
+# __coconut_hash__ = 0x4f137457
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -24,6 +24,7 @@ from abc import abstractmethod
 from abc import abstractproperty
 from copy import copy
 import pandas as pd
+import numpy as np
 
 
 def merge(*datasets, **kwargs):
@@ -60,10 +61,12 @@ def merge(*datasets, **kwargs):
 class DataSet(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, home_path):
+    def __init__(self, name, home_path, train_prop=0.8):
         self.name = name
         self.path = os.path.join(home_path, self.name)
 
+        self.train_prop = train_prop
+        self._dataframe = None
         self._complete_set = None
         self._test_set = None
         self._training_set = None
@@ -116,6 +119,8 @@ class DataSet(object):
             self.rm_compressed(**kwargs)
 
         return self
+
+
 
 
     def download(self, rm=False, **kwargs):
@@ -211,11 +216,7 @@ class DataSet(object):
 
 
     @abstractproperty
-    def training_set_class(self):
-        pass
-
-    @abstractproperty
-    def test_set_class(self):
+    def subset_class(self):
         pass
 
     @abstractproperty
@@ -271,6 +272,21 @@ class DataSet(object):
 
         return self._test_set
 
+    def _build_sets(self, df):
+# create mask for distributing train/test set
+        len_df = len(df)
+        msk = np.arange(len_df) < (self.train_prop * len_df)
+
+# select test and training sets
+        train = df[msk]
+        test = df[~msk]
+
+# set fields
+        self._dataframe = df
+        self._training_set = self.subset_class(self, train)
+        self._test_set = self.subset_class(self, test)
+        self._complete_set = self.subset_class(self, df)
+
 
 class SubSet(object):
     __metaclass__ = ABCMeta
@@ -307,19 +323,11 @@ class SubSet(object):
     def random_batch_arrays_generator(self, batch_size):
         pass
 
-
-    @abstractmethod
-    def _load_dataframe(self):
-        pass
-
     @property
     def size(self):
         return len(self._dataframe)
 
     def batch_dataframe_generator(self, batch_size):
-
-        self._load_dataframe()
-
         i = 0
         total = self.size
 

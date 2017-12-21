@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x6f7c8cdc
+# __coconut_hash__ = 0x7fc3fad1
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -42,11 +42,7 @@ class ImageDataSet(DataSet):
         return ".{}".format(self._raw_extension)
 
     @property
-    def training_set_class(self):
-        return ImageSubSet
-
-    @property
-    def test_set_class(self):
+    def subset_class(self):
         return ImageSubSet
 
 
@@ -102,18 +98,6 @@ class ImageDataSet(DataSet):
     def n_classes(self):
         return (len)((os.listdir)(self.training_set.path))
 
-
-
-
-class ImageSubSet(SubSet):
-
-    def __init__(self, *args, **kwargs):
-        super(ImageSubSet, self).__init__(*args, **kwargs)
-        self._dataframe = None
-        self._features = None
-        self._labels = None
-
-
     def _dict_generator(self):
         for root, dirs, files in os.walk(self.path):
             for file in files:
@@ -130,8 +114,19 @@ class ImageSubSet(SubSet):
     def _load_dataframe(self):
         if self._dataframe is None:
             import pandas as pd
-            self._dataframe = pd.DataFrame(self._dict_generator())
 
+            df = pd.DataFrame(self._dict_generator())
+            self._build_sets(df)
+
+
+
+
+class ImageSubSet(SubSet):
+
+    def __init__(self, *args, **kwargs):
+        super(ImageSubSet, self).__init__(*args, **kwargs)
+        self._features = None
+        self._labels = None
 
     def dataframe(self):
         import numpy as np

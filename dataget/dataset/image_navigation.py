@@ -50,11 +50,7 @@ class ImageNavigationDataSet(DataSet):
         return ".{}".format(self._raw_extension)
 
     @property
-    def training_set_class(self):
-        return ImageNavigationSubSet
-
-    @property
-    def test_set_class(self):
+    def subset_class(self):
         return ImageNavigationSubSet
 
 

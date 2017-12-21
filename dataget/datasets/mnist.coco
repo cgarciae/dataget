@@ -18,13 +18,13 @@ def ungzip(src_name, dest_name):
                 outfile.write(line)
 
 
-def arrays_to_images(path, images, labels, dims, format):
+def arrays_to_images(path, images, labels, dims, format, dataset):
     from PIL import Image
 
     last = -1
     n = len(labels)
 
-    for i, (array_img, label) in (images, labels) |*> zip |> enumerate:
+    for i, (array_img, label) in  zip(images, labels) |> enumerate:
 
         label = str(label)
         class_path = os.path.join(path, label) |> maybe_mkdir
@@ -34,7 +34,7 @@ def arrays_to_images(path, images, labels, dims, format):
             im.save(
                 os.path.join(
                     class_path,
-                    "{}.{}".format(i, format)
+                    "{}-{}.{}".format(dataset, i, format)
                 ),
                 quality=100
             )
@@ -47,16 +47,6 @@ def arrays_to_images(path, images, labels, dims, format):
 
 @register_dataset
 class Mnist(ImageDataSet):
-
-    def __init__(self, *args, **kwargs):
-        super(Mnist, self).__init__(*args, **kwargs)
-
-        # self.path
-        # self.training_set
-        # self.training_set.path
-        # self.test_set
-        # self.test_set.path
-
 
     @property
     def _raw_extension(self):
@@ -80,22 +70,22 @@ class Mnist(ImageDataSet):
 
         ungzip(
             os.path.join(self.path, "train-features.gz"),
-            os.path.join(self.training_set.path, "train-features.idx")
+            os.path.join(self.path, "train-features.idx")
         )
 
         ungzip(
             os.path.join(self.path, "train-labels.gz"),
-            os.path.join(self.training_set.path, "train-labels.idx")
+            os.path.join(self.path, "train-labels.idx")
         )
 
         ungzip(
             os.path.join(self.path, "test-features.gz"),
-            os.path.join(self.test_set.path, "test-features.idx")
+            os.path.join(self.path, "test-features.idx")
         )
 
         ungzip(
             os.path.join(self.path, "test-labels.gz"),
-            os.path.join(self.test_set.path, "test-labels.idx")
+            os.path.join(self.path, "test-labels.idx")
         )
 
 
@@ -109,26 +99,28 @@ class Mnist(ImageDataSet):
 
         print("processing training-set")
         arrays_to_images(
-            path = self.training_set.path,
-            images = os.path.join(self.training_set.path, "train-features.idx") |> convert_from_file,
-            labels = os.path.join(self.training_set.path, "train-labels.idx") |> convert_from_file,
+            path = self.path,
+            images = os.path.join(self.path, "train-features.idx") |> convert_from_file,
+            labels = os.path.join(self.path, "train-labels.idx") |> convert_from_file,
             dims = dims,
-            format = format
+            format = format,
+            dataset = "train",
         )
 
         print("processing test-set")
         arrays_to_images(
-            path = self.test_set.path,
-            images = os.path.join(self.test_set.path, "test-features.idx") |> convert_from_file,
-            labels = os.path.join(self.test_set.path, "test-labels.idx") |> convert_from_file,
+            path = self.path,
+            images = os.path.join(self.path, "test-features.idx") |> convert_from_file,
+            labels = os.path.join(self.path, "test-labels.idx") |> convert_from_file,
             dims = dims,
-            format = format
+            format = format,
+            dataset = "test",
         )
 
 
     def _rm_raw(self, **kwargs):
         print("removing raw")
-        os.path.join(self.training_set.path, "train-features.idx") |> os.remove
-        os.path.join(self.training_set.path, "train-labels.idx") |> os.remove
-        os.path.join(self.test_set.path, "test-features.idx") |> os.remove
-        os.path.join(self.test_set.path, "test-labels.idx") |> os.remove
+        os.path.join(self.path, "train-features.idx") |> os.remove
+        os.path.join(self.path, "train-labels.idx") |> os.remove
+        os.path.join(self.path, "test-features.idx") |> os.remove
+        os.path.join(self.path, "test-labels.idx") |> os.remove
