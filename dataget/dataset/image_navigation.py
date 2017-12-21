@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xad66ae18
+# __coconut_hash__ = 0x4dcc42f1
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -114,7 +114,7 @@ class ImageNavigationSubSet(SubSet):
     def __init__(self, *args, **kwargs):
 
         super(ImageNavigationSubSet, self).__init__(*args, **kwargs)
-        self._dataframe = None
+
         self._features = None
         self._labels = None
 

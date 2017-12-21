@@ -92,7 +92,7 @@ class ImageNavigationSubSet(SubSet):
     def __init__(self, *args, **kwargs):
 
         super(ImageNavigationSubSet, self).__init__(*args, **kwargs)
-        self._dataframe = None
+        
         self._features = None
         self._labels = None
 
