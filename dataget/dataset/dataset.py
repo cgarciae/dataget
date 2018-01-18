@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x4f137457
+# __coconut_hash__ = 0xefc95f2a
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -274,6 +274,8 @@ class DataSet(object):
 
     def _build_sets(self, df):
 # create mask for distributing train/test set
+        df = df.sample(frac=1)
+
         len_df = len(df)
         msk = np.arange(len_df) < (self.train_prop * len_df)
 
