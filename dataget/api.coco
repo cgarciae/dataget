@@ -1,7 +1,6 @@
 import os
 from .utils import upper_to_dashed
 
-
 DATASETS = {}
 
 def register_dataset(cls):
@@ -23,6 +22,8 @@ def get_path(path=None, global_=False, path_root=None):
         path = os.environ.get("DATAGET_HOME") |> os.path.join$(?, "data")
     else:
         path = os.path.join(os.getcwd(), ".dataget", "data")
+
+    path = os.path.realpath(path)
 
     return path
 

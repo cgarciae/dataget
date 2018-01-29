@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xa147694b
+# __coconut_hash__ = 0xf65fbd40
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -19,7 +19,6 @@ _coconut_sys.path.remove(_coconut_file_path)
 
 import os
 from .utils import upper_to_dashed
-
 
 DATASETS = {}
 
@@ -42,6 +41,8 @@ def get_path(path=None, global_=False, path_root=None):
         path = (_coconut_partial(os.path.join, {1: "data"}, 2))(os.environ.get("DATAGET_HOME"))
     else:
         path = os.path.join(os.getcwd(), ".dataget", "data")
+
+    path = os.path.realpath(path)
 
     return path
 

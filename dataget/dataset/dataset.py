@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xefc95f2a
+# __coconut_hash__ = 0x6cb297c5
 
 # Compiled with Coconut version 1.2.3 [Colonel]
 
@@ -272,16 +272,16 @@ class DataSet(object):
 
         return self._test_set
 
-    def _build_sets(self, df):
+    def _build_sets(self, df, shuffle_data=True):
 # create mask for distributing train/test set
-        df = df.sample(frac=1)
-
-        len_df = len(df)
-        msk = np.arange(len_df) < (self.train_prop * len_df)
+        if shuffle_data:
+            df = df.sample(frac=1)
 
 # select test and training sets
-        train = df[msk]
-        test = df[~msk]
+        split = int(len(df) * self.train_prop)
+
+        train = df.iloc[:split]
+        test = df.iloc[split:]
 
 # set fields
         self._dataframe = df
@@ -338,8 +338,6 @@ class SubSet(object):
             _from = i
             _to = min(i + batch_size, total)
 
-            idx = list(range(_from, _to))
-
-            yield self._dataframe.iloc[idx]
+            yield self.df.iloc[_from:_to]
 
             i += batch_size
