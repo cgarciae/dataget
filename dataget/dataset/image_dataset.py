@@ -1,29 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x7fc3fad1
-
-# Compiled with Coconut version 1.2.3 [Colonel]
-
-# Coconut Header: --------------------------------------------------------
-
 from __future__ import print_function, absolute_import, unicode_literals, division
-
-import sys as _coconut_sys, os.path as _coconut_os_path
-_coconut_file_path = _coconut_os_path.dirname(_coconut_os_path.abspath(__file__))
-_coconut_sys.path.insert(0, _coconut_file_path)
-from __coconut__ import _coconut, _coconut_MatchError, _coconut_tail_call, _coconut_tco, _coconut_igetitem, _coconut_compose, _coconut_pipe, _coconut_starpipe, _coconut_backpipe, _coconut_backstarpipe, _coconut_bool_and, _coconut_bool_or, _coconut_minus, _coconut_map, _coconut_partial
-from __coconut__ import *
-_coconut_sys.path.remove(_coconut_file_path)
-
-# Compiled Coconut: ------------------------------------------------------
-
 from abc import abstractproperty
-from .dataset import DataSet
-from .dataset import SubSet
-import os
-import random
+from .dataset import DataSet, SubSet
+import os, random
 from dataget.utils import OS_SPLITTER
 from dataget.utils import read_pillow_image
+import pandas as pd
 
 #####
 
@@ -83,7 +64,7 @@ class ImageDataSet(DataSet):
                     import pandas as pd
 
                     df = pd.read_csv(file)
-                    df['filename'] = df['filename'].str.replace(self.raw_extension, "." + format)
+                    df['filename'] =  df['filename'].str.replace(self.raw_extension, "." + format)
 
                     print("formatting {}".format(file))
 
@@ -96,27 +77,28 @@ class ImageDataSet(DataSet):
 
     @property
     def n_classes(self):
-        return (len)((os.listdir)(self.training_set.path))
+        return len(os.listdir(self.training_set.path))
 
     def _dict_generator(self):
         for root, dirs, files in os.walk(self.path):
             for file in files:
                 if root != self.path:
-                    class_id = (_coconut.operator.itemgetter(-1))(root.split(OS_SPLITTER))
-
+                    class_id = root.split(OS_SPLITTER)[-1]
                     try:
                         class_id = int(class_id)
                     except:
                         pass
 
-                    yield dict(filename=os.path.join(root, file), class_id=class_id)
+                    yield dict(
+                        filename = os.path.join(root, file),
+                        class_id = class_id
+                    )
+
 
     def _load_dataframe(self):
-        if self._dataframe is None:
-            import pandas as pd
 
-            df = pd.DataFrame(self._dict_generator())
-            self._build_sets(df)
+        df = pd.DataFrame(self._dict_generator())
+        self._build_sets(df)
 
 
 
@@ -135,7 +117,7 @@ class ImageSubSet(SubSet):
         self._load_dataframe()
 
         if not "image" in self._dataframe:
-            self._dataframe["image"] = (self._dataframe.filename.apply)(read_pillow_image(Image, np))
+            self._dataframe["image"] = self._dataframe.filename.apply(read_pillow_image(Image, np))
 
         return self._dataframe
 
@@ -162,7 +144,7 @@ class ImageSubSet(SubSet):
             batch = self._dataframe.sample(batch_size)
 
             if not "image" in batch:
-                batch["image"] = (batch.filename.apply)(read_pillow_image(Image, np))
+                batch["image"] = batch.filename.apply(read_pillow_image(Image, np)) 
 
             yield batch
 
@@ -177,7 +159,7 @@ class ImageSubSet(SubSet):
             yield features, labels
 
 
-    def class_sample(self, class_id, n_samples=10):
+    def class_sample(self, class_id, n_samples = 10):
         import numpy as np
         from PIL import Image
 
@@ -187,9 +169,9 @@ class ImageSubSet(SubSet):
 
         df = self._dataframe
 
-        df = df[df.class_id == class_id]
+        df = df[df.class_id==class_id]
         df = df.sample(n_samples)
 
-        df["image"] = (df.filename.apply)(read_pillow_image(Image, np))
+        df["image"] = df.filename.apply(read_pillow_image(Image, np))
 
         return np.stack(df.image.as_matrix())

@@ -1,22 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x6cb297c5
-
-# Compiled with Coconut version 1.2.3 [Colonel]
-
-# Coconut Header: --------------------------------------------------------
-
 from __future__ import print_function, absolute_import, unicode_literals, division
-
-import sys as _coconut_sys, os.path as _coconut_os_path
-_coconut_file_path = _coconut_os_path.dirname(_coconut_os_path.abspath(__file__))
-_coconut_sys.path.insert(0, _coconut_file_path)
-from __coconut__ import _coconut, _coconut_MatchError, _coconut_tail_call, _coconut_tco, _coconut_igetitem, _coconut_compose, _coconut_pipe, _coconut_starpipe, _coconut_backpipe, _coconut_backstarpipe, _coconut_bool_and, _coconut_bool_or, _coconut_minus, _coconut_map, _coconut_partial
-from __coconut__ import *
-_coconut_sys.path.remove(_coconut_file_path)
-
-# Compiled Coconut: ------------------------------------------------------
-
 import os
 import shutil
 from abc import ABCMeta
@@ -27,41 +9,10 @@ import pandas as pd
 import numpy as np
 
 
-def merge(*datasets, **kwargs):
-
-    if len(datasets) < 2:
-        raise Exception("Please merge atleast 2 datasets, got {}".format(len(datasets)))
-
-# get subsets
-    training_sets = (list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("training_set")))(datasets))
-    test_sets = (list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("test_set")))(datasets))
-
-# load subsets
-    for set in training_sets + test_sets:
-        set._load_dataframe(**kwargs)
-
-# get dataframes
-    df_train = (_coconut_partial(pd.concat, {}, 1, axis=0))((list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("_dataframe")))(training_sets)))
-    df_test = (_coconut_partial(pd.concat, {}, 1, axis=0))((list)((_coconut.functools.partial(map, _coconut.operator.attrgetter("_dataframe")))(test_sets)))
-
-# get base class copy
-    base_dataset = (copy)(datasets[0])
-    base_dataset.training_set._dataframe = df_train
-    base_dataset.test_set._dataframe = df_test
-
-#reset state
-    base_dataset._complete_set = None
-
-    return base_dataset
-
-
-
-
-
 class DataSet(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, home_path, train_prop=0.8):
+    def __init__(self, name, home_path, train_prop = 0.8):
         self.name = name
         self.path = os.path.join(home_path, self.name)
 
@@ -93,28 +44,28 @@ class DataSet(object):
     def get(self, download=True, rm=False, rm_compressed=True, process=True, rm_raw=True, **kwargs):
         self.before_op(**kwargs)
 
-# rm
+        # rm
         if rm:
             self.rm(**kwargs)
 
-# return if path exists, dataset downloaded already, else create path
+        # return if path exists, dataset downloaded already, else create path
         if not self.is_empty():
             return self
 
-# get data
+        # get data
         if download:
             self.download(**kwargs)
 
         self.extract(**kwargs)
 
-# process
+        # process
         if process:
             self.process(**kwargs)
 
             if rm_raw:
                 self.rm_raw(**kwargs)
 
-# clean
+        # clean
         if rm_compressed:
             self.rm_compressed(**kwargs)
 
@@ -127,7 +78,7 @@ class DataSet(object):
         self.before_op(**kwargs)
         print("===DOWNLOAD===")
 
-# rm
+        # rm
         if rm:
             self.rm(**kwargs)
 
@@ -192,7 +143,7 @@ class DataSet(object):
         self.before_op(**kwargs)
 
         if os.path.exists(self.path):
-            (print)((_coconut.operator.itemgetter(-1))(self.path.split("/")))
+            print(self.path.split("/")[-1])
             shutil.rmtree(self.path)
 
         return self
@@ -271,24 +222,6 @@ class DataSet(object):
             self._load_dataframe()
 
         return self._test_set
-
-    def _build_sets(self, df, shuffle_data=True):
-# create mask for distributing train/test set
-        if shuffle_data:
-            df = df.sample(frac=1)
-
-# select test and training sets
-        split = int(len(df) * self.train_prop)
-
-        train = df.iloc[:split]
-        test = df.iloc[split:]
-
-# set fields
-        self._dataframe = df
-        self._training_set = self.subset_class(self, train)
-        self._test_set = self.subset_class(self, test)
-        self._complete_set = self.subset_class(self, df)
-
 
 class SubSet(object):
     __metaclass__ = ABCMeta
