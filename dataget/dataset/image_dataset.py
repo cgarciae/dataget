@@ -96,10 +96,7 @@ class ImageDataSet(DataSet):
 
 
     def _load_dataframe(self):
-
-        df = pd.DataFrame(self._dict_generator())
-        self._build_sets(df)
-
+        return pd.DataFrame(self._dict_generator())
 
 
 
