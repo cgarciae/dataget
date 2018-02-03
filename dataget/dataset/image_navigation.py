@@ -1,24 +1,12 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 from abc import abstractproperty, abstractmethod
-from .dataset import DataSet, SubSet
+from .dataset import DataSet
 import os, random
-from dataget.utils import read_pillow_image
+import numpy as np
+import pandas as pd
 
 
 class ImageNavigationDataSet(DataSet):
-
-    def __init__(self, *args, **kwargs):
-
-        self._camera_steering_correction = kwargs.pop("camera_steering_correction", 0.2)
-        super(ImageNavigationDataSet, self).__init__(*args, **kwargs)
-
-    @abstractproperty
-    def features(self):
-        pass
-
-    @abstractproperty
-    def labels(self):
-        pass
 
     @abstractproperty
     def _raw_extension(self):
@@ -27,16 +15,6 @@ class ImageNavigationDataSet(DataSet):
     @property
     def raw_extension(self):
         return ".{}".format(self._raw_extension)
-
-    @property
-    def training_set_class(self):
-        return ImageNavigationSubSet
-
-    @property
-    def test_set_class(self):
-        return ImageNavigationSubSet
-
-
 
     def reqs(self, **kwargs):
         return "pillow pandas numpy"
@@ -74,100 +52,18 @@ class ImageNavigationDataSet(DataSet):
 
                         print("formatting {}".format(file))
 
-                        self.process_dataframe(df, dims=dims, format=format, **kwargs)
-
                         df.to_csv(file, index=False)
 
     def _rm_raw(self, **kwargs):
         self.remove_all_file_with_extension(self._raw_extension)
 
 
-    def process_dataframe(self, df, **kwargs):
+    def get_df(self):
 
+        csv_path = os.path.join(self.path, "data.csv")
+        df = pd.read_csv(csv_path)
+
+        df["filename"] = self.path + os.sep + df["filename"]
+
+        # set fields
         return df
-
-
-
-class ImageNavigationSubSet(SubSet):
-
-    def __init__(self, *args, **kwargs):
-
-        super(ImageNavigationSubSet, self).__init__(*args, **kwargs)
-        
-        self._features = None
-        self._labels = None
-
-
-    def process_dataframe(self, df, **kwargs):
-        return df
-
-
-    def _load_dataframe(self):
-        if self._dataframe is None:
-            import pandas as pd
-            import numpy as np
-
-            df["filename"] = self.path + os.sep + df["filename"]
-
-            #correct side camera angles
-            df["original_steering"] = df.steering
-            df.loc[ df.camera == 0, "steering"] = df[df.camera == 0].steering + self.dataset._camera_steering_correction
-            df.loc[ df.camera == 2, "steering"] = df[df.camera == 2].steering - self.dataset._camera_steering_correction
-
-
-            # set fields
-            self._dataframe = df
-
-
-    def dataframe(self, load_images = True):
-        import numpy as np
-        from PIL import Image
-
-        self._load_dataframe()
-
-        if load_images and not "image" in self._dataframe:
-            self._dataframe["image"] = self._dataframe.filename.apply(read_pillow_image(Image, np))
-
-
-        return self._dataframe
-
-
-    def arrays(self, extra_features=[], extra_labels=[]):
-        import numpy as np
-
-        if self._features is None or self._labels is None:
-            dataframe = self.dataframe()
-
-            self._features = { name: np.stack(dataframe[name].as_matrix()) for name in self.dataset.features + extra_features if name in dataframe }
-            self._labels = { name: np.stack(dataframe[name].as_matrix()) for name in self.dataset.labels + extra_labels if name in dataframem }
-
-        return self._features, self._labels
-
-
-    def random_batch_dataframe_generator(self, batch_size, load_images = True):
-        import numpy as np
-        import pandas as pd
-        from PIL import Image
-
-        self._load_dataframe()
-
-        while True:
-            df = self._dataframe
-
-            batch = df.sample(batch_size)
-
-            if load_images and not "image" in batch:
-                batch["image"] = batch.filename.apply(read_pillow_image(Image, np))
-
-            yield batch
-
-
-    def random_batch_arrays_generator(self, batch_size, extra_features=[], extra_labels=[], **kwargs):
-        import numpy as np
-
-        for data in self.random_batch_dataframe_generator(batch_size, **kwargs):
-
-            features = { name: np.stack(data[name].as_matrix()) for name in self.dataset.features + extra_features if name in data}
-            labels = { name: np.stack(data[name].as_matrix()) for name in self.dataset.labels + extra_labels if name in data}
-
-            yield features, labels

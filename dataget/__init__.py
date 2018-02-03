@@ -17,7 +17,7 @@ from .dataset_loader import (
     load_custom_datasets, load_plugin_datasets, load_local_datasets)
 from .functions import (
     load_images, split, batch_generator, epochs_batch_generator, 
-    infinite_random_batch_generator )
+    infinite_random_batch_generator, shuffle)
 
 load_custom_datasets(DATASETS)
 load_plugin_datasets(DATASETS)

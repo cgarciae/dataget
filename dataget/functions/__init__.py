@@ -14,6 +14,9 @@ def _load_image(filename):
         return None
 
 def load_images(df, path_key = "filename", image_key = "image", inplace = False):
+    """
+    """
+    
     if not inplace:
         df = df.copy()
 
@@ -21,10 +24,19 @@ def load_images(df, path_key = "filename", image_key = "image", inplace = False)
 
     return df
 
+def shuffle(df, seed = None):
+    """
+    """
+
+    if seed is not None:
+        np.random.seed(seed = seed)
+
+    return df.sample(frac = 1)
 
 def split(df, *splits):
     """
     """
+
 
     splits = list(splits)
 
@@ -54,6 +66,9 @@ def split(df, *splits):
 
 
 def batch_generator(df, batch_size, shuffle = False):
+    """
+    """
+
     df = df.copy()
 
     if shuffle:
@@ -70,13 +85,17 @@ def batch_generator(df, batch_size, shuffle = False):
         b = min(b + batch_size, len(df))
 
 def epochs_batch_generator(df, batch_size, epochs, shuffle = False):
+    """
+    """
 
     for i in range(epochs):
         for batch in batch_generator(df, batch_size, shuffle = shuffle):
             yield batch
 
 def infinite_random_batch_generator(df, batch_size):
-
+    """
+    """
+    
     while True:
         yield df.sample(n = batch_size).copy()
 
