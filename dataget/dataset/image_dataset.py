@@ -1,6 +1,6 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 from abc import abstractproperty
-from .dataset import DataSet, SubSet
+from .dataset import DataSet
 import os, random
 from dataget.utils import OS_SPLITTER
 from dataget.utils import read_pillow_image
@@ -21,10 +21,6 @@ class ImageDataSet(DataSet):
     @property
     def raw_extension(self):
         return ".{}".format(self._raw_extension)
-
-    @property
-    def subset_class(self):
-        return ImageSubSet
 
 
     def reqs(self, **kwargs):

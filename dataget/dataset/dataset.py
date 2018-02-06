@@ -12,24 +12,11 @@ import numpy as np
 class DataSet(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, home_path, train_prop = 0.8):
+    def __init__(self, name, path):
         self.name = name
-        self.path = os.path.join(home_path, self.name)
-
-        self.train_prop = train_prop
-        self._dataframe = None
-        self._complete_set = None
-        self._test_set = None
-        self._training_set = None
-
-
-    @property
-    def complete_set(self):
-
-        if self._complete_set is None:
-            self._load_dataframe()
-
-        return self._complete_set
+        print(path)
+        self.path = os.path.join(path, self.name)
+        self._df = None
 
 
     def make_dirs(self):
@@ -165,11 +152,6 @@ class DataSet(object):
         else:
             return not os.listdir(self.path)
 
-
-    @abstractproperty
-    def subset_class(self):
-        pass
-
     @abstractproperty
     def help(self):
         pass
@@ -204,3 +186,14 @@ class DataSet(object):
     @abstractmethod
     def reqs(self, **kwargs):
         pass
+
+    @abstractmethod
+    def get_df(self):
+        pass
+
+    @property
+    def df(self):
+        if self._df is None:
+            self._df = self.get_df()
+        
+        return self._df

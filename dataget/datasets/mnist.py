@@ -69,7 +69,6 @@ class Mnist(ImageDataSet):
 
     def _extract(self, **kwargs):
 
-
         ungzip(
             os.path.join(self.path, "train-features.gz"),
             os.path.join(self.path, "train-features.idx")

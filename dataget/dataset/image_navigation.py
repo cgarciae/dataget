@@ -30,36 +30,36 @@ class ImageNavigationDataSet(DataSet):
 
 
         CLASS = None
+        dataset_path = self.path
 
-        for dataset_path in [self.training_set.path, self.test_set.path]:
-            for root, dirs, files in os.walk(dataset_path):
-                for file in files:
-                    file = os.path.join(root, file)
+        for root, dirs, files in os.walk(dataset_path):
+            for file in files:
+                file = os.path.join(root, file)
 
-                    if file.endswith(self.raw_extension):
+                if file.endswith(self.raw_extension):
 
-                        new_file = file.replace(self.raw_extension, ".{}".format(format))
+                    new_file = file.replace(self.raw_extension, ".{}".format(format))
 
-                        with Image.open(file) as im:
-                            im = im.resize(dims)
-                            im.save(new_file, quality=100)
+                    with Image.open(file) as im:
+                        im = im.resize(dims)
+                        im.save(new_file, quality=100)
 
-                    elif file.endswith(".csv"):
-                        import pandas as pd
+                elif file.endswith(".csv"):
+                    import pandas as pd
 
-                        df = pd.read_csv(file)
-                        df['filename'] =  df['filename'].str.replace(self.raw_extension, "." + format)
+                    df = pd.read_csv(file)
+                    df['filename'] =  df['filename'].str.replace(self.raw_extension, "." + format)
 
-                        print("formatting {}".format(file))
+                    print("formatting {}".format(file))
 
-                        df.to_csv(file, index=False)
+                    df.to_csv(file, index=False)
 
     def _rm_raw(self, **kwargs):
         self.remove_all_file_with_extension(self._raw_extension)
 
 
     def get_df(self):
-
+        
         csv_path = os.path.join(self.path, "data.csv")
         df = pd.read_csv(csv_path)
 
