@@ -43,8 +43,6 @@ def data(dataset_name, path=None, global_=False, path_root=None, **kwargs):
 
     path = get_path(path=path, global_=global_, path_root=path_root)
 
-    print(path)
-
     if dataset_name not in DATASETS:
         raise Exception("Dataset '{}' not found".format(dataset_name))
     
