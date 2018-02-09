@@ -14,7 +14,6 @@ class DataSet(object):
 
     def __init__(self, name, path):
         self.name = name
-        print(path)
         self.path = os.path.join(path, self.name)
         self._df = None
 
