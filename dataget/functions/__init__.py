@@ -77,7 +77,7 @@ def batch_generator(df, batch_size, shuffle = False):
     a = 0
     b = min(batch_size, len(df))
 
-    while b < len(df):
+    while a < len(df):
 
         yield df.iloc[a:b].copy()
 
