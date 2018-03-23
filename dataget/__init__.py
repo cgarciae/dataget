@@ -9,8 +9,13 @@
 # Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
 from __future__ import print_function, absolute_import, unicode_literals, division
 from .version import __version__  # NOQA
+import sys
 
 from . import utils
+
+if sys.version_info >= (3, 6):
+    from . import stream
+
 from . import dataset
 from .api import ls, data, get_path, DATASETS
 from .dataset_loader import (
