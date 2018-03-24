@@ -66,6 +66,38 @@ def f_wrapper(f, queue = None, is_filter = False):
                 await queue.put(y)
     
     return _f_wrapper
+
+def filter_wrapper(f, queue):
+    async def _filter_wrapper(x):
+
+        y = f(x)
+
+        if hasattr(y, "__await__"):
+            y = await y
+
+        if bool(y):
+            await queue.put(x)
+    
+    return _filter_wrapper
+
+def map_wrapper(f, queue):
+    async def _map_wrapper(x):
+
+        y = f(x)
+
+        if hasattr(y, "__await__"):
+            y = await y
+
+        await queue.put(y)
+    
+    return _map_wrapper
+
+def each_wrapper(f):
+    async def _each_wrapper(x):
+
+        f(x)
+    
+    return _each_wrapper
         
         
 def map(f, stream, limit = 0, queue_maxsize = 0):
@@ -76,7 +108,7 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
         coroin = stream.coroutine
         qin = stream.queue
         coroin_task = asyncio.ensure_future(coroin)
-        f = f_wrapper(f, queue = qout)
+        f = map_wrapper(f, queue = qout)
 
         async with TaskPool(limit = limit) as tasks:
 
@@ -102,7 +134,7 @@ def filter(f, stream, limit = 0, queue_maxsize = 0):
         coroin = stream.coroutine
         qin = stream.queue
         coroin_task = asyncio.ensure_future(coroin)
-        f = f_wrapper(f, queue = qout, is_filter = True)
+        f = filter_wrapper(f, queue = qout, is_filter = True)
 
         async with TaskPool(limit = limit) as tasks:
 
@@ -137,7 +169,7 @@ async def each(f, stream, limit = 0):
     coroin = stream.coroutine
     qin = stream.queue
     coroin_task = asyncio.ensure_future(coroin)
-    f = f_wrapper(f)
+    f = each_wrapper(f)
 
     async with TaskPool(limit = limit) as tasks:
 
