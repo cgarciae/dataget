@@ -51,7 +51,7 @@ def active_tasks(tasks):
     return [ task for task in tasks if not task.done() ]
 
 
-def f_wrapper(f, queue = None):
+def f_wrapper(f, queue = None, is_filter = False):
     async def _f_wrapper(x):
 
         y = f(x)
@@ -60,7 +60,10 @@ def f_wrapper(f, queue = None):
             y = await y
 
         if queue is not None:
-            await queue.put(y)
+            if is_filter and bool(y):
+                await queue.put(x)
+            else:
+                await queue.put(y)
     
     return _f_wrapper
         
@@ -88,8 +91,34 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
             await qout.put(DONE)
             await coroin_task
 
-        
     return Stream(_map(f), qout)
+
+
+def filter(f, stream, limit = 0, queue_maxsize = 0):
+    
+    qout = asyncio.Queue(maxsize = queue_maxsize)
+    
+    async def _filter(f):
+        coroin = stream.coroutine
+        qin = stream.queue
+        coroin_task = asyncio.ensure_future(coroin)
+        f = f_wrapper(f, queue = qout, is_filter = True)
+
+        async with TaskPool(limit = limit) as tasks:
+
+            x = await qin.get()
+            while x is not DONE:
+                
+                fcoro = f(x)
+                await tasks.put(fcoro)
+
+                x = await qin.get()
+
+            await qout.put(DONE)
+            await coroin_task
+
+        
+    return Stream(_filter(f), qout)
 
 def from_iterable(iterable, queue_maxsize = 0):
     qout = asyncio.Queue(maxsize=queue_maxsize)
