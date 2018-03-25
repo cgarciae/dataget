@@ -4,7 +4,10 @@ import sys
 
 DONE = object()
 
-Stream = namedtuple("Stream", "coroutine queue")
+class Stream(namedtuple("Stream", ["coroutine", "queue"])):
+
+    def __await__(self):
+        return self.coroutine.__await__()
 
 
 class TaskPool(object):
@@ -21,6 +24,8 @@ class TaskPool(object):
 
         if len(self._tasks) > 0:
             await asyncio.wait(self._tasks)
+
+        self.filter_tasks()
         
 
     async def put(self, coro):
@@ -47,25 +52,6 @@ class TaskPool(object):
 
 
 
-def active_tasks(tasks):
-    return [ task for task in tasks if not task.done() ]
-
-
-def f_wrapper(f, queue = None, is_filter = False):
-    async def _f_wrapper(x):
-
-        y = f(x)
-
-        if hasattr(y, "__await__"):
-            y = await y
-
-        if queue is not None:
-            if is_filter and bool(y):
-                await queue.put(x)
-            else:
-                await queue.put(y)
-    
-    return _f_wrapper
 
 def filter_wrapper(f, queue):
     async def _filter_wrapper(x):
@@ -95,16 +81,17 @@ def map_wrapper(f, queue):
 def each_wrapper(f):
     async def _each_wrapper(x):
 
-        f(x)
+        y = f(x)
+
+        if hasattr(y, "__await__"):
+            y = await y
     
     return _each_wrapper
         
         
 def map(f, stream, limit = 0, queue_maxsize = 0):
     
-    qout = asyncio.Queue(maxsize = queue_maxsize)
-    
-    async def _map(f):
+    async def _map(f, qout):
         coroin = stream.coroutine
         qin = stream.queue
         coroin_task = asyncio.ensure_future(coroin)
@@ -114,31 +101,34 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
 
             x = await qin.get()
             while x is not DONE:
-                
+
                 fcoro = f(x)
                 await tasks.put(fcoro)
 
                 x = await qin.get()
 
-            await qout.put(DONE)
-            await coroin_task
+        # end async with: wait all tasks to finish
+        await qout.put(DONE)
+        await coroin_task
 
-    return Stream(_map(f), qout)
+
+    qout = asyncio.Queue(maxsize = queue_maxsize)
+
+    return Stream(_map(f, qout), qout)
 
 
 def filter(f, stream, limit = 0, queue_maxsize = 0):
     
-    qout = asyncio.Queue(maxsize = queue_maxsize)
-    
-    async def _filter(f):
+    async def _filter(f, qout):
         coroin = stream.coroutine
         qin = stream.queue
         coroin_task = asyncio.ensure_future(coroin)
-        f = filter_wrapper(f, queue = qout, is_filter = True)
+        f = filter_wrapper(f, qout)
 
         async with TaskPool(limit = limit) as tasks:
 
             x = await qin.get()
+            
             while x is not DONE:
                 
                 fcoro = f(x)
@@ -146,33 +136,39 @@ def filter(f, stream, limit = 0, queue_maxsize = 0):
 
                 x = await qin.get()
 
-            await qout.put(DONE)
-            await coroin_task
+        # end async with: wait all tasks to finish
 
+        await qout.put(DONE)
+        await coroin_task
+
+    qout = asyncio.Queue(maxsize = queue_maxsize)
         
-    return Stream(_filter(f), qout)
+    return Stream(_filter(f, qout), qout)
 
 def from_iterable(iterable, queue_maxsize = 0):
-    qout = asyncio.Queue(maxsize=queue_maxsize)
     
-    async def _from_iterable():
+    
+    async def _from_iterable(qout):
         
         for x in iterable:
             await qout.put(x)
             
         await qout.put(DONE)
-        
-    return Stream(_from_iterable(), qout)
+    
+    qout = asyncio.Queue(maxsize=queue_maxsize)
+
+    return Stream(_from_iterable(qout), qout)
 
 async def each(f, stream, limit = 0):
     
+
     coroin = stream.coroutine
     qin = stream.queue
     coroin_task = asyncio.ensure_future(coroin)
     f = each_wrapper(f)
 
     async with TaskPool(limit = limit) as tasks:
-
+        
         x = await qin.get()
         while x is not DONE:
             
@@ -181,7 +177,7 @@ async def each(f, stream, limit = 0):
 
             x = await qin.get()
 
-        await coroin_task
+    await coroin_task
 
 
 def run(stream):
@@ -201,12 +197,8 @@ if __name__ == '__main__':
             filename = os.path.basename(url)
             filepath = os.path.join(path, filename)
 
-            print(f"Downloading {url}")
-
             async with aiohttp.request("GET", url) as resp:
                 context = await resp.read()
-
-            print(f"Completed {filename}")
 
             async with aiofiles.open(filepath, "wb") as f:
                 await f.write(context)
