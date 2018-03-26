@@ -90,19 +90,22 @@ def each_wrapper(f):
         
         
 def map(f, stream, limit = 0, queue_maxsize = 0):
+
+    qout = asyncio.Queue(maxsize = queue_maxsize)
     
-    async def _map(f, qout):
+    async def _map():
         coroin = stream.coroutine
         qin = stream.queue
+        
         coroin_task = asyncio.ensure_future(coroin)
-        f = map_wrapper(f, queue = qout)
+        f_wrapped = map_wrapper(f, queue = qout)
 
         async with TaskPool(limit = limit) as tasks:
 
             x = await qin.get()
             while x is not DONE:
 
-                fcoro = f(x)
+                fcoro = f_wrapped(x)
                 await tasks.put(fcoro)
 
                 x = await qin.get()
@@ -112,9 +115,9 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
         await coroin_task
 
 
-    qout = asyncio.Queue(maxsize = queue_maxsize)
+    
 
-    return Stream(_map(f, qout), qout)
+    return Stream(_map(f), qout)
 
 
 def filter(f, stream, limit = 0, queue_maxsize = 0):
@@ -145,8 +148,8 @@ def filter(f, stream, limit = 0, queue_maxsize = 0):
         
     return Stream(_filter(f, qout), qout)
 
+
 def from_iterable(iterable, queue_maxsize = 0):
-    
     
     async def _from_iterable(qout):
         
@@ -164,6 +167,7 @@ async def each(f, stream, limit = 0):
 
     coroin = stream.coroutine
     qin = stream.queue
+    
     coroin_task = asyncio.ensure_future(coroin)
     f = each_wrapper(f)
 
