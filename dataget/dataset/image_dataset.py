@@ -57,7 +57,6 @@ class ImageDataSet(DataSet):
                         print("formating {} {}".format(_set, _class))
 
                 elif file.endswith(".csv"):
-                    import pandas as pd
 
                     df = pd.read_csv(file)
                     df['filename'] =  df['filename'].str.replace(self.raw_extension, "." + format)
