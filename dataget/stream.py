@@ -117,7 +117,7 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
 
     
 
-    return Stream(_map(f), qout)
+    return Stream(_map(), qout)
 
 
 def filter(f, stream, limit = 0, queue_maxsize = 0):
