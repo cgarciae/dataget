@@ -9,7 +9,6 @@
 # Copyright (c) 2017, cgarciae <cgarcia.e88@gmail.com>
 
 from setuptools import setup, find_packages
-from dataget import __version__
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
@@ -28,7 +27,7 @@ tests_require = [
 
 setup(
     name='dataget',
-    version=__version__,
+    version="0.2.1",
     description='an incredible python package',
     long_description='''
 an incredible python package

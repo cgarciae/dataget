@@ -114,9 +114,6 @@ def map(f, stream, limit = 0, queue_maxsize = 0):
         await qout.put(DONE)
         await coroin_task
 
-
-    
-
     return Stream(_map(), qout)
 
 
