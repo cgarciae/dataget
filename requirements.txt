@@ -2,3 +2,5 @@ click
 numpy
 pandas
 pillow
+tqdm
+requests

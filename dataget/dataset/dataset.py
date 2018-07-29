@@ -14,7 +14,7 @@ class DataSet(object):
 
     def __init__(self, name, path):
         self.name = name
-        self.path = os.path.join(path, self.name)
+        self.path = path
         self._df = None
 
 
@@ -131,17 +131,6 @@ class DataSet(object):
         if os.path.exists(self.path):
             print(self.path.split("/")[-1])
             shutil.rmtree(self.path)
-
-        return self
-
-    def rm_subsets(self, **kwargs):
-        self.before_op(**kwargs)
-
-        if os.path.exists(self.training_set.path):
-            shutil.rmtree(self.training_set.path)
-
-        if os.path.exists(self.test_set.path):
-            shutil.rmtree(self.test_set.path)
 
         return self
 

@@ -22,6 +22,13 @@ import re
 import platform
 from six.moves import urllib
 
+from tqdm import tqdm
+import requests
+import math
+
+
+
+
 
 
 OS_SPLITTER = os.sep
@@ -39,16 +46,28 @@ def get_progress(filename):
 
     return progress
 
-def get_file(file_url, path, filename=None, print_info=True):
+def get_file(url, path, filename=None, print_info=True):
+
     if filename is None:
-        filename = file_url.split("/")[-1]
+        filename = os.path.basename(url)
 
     file_path = os.path.join(path, filename)
+    
+    # Streaming, so we can iterate over the response.
+    r = requests.get(url, stream=True)
 
-    if print_info:
-        print("downloading {}".format(filename))
+    # Total size in bytes.
+    total_size = int(r.headers.get('content-length', 0))
+    block_size = 1024
 
-    urllib.request.urlretrieve(file_url, file_path, get_progress(filename))
+    wrote = 0
+    with open(file_path, 'wb') as f:
+        for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size//block_size) , unit='KB', unit_scale=True):
+            wrote = wrote  + len(data)
+            f.write(data)
+    
+    if total_size != 0 and wrote != total_size:
+        print("ERROR, something went wrong")  
 
 
 def maybe_mkdir(path):

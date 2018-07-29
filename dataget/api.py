@@ -12,9 +12,9 @@ def register_dataset(cls):
 
     return cls
 
-def get_path(path=None, global_=False, path_root=None):
+def get_path(name, path=None, global_=False, path_root=None):
     if path:
-        return path
+        return os.path.realpath(path)
 
     elif global_ or path_root:
 
@@ -37,11 +37,14 @@ def get_path(path=None, global_=False, path_root=None):
 
     path = os.path.realpath(path)
 
+    if name:
+        path = os.path.join(path, name)
+
     return path
 
 def data(dataset_name, path=None, global_=False, path_root=None, **kwargs):
 
-    path = get_path(path=path, global_=global_, path_root=path_root)
+    path = get_path(dataset_name, path=path, global_=global_, path_root=path_root)
 
     if dataset_name not in DATASETS:
         raise Exception("Dataset '{}' not found".format(dataset_name))
@@ -60,7 +63,7 @@ def ls(available=False, path=None, global_=False, path_root=None):
             print(element)
 
     else:
-        path = get_path(path=path, global_=global_, path_root=path_root)
+        path = get_path(None, path=path, global_=global_, path_root=path_root)
 
         if not os.path.exists(path):
             return
