@@ -104,14 +104,13 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
                 csv_path = os.path.join(folder_path, "driving_log.csv")
 
                 df = pd.read_csv(csv_path)
+                df.columns = [ "center", "left", "right", "steering", "throttle", "brake", "speed" ]
                 df = normalize_dataframe(df)
 
                 filepath_base = df.filename.iloc[0]
                 filepath_base = filepath_base.split("/")[:-2]
                 filepath_base = "/".join(filepath_base)
-
-                print("BASEPATH", filepath_base)
-
+                
                 df["filename"] = df.filename.str.replace(filepath_base, '')
                 df["filename"] = self.path + "/" + folder + "/" + df.filename.str.lstrip()
             
