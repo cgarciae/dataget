@@ -6,7 +6,9 @@ from .api import DATASETS
 
 
 def load_datasets(datasets_path):
+
     if not os.path.exists(datasets_path):
+        print("WARNING: datasets not loaded, {datasets_path} does not exist".format(datasets_path=datasets_path))
         return
 
     datasets = os.listdir(datasets_path)
@@ -24,6 +26,7 @@ def load_datasets(datasets_path):
         load_module(module_name, filename)
 
 
+load_datasets_at = load_datasets
 
 
 def load_custom_datasets():
@@ -50,15 +53,6 @@ def load_local_datasets():
     if os.path.exists(datasets_path):
         load_datasets(datasets_path)
 
-def load_datasets_at(path, dataget_folder = True):
-
-    datasets_path = os.path.realpath(path)
-
-    if dataget_folder:
-        datasets_path = os.path.join(datasets_path, ".dataget", "datasets")
-
-    if os.path.exists(datasets_path):
-        load_datasets(datasets_path)
 
 
 def load_module(module_name, file_path):

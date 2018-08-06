@@ -1,5 +1,5 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
-from dataget.dataset import ImageDataSet
+from dataget.core import ImageDataSet
 from dataget.utils import get_file, maybe_mkdir
 from dataget.api import register_dataset
 import gzip

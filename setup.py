@@ -27,7 +27,7 @@ tests_require = [
 
 setup(
     name='dataget',
-    version="0.2.3",
+    version="0.3.0",
     description='an incredible python package',
     long_description='''
 an incredible python package

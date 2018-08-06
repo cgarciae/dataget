@@ -100,7 +100,7 @@ dataget -g ls
 
 ### Template
 ```python
-from dataget.dataset import DataSet, SubSet
+from dataget.core import DataSet, SubSet
 from dataget.utils import get_file
 import os, urllib, zipfile, sys, gzip
 

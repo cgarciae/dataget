@@ -1,7 +1,7 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 
 import os, sys, urllib, zipfile, shutil
-from dataget.dataset import ImageDataSet
+from dataget.core import ImageDataSet
 from dataget.utils import get_file
 from dataget.api import register_dataset
 

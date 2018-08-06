@@ -8,12 +8,6 @@
 
 from __future__ import print_function, absolute_import, unicode_literals, division
 
-import sys as _coconut_sys, os.path as _coconut_os_path
-_coconut_file_path = _coconut_os_path.dirname(_coconut_os_path.abspath(__file__))
-_coconut_sys.path.insert(0, _coconut_file_path)
-from __coconut__ import _coconut, _coconut_MatchError, _coconut_tail_call, _coconut_tco, _coconut_igetitem, _coconut_compose, _coconut_pipe, _coconut_starpipe, _coconut_backpipe, _coconut_backstarpipe, _coconut_bool_and, _coconut_bool_or, _coconut_minus, _coconut_map, _coconut_partial
-from __coconut__ import *
-_coconut_sys.path.remove(_coconut_file_path)
 
 # Compiled Coconut: ------------------------------------------------------
 
@@ -25,27 +19,24 @@ import os
 from dataget.api import ls as _ls
 from dataget.api import data
 from dataget.api import get_path
+from dataget import api
 
 @click.group()
 @click.option('--path', '-p', default=None)
-@click.option('-g', is_flag=True, help="Use global path: DATAGET_HOME env variable or ~/.dataget by default.")
-@click.option('--path-root', default=None, help="Use global path: DATAGET_HOME env variable or ~/.dataget by default.")
 @click.pass_context
-def main(ctx, path, g, path_root):
-    path = get_path(path=path, global_=g, path_root=path_root)
-    ctx.obj = dict(path=path, global_=g, path_root=path_root)
+def main(ctx, path):
+    path = get_path(path=path)
+    ctx.obj = dict(path=path)
 
 
 @main.command()
-@click.option('--available', '-a', is_flag=True, help="List all available dataget datasets for download.")
+@click.option('--installed', '-i', is_flag=True, help="List all available dataget datasets for download.")
 @click.pass_context
-def ls(ctx, available):
+def ls(ctx, installed):
     "List installed datasets on path"
 
-    path = ctx.obj['path']
-    global_ = ctx.obj['global_']
-
-    _ls(available=available, **ctx.obj)
+    for dataset in api.ls(installed=installed):
+        print(dataset)
 
 @main.command()
 @click.argument('dataset')
@@ -54,8 +45,10 @@ def ls(ctx, available):
 def reqs(ctx, dataset, kwargs):
     "Get the dataset's pip requirements"
 
-    kwargs = parse_kwargs(kwargs)
-    (print)(data(dataset, **ctx.obj).reqs(**kwargs))
+    kwargs = _parse_kwargs(kwargs)
+    reqs = data(dataset, **ctx.obj).reqs(**kwargs)
+    
+    print(reqs)
 
 
 @main.command()
@@ -65,8 +58,10 @@ def reqs(ctx, dataset, kwargs):
 def size(ctx, dataset, kwargs):
     "Show dataset size"
 
-    kwargs = parse_kwargs(kwargs)
-    (print)(data(dataset, **ctx.obj).get(**kwargs).complete_set.size)
+    kwargs = _parse_kwargs(kwargs)
+    df = data(dataset, **ctx.obj).get(**kwargs).df
+
+    print(len(df))
 
 
 @main.command()
@@ -81,7 +76,7 @@ def size(ctx, dataset, kwargs):
 def get(ctx, dataset, rm, keep_compressed, dont_process, dont_download, keep_raw, kwargs):
     "performs the operations download, extract, rm_compressed, processes and rm_raw, in sequence. KWARGS must be in the form: key=value, and are fowarded to all opeartions."
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
 
     process = not dont_process
     rm_raw = not keep_raw
@@ -98,7 +93,7 @@ def get(ctx, dataset, rm, keep_compressed, dont_process, dont_download, keep_raw
 def rm(ctx, dataset, kwargs):
     "removes the dataset's folder if it exists"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).rm(**kwargs)
 
 @main.command("rm-subsets")
@@ -108,7 +103,7 @@ def rm(ctx, dataset, kwargs):
 def rm_subsets(ctx, dataset, kwargs):
     "removes the dataset's training-set and test-set folders if they exists"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).rm_subsets(**kwargs)
 
 @main.command()
@@ -119,7 +114,7 @@ def rm_subsets(ctx, dataset, kwargs):
 def download(ctx, dataset, rm, kwargs):
     "downloads the dataset's compressed files"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).download(rm=rm, **kwargs)
 
 @main.command()
@@ -129,7 +124,7 @@ def download(ctx, dataset, rm, kwargs):
 def extract(ctx, dataset, kwargs):
     "extracts the files from the compressed archives"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).extract(**kwargs)
 
 
@@ -140,7 +135,7 @@ def extract(ctx, dataset, kwargs):
 def rm_compressed(ctx, dataset, kwargs):
     "removes the compressed files"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).rm_compressed(**kwargs)
 
 @main.command()
@@ -150,7 +145,7 @@ def rm_compressed(ctx, dataset, kwargs):
 def process(ctx, dataset, kwargs):
     "processes the data to a friendly format"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).process(**kwargs)
 
 
@@ -161,10 +156,14 @@ def process(ctx, dataset, kwargs):
 def rm_raw(ctx, dataset, kwargs):
     "removes the raw unprocessed data"
 
-    kwargs = parse_kwargs(kwargs)
+    kwargs = _parse_kwargs(kwargs)
     data(dataset, **ctx.obj).rm_raw(**kwargs)
 
 
 
-def parse_kwargs(kwargs):
-    return ((dict)((_coconut.functools.partial(map, tuple))((_coconut.functools.partial(map, _coconut.operator.methodcaller("split", "=")))(kwargs))))
+def _parse_kwargs(kwargs):
+
+    kwargs = map(lambda arg: arg.split("="), kwargs)
+    kwargs = map(tuple, kwargs)
+
+    return dict(kwargs)

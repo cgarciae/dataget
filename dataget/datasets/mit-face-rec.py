@@ -3,7 +3,7 @@ import os, sys, urllib, stat, zipfile, time
 
 from dataget.utils import get_file
 from dataget.api import register_dataset
-from dataget.dataset import ImageDataSet
+from dataget.core import ImageDataSet
 
 TRAINING_SET_URL = "http://cbcl.mit.edu/software-datasets/heisele/download/download.html"
 

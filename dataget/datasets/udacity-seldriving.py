@@ -5,7 +5,7 @@ import shutil
 from dataget.utils import get_file, move_files
 from dataget.api import register_dataset
 from multiprocessing import Pool
-from dataget.dataset import ImageNavigationDataSet
+from dataget.core import DataSet
 import time
 import pandas as pd
 
@@ -13,7 +13,12 @@ import pandas as pd
 URL = "https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip"
 
 @register_dataset
-class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
+class UdacitySelfdrivingSimulator(DataSet):
+
+    def __init__(self, *args, **kwargs):
+        self.normalize = kwargs.pop("normalize", True)
+
+        super(UdacitySelfdrivingSimulator, self).__init__(*args, **kwargs)
 
     @property
     def features(self):
@@ -45,46 +50,6 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
 
         shutil.rmtree(os.path.join(self.path, "__MACOSX"))
 
-        # os.path.join(self.path, "data", "IMG")
-        # shutil.move(?, self.path)
-        # os.path.join(self.path, "data", "driving_log.csv")
-        # shutil.move(?, self.path)
-
-
-        # print("Loading Data")
-        # csv_path = os.path.join(self.path, "driving_log.csv")
-        # df = pd.read_csv(csv_path)
-
-        # if "timestamp" not in df:
-        #     timestamp = time.time() * 1000 |> int
-        #     n = len(df)
-
-        #     df["timestamp"] = np.arange(n) * 100 + timestamp
-
-        # df = normalize_dataframe(df)
-        # df["filename"] = df["filename"].str.replace("IMG/", "").str.strip()
-
-
-
-        # # df.iloc[0].filename
-
-        # msk = np.random.rand(len(df)) < train_size
-
-        # train = df[msk]
-        # test = df[~msk]
-
-        # print("Moving Files")
-        # move_files(train['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'training-set'))
-        # move_files(test['filename'].values, os.path.join(self.path, "IMG"), os.path.join(self.path, 'test-set'))
-
-        # os.path.join(self.path, "training-set", "data.csv") |> train.to_csv$(?, index = False)
-        # os.path.join(self.path, "test-set", "data.csv") |> test.to_csv$(?, index = False)
-
-
-        # print("Removing folders")
-        # os.path.join(self.path, "__MACOSX")
-        # os.path.join(self.path, "data") |> shutil.rmtree
-        # os.path.join(self.path, "IMG") |> shutil.rmtree
 
     def _process(self, **kwargs):
         print("This class wont process the data... :|")
@@ -104,15 +69,21 @@ class UdacitySelfdrivingSimulator(ImageNavigationDataSet):
                 csv_path = os.path.join(folder_path, "driving_log.csv")
 
                 df = pd.read_csv(csv_path)
-                df.columns = [ "center", "left", "right", "steering", "throttle", "brake", "speed" ]
-                df = normalize_dataframe(df)
+
+                if self.normalize:
+                    df.columns = [ "center", "left", "right", "steering", "throttle", "brake", "speed" ]
+                    df = normalize_dataframe(df)
+
 
                 filepath_base = df.filename.iloc[0]
                 filepath_base = filepath_base.split("/")[:-2]
-                filepath_base = "/".join(filepath_base)
+                filepath_base = os.sep.join(filepath_base)
+                filepath_base = os.path.join(filepath_base, "IMG") + os.sep
+
                 
-                df["filename"] = df.filename.str.replace(filepath_base, '')
-                df["filename"] = self.path + "/" + folder + "/" + df.filename.str.lstrip()
+                df["filename"] = df.filename.str.replace(filepath_base, '').str.strip()
+                df["folder"] = folder
+                df["filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.filename
             
                 dfs.append(df)
     

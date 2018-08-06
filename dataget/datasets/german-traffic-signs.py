@@ -3,7 +3,7 @@
 # import os
 # import shutil
 # from dataget.utils import get_file
-# from dataget.dataset import ImageDataSetWithMetadata
+# from dataget.core import ImageDataSetWithMetadata
 # from dataget.api import register_dataset
 # from multiprocessing import Pool
 # from dataget.utils import OS_SPLITTER
