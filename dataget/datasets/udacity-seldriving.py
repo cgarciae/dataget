@@ -69,22 +69,40 @@ class UdacitySelfdrivingSimulator(DataSet):
                 csv_path = os.path.join(folder_path, "driving_log.csv")
 
                 df = pd.read_csv(csv_path)
+                df.columns = [ "center", "left", "right", "steering", "throttle", "brake", "speed" ]
+                
 
                 if self.normalize:
-                    df.columns = [ "center", "left", "right", "steering", "throttle", "brake", "speed" ]
                     df = normalize_dataframe(df)
 
+                    filepath_base = df.filename.iloc[0]
+                    filepath_base = filepath_base.split("/")[:-2]
+                    filepath_base = os.sep.join(filepath_base)
+                    filepath_base = os.path.join(filepath_base, "IMG") + os.sep
 
-                filepath_base = df.filename.iloc[0]
-                filepath_base = filepath_base.split("/")[:-2]
-                filepath_base = os.sep.join(filepath_base)
-                filepath_base = os.path.join(filepath_base, "IMG") + os.sep
+                    
+                    df["filename"] = df.filename.str.replace(filepath_base, '').str.strip()
+                    df["filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.filename
+                
+                else:
+                    filepath_base = df.center.iloc[0]
+                    filepath_base = filepath_base.split("/")[:-2]
+                    filepath_base = os.sep.join(filepath_base)
+                    filepath_base = os.path.join(filepath_base, "IMG") + os.sep
+
+                    
+                    df["left"] = df.left.str.replace(filepath_base, '').str.strip()
+                    df["left_filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.left
+
+                    df["center"] = df.center.str.replace(filepath_base, '').str.strip()
+                    df["center_filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.center
+                    
+                    df["right"] = df.right.str.replace(filepath_base, '').str.strip()
+                    df["right_filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.right
 
                 
-                df["filename"] = df.filename.str.replace(filepath_base, '').str.strip()
                 df["folder"] = folder
-                df["filepath"] = os.path.join(self.path, folder, "IMG") + os.sep + df.filename
-            
+
                 dfs.append(df)
     
         return pd.concat(dfs)
