@@ -90,15 +90,7 @@ def maybe_mkdir(path):
 
     return path
 
-def split_upper(txt):
-    return [a for a in re.split(r'([A-Z][a-z]*\d*)', txt) if a]
 
-def upper_to_dashed(txt):
-    
-    txt = split_upper(txt)
-    txt = map(lambda s: s.lower(), txt)
-
-    return "-".join(txt)
 
 
 def read_pillow_image(Image, np):
