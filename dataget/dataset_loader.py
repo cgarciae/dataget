@@ -8,7 +8,7 @@ from .api import DATASETS
 def load_datasets(datasets_path):
 
     if not os.path.exists(datasets_path):
-        print("WARNING: datasets not loaded, {datasets_path} does not exist".format(datasets_path=datasets_path))
+        # print("WARNING: datasets not loaded, {datasets_path} does not exist".format(datasets_path=datasets_path))
         return
 
     datasets = os.listdir(datasets_path)

@@ -219,8 +219,8 @@ if __name__ == '__main__':
     path = "/data/tmp/images"
 
     stream = from_iterable(urls)
-    coro = each(download_file(path), stream, limit = 2)
+    stream = map(download_file(path), stream, limit = 2)
 
     loop = asyncio.get_event_loop()
     loop.set_exception_handler(handle_async_exception)
-    loop.run_until_complete(coro)
+    loop.run_until_complete(stream)

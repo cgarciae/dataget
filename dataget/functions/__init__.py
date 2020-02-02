@@ -47,7 +47,7 @@ def split(df, *splits):
         splits.append(inverse)
 
     splits = [0.0] + list(splits)
-    splits = np.asarray(splits)
+    splits = np.asarray(splits, dtype=np.float32)
     splits = np.cumsum(splits) / np.sum(splits)
     splits = len(df) * splits
     splits = np.round(splits).astype(np.int64)
