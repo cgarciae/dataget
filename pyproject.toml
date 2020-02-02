@@ -4,6 +4,7 @@ build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
 module = "dataget"
+version="0.3.1"
 author = "Cristian Garcia"
 author-email = "cgarcia.e88@gmail.com"
 classifiers = ["License :: OSI Approved :: MIT License"]
