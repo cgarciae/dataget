@@ -1,0 +1,24 @@
+[build-system]
+requires = ["flit", "setuptools"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "dataget"
+author = "Cristian Garcia"
+author-email = "cgarcia.e88@gmail.com"
+classifiers = ["License :: OSI Approved :: MIT License"]
+license = "MIT"
+requires-python=">=3.7"
+requires = [
+    "opencv-python>=3.4,<4",
+    "pyyaml",
+    "jinja2"
+]
+
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+    "coverage",
+]
