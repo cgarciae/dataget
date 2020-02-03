@@ -19,6 +19,7 @@ class Dataset(ABC):
         # rm
         if not self.is_valid() or not use_cache:
             shutil.rmtree(self.path, ignore_errors=True)
+            self.path.mkdir(parents=True)
 
             # get data
             coro = self.download(**kwargs)

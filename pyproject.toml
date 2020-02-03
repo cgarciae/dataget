@@ -16,7 +16,8 @@ requires = [
     "pandas",
     "idx2numpy",
     "aiofiles",
-    "tqdm"
+    "tqdm",
+    "pyarrow",
 ]
 
 [tool.flit.metadata.requires-extra]
