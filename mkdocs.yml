@@ -1,0 +1,29 @@
+site_name: Dataget
+repo_name: 'cgarciae/dataget'
+repo_url: 'https://github.com/cgarciae/dataget'
+
+theme:
+  name: 'material'
+
+  nav:
+    - Dataget: index.md
+    - Datasets:
+      - Kaggle: datasets/kaggle.md
+      - Vision:
+        - MNIST: datasets/vision/mnist.md
+        
+        
+        
+extra:
+  search:
+    language: 'en'
+  social:
+    - type: 'github'
+      link: 'https://github.com/cgarciae'
+    - type: 'twitter'
+      link: 'https://twitter.com/cgarciae88'
+    - type: 'linkedin'
+      link: 'https://www.linkedin.com/in/cgarciae'
+
+markdown_extensions:
+  - codehilite

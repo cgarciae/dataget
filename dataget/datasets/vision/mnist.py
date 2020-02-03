@@ -107,7 +107,7 @@ class Mnist(Dataset):
         ).exists()
 
     def load_data(self, extras, **kwargs):
-
+        
         df_train = pd.read_feather(self.path / "train.feather")
         df_test = pd.read_feather(self.path / "test.feather")
 

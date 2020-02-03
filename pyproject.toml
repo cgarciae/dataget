@@ -26,4 +26,6 @@ test = [
     "pytest-cov",
     "pytest-sugar",
     "coverage",
+    "mkdocs",
+    "mkdocs-material",
 ]
