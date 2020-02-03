@@ -18,7 +18,7 @@ def register_dataset(cls):
     return cls
 
 
-def data(dataset_name, path=None, local=False, **kwargs):
+def data(dataset_name, path=None, local=True, **kwargs):
 
     if dataset_name not in DATASETS:
         raise Exception("Dataset '{}' not found".format(dataset_name))
