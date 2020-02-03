@@ -1,5 +1,6 @@
 import os
 from dataget.utils import upper_to_dashed
+from pathlib import Path
 
 
 DATASETS = {}
@@ -17,16 +18,19 @@ def register_dataset(cls):
     return cls
 
 
-def data(dataset_name, path=None, **kwargs):
-
-    path = get_path(dataset_name, path=path)
+def data(dataset_name, path=None, local=False, **kwargs):
 
     if dataset_name not in DATASETS:
         raise Exception("Dataset '{}' not found".format(dataset_name))
 
-    dataset_class = DATASETS[dataset_name]
+    if path:
+        pass
+    elif local:
+        path = Path("data")
+    else:
+        path = Path("~").expanduser() / ".dataget"
 
-    dataset = dataset_class(dataset_name, path, **kwargs)
+    dataset = DATASETS[dataset_name](path, **kwargs)
 
     return dataset
 
