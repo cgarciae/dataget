@@ -34,7 +34,7 @@ class Kaggle(Dataset):
         outputs = (df_train, df_test)
 
         if extras:
-            extras = [self._load_file(filename) for filename in extras]
+            extras = {filename: self._load_file(filename) for filename in extras}
             outputs += (extras,)
 
         return outputs
