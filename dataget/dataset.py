@@ -14,10 +14,10 @@ class Dataset(ABC):
 
         self.path = root / self.name
 
-    def get(self, use_cache=True, extras=False, **kwargs):
+    def get(self, use_cache=True, extras=None, **kwargs):
 
         # rm
-        if not self.is_valid() or not use_cache:
+        if not self.is_valid(**kwargs) or not use_cache:
             shutil.rmtree(self.path, ignore_errors=True)
             self.path.mkdir(parents=True)
 
@@ -27,7 +27,7 @@ class Dataset(ABC):
             if coro is not None:
                 asyncio.get_event_loop().run_until_complete(coro)
 
-        outputs = self.load_data(extras=extras)
+        outputs = self.load_data(extras, **kwargs)
 
         if extras and len(outputs) == 2:
             return outputs + (None,)

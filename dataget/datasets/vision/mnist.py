@@ -101,12 +101,12 @@ class Mnist(Dataset):
 
         gz_path.unlink()
 
-    def is_valid(self):
+    def is_valid(self, **kwargs):
         return (self.path / "train.feather").exists() and (
             self.path / "test.feather"
         ).exists()
 
-    def load_data(self, extras):
+    def load_data(self, extras, **kwargs):
 
         df_train = pd.read_feather("train.feather")
         df_test = pd.read_feather("test.feather")
