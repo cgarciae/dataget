@@ -388,18 +388,24 @@
 <ul>
 <li><strong>Minimal</strong>: Downloads entire datasets with just 1 line of code.</li>
 <li><strong>Compatible</strong>: Loads data as Pandas Dataframes which can be easily used with the majority of Machine Learning frameworks.</li>
+<li><strong>Efficient</strong>: Loads data as Pandas Dataframes which can be easily used with the majority of Machine Learning frameworks.</li>
 <li><strong>Transparent</strong>: By default stores data in your current project so you can easily inspect it.</li>
 <li><strong>Kaggle Integration</strong>: Supports loading Kaggle Datasets in a variety of formats.</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
+<p>In dataget you just have to use two functions:</p>
+<ul>
+<li><code>data</code> to specify source of the data.</li>
+<li><code>get</code> to download the dataset to disk and load it into memory.</li>
+</ul>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
-<span class="c1"># Downloads MNIST from http://yann.lecun.com/exdb/mnist/</span>
-<span class="c1"># and loads it into memory as pandas dataframes.</span>
+
 <span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 
+<p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/mnist</code> and loads it as <code>pandas</code> dataframes.</p>
 <h2 id="installation">Installation</h2>
 <div class="codehilite"><pre><span></span>pip install dataget
 </pre></div>
