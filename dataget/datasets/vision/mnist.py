@@ -108,8 +108,8 @@ class Mnist(Dataset):
 
     def load_data(self, extras, **kwargs):
 
-        df_train = pd.read_feather("train.feather")
-        df_test = pd.read_feather("test.feather")
+        df_train = pd.read_feather(self.path / "train.feather")
+        df_test = pd.read_feather(self.path / "test.feather")
 
         outputs = (df_train, df_test)
 
@@ -129,7 +129,9 @@ class Mnist(Dataset):
 
 if __name__ == "__main__":
 
-    df_train, df_test, extras = Mnist("data").get(extras=True)
+    import dataget as dg
+
+    df_train, df_test, extras = dg.data("mnist").get(extras=True)
 
     X_train = extras["X_train"]
     y_train = extras["y_train"]
