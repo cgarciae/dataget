@@ -8,6 +8,7 @@ from dataget.api import register_dataset
 from dataget.dataset import Dataset
 
 
+@register_dataset
 class Kaggle(Dataset):
     def __init__(self, root: Path, dataset: str):
         if not isinstance(root, Path):
@@ -60,10 +61,11 @@ class Kaggle(Dataset):
 
 
 if __name__ == "__main__":
+    import dataget as dg
 
-    df_train, df_test = Kaggle("data", dataset="cristiangarcia/pointcloudmnist2d").get(
-        train_file="train.csv", test_file="test.csv"
-    )
+    df_train, df_test = dg.data(
+        "kaggle", dataset="cristiangarcia/pointcloudmnist2d"
+    ).get(train_file="train.csv", test_file="test.csv")
 
     print(df_train.shape)
     print(df_test.shape)
