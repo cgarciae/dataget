@@ -13,7 +13,7 @@ class Kaggle(Dataset):
         if not isinstance(root, Path):
             root = Path(root)
 
-        self.path = root / self.name / dataset.replace("/", "_")
+        self.path = root / self.name / dataset
         self.kaggle_dataset = dataset
 
     def download(self, **kwargs):
