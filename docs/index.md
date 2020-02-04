@@ -19,10 +19,27 @@ In dataget you just have to use two functions:
 import dataget as dg
 
 
-df_train, df_test = dg.data("mnist").get()
+X_train, y_train, X_test, y_test = dg.data("vision/mnist").get()
 ```
 
-This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) to `./data/mnist` and loads it as `pandas` dataframes.
+This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) to `./data/mnist` and loads it as `numpy` arrays.
+
+### Kaggle
+
+Kaggle promotes the use of `csv` files and `dataget` loves it! 
+
+```python
+import dataget as dg
+
+df_train, df_test = dg.data(
+    "kaggle", dataset="cristiangarcia/pointcloudmnist2d"
+).get(files=["train.csv", "test.csv"])
+```
+
+In the future we want to expand Kaggle support in the following ways:
+
+* Be able to use any file that `numpy` or `pandas` can load.
+* Have generic support for other types of datasets like images, audio, or video. E.g. `dg.get("kaggle_vision", ...).get(...)`
 
 ## Installation
 

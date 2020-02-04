@@ -6,16 +6,19 @@ from pathlib import Path
 DATASETS = {}
 
 
-def register_dataset(cls):
+def register_dataset(name):
+    def wrapper(cls):
 
-    name = upper_to_dashed(cls.__name__)
+        if name in DATASETS:
+            raise ValueError(f"Dataset for '{cls.__name__}' already registered")
 
-    if name in DATASETS:
-        raise ValueError(f"Dataset for '{cls.__name__}' already registered")
+        DATASETS[name] = cls
 
-    DATASETS[name] = cls
+        cls.name = name
 
-    return cls
+        return cls
+
+    return wrapper
 
 
 def data(dataset_name, path=None, local=True, **kwargs):

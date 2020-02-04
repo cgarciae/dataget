@@ -8,13 +8,18 @@ from dataget import utils
 
 
 class Dataset(ABC):
+
+    name: str = None
+
     def __init__(self, root: Path):
+        assert self.name, f"Empty 'name' for class {self.__class__}"
+
         if not isinstance(root, Path):
             root = Path(root)
 
-        self.path = root / self.name
+        self.path = root / self.name.replace("/", "_")
 
-    def get(self, use_cache=True, extras=None, **kwargs):
+    def get(self, use_cache=True, **kwargs):
 
         # rm
         if not self.is_valid(**kwargs) or not use_cache:
@@ -27,16 +32,7 @@ class Dataset(ABC):
             if coro is not None:
                 asyncio.get_event_loop().run_until_complete(coro)
 
-        outputs = self.load_data(extras, **kwargs)
-
-        if extras and len(outputs) == 2:
-            return outputs + (None,)
-        else:
-            return outputs
-
-    @property
-    def name(self):
-        return utils.upper_to_dashed(self.__class__.__name__)
+        return self.load_data(**kwargs)
 
     @abstractmethod
     def download(self, **kwargs):
