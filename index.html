@@ -238,6 +238,19 @@
     Getting Started
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kaggle" class="md-nav__link">
+    Kaggle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -355,6 +368,19 @@
     Getting Started
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kaggle" class="md-nav__link">
+    Kaggle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -406,6 +432,21 @@
 
 
 <p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/mnist</code> and loads it as <code>numpy</code> arrays.</p>
+<h3 id="kaggle">Kaggle</h3>
+<p>Kaggle promotes the use of <code>csv</code> files and <code>dataget</code> loves it! </p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
+
+<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span>
+    <span class="s2">&quot;kaggle&quot;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">])</span>
+</pre></div>
+
+
+<p>In the future we want to expand Kaggle support in the following ways:</p>
+<ul>
+<li>Be able to use any file that <code>numpy</code> or <code>pandas</code> can load.</li>
+<li>Have generic support for other types of datasets like images, audio, or video. E.g. <code>dg.get("kaggle_vision", ...).get(...)</code></li>
+</ul>
 <h2 id="installation">Installation</h2>
 <div class="codehilite"><pre><span></span>pip install dataget
 </pre></div>
