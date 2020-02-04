@@ -282,6 +282,14 @@ mkdocs = ">=1.0.4"
 
 [[package]]
 category = "dev"
+description = "Automatic documentation from docstrings, for mkdocs."
+name = "mkdocstrings"
+optional = false
+python-versions = ">=3.6,<4.0"
+version = "0.7.0"
+
+[[package]]
+category = "dev"
 description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
 optional = false
@@ -565,7 +573,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "8952909815f5ad39cdf5a499b9231509548af9be02f8b48b1ab422b26beea8f0"
+content-hash = "667edb151f19d93c9f7614c99fd281ba14c64506e115ceda48cfcc13a180f46b"
 python-versions = "3.7.6"
 
 [metadata.files]
@@ -728,6 +736,10 @@ mkdocs-material = [
 mkdocs-minify-plugin = [
     {file = "mkdocs-minify-plugin-0.2.1.tar.gz", hash = "sha256:3000a5069dd0f42f56a8aaf7fd5ea1222c67487949617e39585d6b6434b074b6"},
     {file = "mkdocs_minify_plugin-0.2.1-py2-none-any.whl", hash = "sha256:d54fdd5be6843dd29fd7af2f7fdd20a9eb4db46f1f6bed914e03b2f58d2d488e"},
+]
+mkdocstrings = [
+    {file = "mkdocstrings-0.7.0-py3-none-any.whl", hash = "sha256:60e6d2620341e625e31e466af173acdde00bda6dac2d8f51e8717bbcf7329e2d"},
+    {file = "mkdocstrings-0.7.0.tar.gz", hash = "sha256:76c255c59514d8f447e98d7bd8ee464d2a2bc5add3a638a8dda79efe8c942038"},
 ]
 more-itertools = [
     {file = "more-itertools-8.2.0.tar.gz", hash = "sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"},

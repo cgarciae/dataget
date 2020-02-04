@@ -38,5 +38,5 @@ def data(dataset_name, path=None, local=True, **kwargs):
     return dataset
 
 
-def datasets_list():
+def dataset_list():
     return list(DATASETS.keys())

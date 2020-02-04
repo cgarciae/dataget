@@ -8,12 +8,14 @@ import asyncio
 
 from dataget import utils
 from dataget.api import register_dataset
-from dataget.dataset import Dataset
+from dataget.datasets.dataset import Dataset
 
 TRAIN_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
 TRAIN_LABELS_URL = "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz"
 TEST_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz"
 TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
+
+print(1)
 
 
 @register_dataset("vision/mnist")
@@ -67,14 +69,3 @@ class MNIST(Dataset):
 
         return X_train, y_train, X_test, y_test
 
-
-if __name__ == "__main__":
-
-    import dataget as dg
-
-    X_train, y_train, X_test, y_test = dg.data("vision/mnist").get()
-
-    print(X_train.shape)
-    print(y_train.shape)
-    print(X_test.shape)
-    print(y_test.shape)

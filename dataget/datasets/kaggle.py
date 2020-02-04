@@ -5,7 +5,7 @@ import pandas as pd
 
 from dataget import utils
 from dataget.api import register_dataset
-from dataget.dataset import Dataset
+from dataget.datasets.dataset import Dataset
 
 
 @register_dataset("kaggle")
@@ -41,15 +41,4 @@ class Kaggle(Dataset):
 
     def is_valid(self, files, **kwargs):
         return all((self.path / filename).exists() for filename in files)
-
-
-if __name__ == "__main__":
-    import dataget as dg
-
-    df_train, df_test = dg.data(
-        "kaggle", dataset="cristiangarcia/pointcloudmnist2d"
-    ).get(files=["train.csv", "test.csv"])
-
-    print(df_train.shape)
-    print(df_test.shape)
 

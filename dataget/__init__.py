@@ -1,2 +1,5 @@
 from . import utils
-from .api import data, datasets_list, register_dataset
+from .api import data, dataset_list, register_dataset
+
+# datasets
+from . import datasets
