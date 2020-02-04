@@ -43,9 +43,9 @@ class Dataset(ABC):
         pass
 
     @abstractmethod
-    def load_data(self):
+    def load_data(self, **kwargs):
         pass
 
     @abstractmethod
-    def is_valid(self):
+    def is_valid(self, **kwargs):
         pass

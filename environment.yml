@@ -1,4 +1,0 @@
-name: "dataget"
-
-dependencies:
-    - python=3.7

@@ -3,10 +3,10 @@
 Dataget is an easy to use, framework agnostic dataset library that gives you quick access to a collection of Machine Learning datasets through a simple API.
 
 * **Minimal**: Downloads entire datasets with just 1 line of code.
-* **Compatible**: Loads data as Pandas Dataframes which can be easily used with the majority of Machine Learning frameworks.
-* **Efficient**: Loads data as Pandas Dataframes which can be easily used with the majority of Machine Learning frameworks.
-* **Transparent**: By default stores data in your current project so you can easily inspect it.
-* **Kaggle Integration**: Supports loading Kaggle Datasets in a variety of formats.
+* **Compatible**: Loads data as `numpy` arrays or `pandas` dataframes which can be easily used with the majority of Machine Learning frameworks.
+* **Transparent**: By default stores the data in your current project so you can easily inspect it.
+* **Memory Efficient**: When a dataset doesn't fit in memory it will return the metadata needed so it can be loaded iteratively.
+* **Integrates with Kaggle**: Supports loading Datasets directly from Kaggle in a variety of formats.
 
 ## Getting Started
 
@@ -21,9 +21,8 @@ import dataget as dg
 
 df_train, df_test = dg.data("mnist").get()
 ```
+
 This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) to `./data/mnist` and loads it as `pandas` dataframes.
-
-
 
 ## Installation
 
