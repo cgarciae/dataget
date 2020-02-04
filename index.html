@@ -410,12 +410,13 @@
                 
                 
                 <h1 id="dataget">Dataget</h1>
-<p>Dataget is an easy to use, framework agnostic dataset library that gives you quick access to a collection of Machine Learning datasets through a simple API.</p>
+<p>Dataget is an easy to use, framework-agnostic, dataset library that gives you quick access to a collection of Machine Learning datasets through a simple API.</p>
+<p>Main features:</p>
 <ul>
 <li><strong>Minimal</strong>: Downloads entire datasets with just 1 line of code.</li>
 <li><strong>Compatible</strong>: Loads data as <code>numpy</code> arrays or <code>pandas</code> dataframes which can be easily used with the majority of Machine Learning frameworks.</li>
 <li><strong>Transparent</strong>: By default stores the data in your current project so you can easily inspect it.</li>
-<li><strong>Memory Efficient</strong>: When a dataset doesn't fit in memory it will return the metadata needed so it can be loaded iteratively.</li>
+<li><strong>Memory Efficient</strong>: When a dataset doesn't fit in memory it will instead return the metadata needed so it can be iteratively loaded.</li>
 <li><strong>Integrates with Kaggle</strong>: Supports loading Datasets directly from Kaggle in a variety of formats.</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
@@ -427,11 +428,11 @@
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">&quot;vision/mnist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 
-<p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/mnist</code> and loads it as <code>numpy</code> arrays.</p>
+<p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
 <h3 id="kaggle">Kaggle</h3>
 <p>Kaggle promotes the use of <code>csv</code> files and <code>dataget</code> loves it! </p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
@@ -444,11 +445,19 @@
 
 <p>In the future we want to expand Kaggle support in the following ways:</p>
 <ul>
-<li>Be able to use any file that <code>numpy</code> or <code>pandas</code> can load.</li>
-<li>Have generic support for other types of datasets like images, audio, or video. E.g. <code>dg.get("kaggle_vision", ...).get(...)</code></li>
+<li>Be able to load any file that <code>numpy</code> or <code>pandas</code> can read.</li>
+<li>Have generic support for other types of datasets like images, audio, or video. E.g. <code>dg.get("kaggle/vision", ...).get(...)</code></li>
 </ul>
 <h2 id="installation">Installation</h2>
-<div class="codehilite"><pre><span></span>pip install dataget
+<p>Avaiable at <code>pypi</code> as <code>dataget</code>, you can install it with your favorite python package manager:</p>
+<div class="codehilite"><pre><span></span><span class="c1"># pip</span>
+pip install dataget
+
+<span class="c1"># pipenv</span>
+pipenv install pytest
+
+<span class="c1"># poetry</span>
+poetry add dataget
 </pre></div>
                 
                   
