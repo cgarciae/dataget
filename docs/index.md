@@ -10,6 +10,8 @@ Main features:
 * **Memory Efficient**: When a dataset doesn't fit in memory it will return metadata instead you can iteratively load it.
 * **Integrates with Kaggle**: Supports loading datasets directly from Kaggle in a variety of formats.
 
+Checkout our list of [avaiable datasets](https://cgarciae.github.io/dataget/datasets/overview/).
+
 ## Getting Started
 
 In dataget you just have to do two things:
@@ -42,6 +44,7 @@ To start using Kaggle datasets just make sure you have properly installed and co
 * Be able to load any file that `numpy` or `pandas` can read.
 * Have generic support for other types of datasets like images, audio, video, etc. 
     * e.g `dg.data.kaggle(..., type="vision").get(...)`
+
 
 ## Installation
 
