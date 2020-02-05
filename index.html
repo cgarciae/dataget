@@ -265,6 +265,33 @@
     Installation
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pip" class="md-nav__link">
+    pip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipenv" class="md-nav__link">
+    pipenv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poetry" class="md-nav__link">
+    poetry
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -419,6 +446,33 @@
     Installation
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pip" class="md-nav__link">
+    pip
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipenv" class="md-nav__link">
+    pipenv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poetry" class="md-nav__link">
+    poetry
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -451,42 +505,47 @@
 <li><strong>Integrates with Kaggle</strong>: Supports loading Datasets directly from Kaggle in a variety of formats.</li>
 </ul>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>In dataget you just have to use two functions:</p>
+<p>In dataget you just have to do two things:</p>
 <ul>
-<li><code>data</code> to specify source of the data.</li>
-<li><code>get</code> to download the dataset to disk and load it into memory.</li>
+<li>Select a dataset from the <code>data</code> module.</li>
+<li>Use the <code>get</code> to download the data to disk and load it into memory.</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">&quot;vision/mnist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 <p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
 <h3 id="kaggle">Kaggle<a class="headerlink" href="#kaggle" title="Permanent link">&para;</a></h3>
-<p>Kaggle promotes the use of <code>csv</code> files and <code>dataget</code> loves it! </p>
+<p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! You can download any dataset from the platform and have immediate access to the data on your local machine:</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
-<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="p">(</span>
-    <span class="s2">&quot;kaggle&quot;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span>
-<span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">])</span>
+<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
 <p>In the future we want to expand Kaggle support in the following ways:</p>
 <ul>
 <li>Be able to load any file that <code>numpy</code> or <code>pandas</code> can read.</li>
-<li>Have generic support for other types of datasets like images, audio, or video. E.g. <code>dg.get("kaggle/vision", ...).get(...)</code></li>
+<li>Have generic support for other types of datasets like images, audio, video, etc. <ul>
+<li>Exmaple: <code>dg.data.kaggle(..., type="vision").get(...)</code></li>
+</ul>
+</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>Avaiable at <code>pypi</code> as <code>dataget</code>, you can install it with your favorite python package manager:</p>
-<div class="codehilite"><pre><span></span><span class="c1"># pip</span>
-pip install dataget
+<p><code>dataget</code> is avaiable at <a href="https://pypi.org/">pypi</a> so you can use your favorite package manager install to it:</p>
+<h4 id="pip">pip<a class="headerlink" href="#pip" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span>pip install dataget
+</pre></div>
 
-<span class="c1"># pipenv</span>
-pipenv install pytest
+<h4 id="pipenv">pipenv<a class="headerlink" href="#pipenv" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span>pipenv install pytest
+</pre></div>
 
-<span class="c1"># poetry</span>
-poetry add dataget
+<h4 id="poetry">poetry<a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span>poetry add dataget
 </pre></div>
                 
                   
