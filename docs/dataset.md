@@ -1,4 +1,4 @@
 
 # Creating a Dataset
 
-::: dataget.datasets.dataset
+::: dataget.dataset

@@ -8,9 +8,9 @@ theme:
 nav:
   - Introduction: index.md
   - Available Datasets:
-      - Kaggle: datasets/kaggle.md
-      - Vision:
-          - MNIST: datasets/vision/mnist.md
+      - kaggle: datasets/kaggle.md
+      - vision:
+          - mnist: datasets/vision/mnist.md
   - Creating a Dataset: dataset.md
   - Reference API: api.md
 
