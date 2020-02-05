@@ -295,6 +295,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    Contributing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     License
   </a>
@@ -483,6 +490,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    Contributing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     License
   </a>
@@ -522,13 +536,14 @@
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>In dataget you just have to do two things:</p>
 <ul>
-<li>Select a dataset from the <code>data</code> module.</li>
-<li>Use the <code>get</code> method to download the data to disk and load it into memory.</li>
+<li>Instantiate a <code>Dataset</code> from our collection.</li>
+<li>Call the <code>get</code> method to download the data to disk and load it into memory.</li>
 </ul>
+<p>Both are usually done in one line:</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 <p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> dataset to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
@@ -536,7 +551,7 @@
 <p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! With dataget you can quickly download any dataset from the platform and have immediate access to the data:</p>
 <p><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
-<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
     <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
@@ -549,19 +564,21 @@ To start using Kaggle datasets just make sure you have properly installed and co
 </li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p><code>dataget</code> is avaiable at <a href="https://pypi.org/">pypi</a> so you can use your favorite package manager install to it:</p>
-<h4 id="pip">pip<a class="headerlink" href="#pip" title="Permanent link">&para;</a></h4>
+<p><code>dataget</code> is avaiable at <a href="https://pypi.org/">pypi</a> so you can use your favorite package manager.</p>
+<h5 id="pip">pip<a class="headerlink" href="#pip" title="Permanent link">&para;</a></h5>
 <div class="codehilite"><pre><span></span>pip install dataget
 </pre></div>
 
-<h4 id="pipenv">pipenv<a class="headerlink" href="#pipenv" title="Permanent link">&para;</a></h4>
+<h5 id="pipenv">pipenv<a class="headerlink" href="#pipenv" title="Permanent link">&para;</a></h5>
 <div class="codehilite"><pre><span></span>pipenv install pytest
 </pre></div>
 
-<h4 id="poetry">poetry<a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h4>
+<h5 id="poetry">poetry<a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h5>
 <div class="codehilite"><pre><span></span>poetry add dataget
 </pre></div>
 
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>Read our guide one <a href="https://cgarciae.github.io/dataget/dataset/">Creating a Dataset</a> if you are interested in adding a dataset to dataget.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>MIT License</p>
                 
