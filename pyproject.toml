@@ -14,6 +14,7 @@ idx2numpy = "*"
 aiofiles = "*"
 tqdm = "*"
 pyarrow = "*"
+kaggle = "^1.5.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.5"

@@ -12,16 +12,16 @@ Main features:
 
 ## Getting Started
 
-In dataget you just have to use two functions:
+In dataget you just have to do two things:
 
-* `data` to specify source of the data.
-* `get` to download the dataset to disk and load it into memory.
+* Select a dataset from the `data` module.
+* Use the `get` to download the data to disk and load it into memory.
 
 ```python
 import dataget as dg
 
 
-X_train, y_train, X_test, y_test = dg.data("vision/mnist").get()
+X_train, y_train, X_test, y_test = dg.data.vision.mnist().get()
 ```
 
 This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) to `./data/vision_mnist` and loads it as `numpy` arrays.
@@ -33,19 +33,19 @@ Kaggle promotes the use of `csv` files and `dataget` loves it!
 ```python
 import dataget as dg
 
-df_train, df_test = dg.data(
-    "kaggle", dataset="cristiangarcia/pointcloudmnist2d"
-).get(files=["train.csv", "test.csv"])
+df_train, df_test = dg.data.kaggle("cristiangarcia/pointcloudmnist2d").get(
+    files=["train.csv", "test.csv"]
+)
 ```
 
 In the future we want to expand Kaggle support in the following ways:
 
 * Be able to load any file that `numpy` or `pandas` can read.
-* Have generic support for other types of datasets like images, audio, or video. E.g. `dg.get("kaggle/vision", ...).get(...)`
+* Have generic support for other types of datasets like images, audio, or video. E.g. `dg.data.kaggle(type="vision", ...).get(...)`
 
 ## Installation
 
-Avaiable at `pypi` as `dataget`, you can install it with your favorite python package manager:
+`dataget` is avaiable at `pypi` so you can use your favorite package manager install to it:
 
 ```bash
 # pip

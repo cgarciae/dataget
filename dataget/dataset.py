@@ -8,24 +8,23 @@ from dataget import utils
 
 
 class Dataset(ABC):
+    @property
+    @abstractmethod
+    def name(self):
+        pass
 
-    name: str = None
+    def __init__(self, root: Path = None, use_global: bool = False):
 
-    def __init__(self, root: Path):
-        """
-        ABC
-        """
-        assert self.name, f"Empty 'name' for class {self.__class__}"
+        if root:
+            pass
+        elif use_global:
+            root = Path("~").expanduser() / ".dataget"
+        else:
+            root = Path("data")
 
-        if not isinstance(root, Path):
-            root = Path(root)
+        self.path = root / self.name
 
-        self.path = root / self.name.replace("/", "_")
-
-    def get(self, use_cache=True, **kwargs):
-        """
-        DFG
-        """
+    def get(self, use_cache: bool = True, **kwargs):
 
         if not self.is_valid(**kwargs) or not use_cache:
             shutil.rmtree(self.path, ignore_errors=True)

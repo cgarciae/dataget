@@ -1,6 +1,6 @@
-from dataget.api import data
+import dataget as dg
 
-X_train, y_train, X_test, y_test = data("vision/mnist").get()
+X_train, y_train, X_test, y_test = dg.data.vision.mnist().get()
 
 print(X_train.shape)
 print(y_train.shape)

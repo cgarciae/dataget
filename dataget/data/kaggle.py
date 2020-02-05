@@ -4,20 +4,18 @@ from pathlib import Path
 import pandas as pd
 
 from dataget import utils
-from dataget.api import register_dataset
-from dataget.datasets.dataset import Dataset
+from dataget.dataset import Dataset
 
 
-@register_dataset("kaggle")
-class Kaggle(Dataset):
-    def __init__(self, root: Path, dataset: str):
-        if not isinstance(root, Path):
-            root = Path(root)
+class kaggle(Dataset):
+    @property
+    def name(self):
+        return f"kaggle_{self.kaggle_dataset.replace('/', '_')}"
 
-        self.path = root / (
-            self.name.replace("/", "_") + "_" + dataset.replace("/", "_")
-        )
+    def __init__(self, dataset: str, **kwargs):
         self.kaggle_dataset = dataset
+
+        super().__init__(**kwargs)
 
     def download(self, **kwargs):
         subprocess.check_call(
@@ -26,7 +24,6 @@ class Kaggle(Dataset):
         )
 
     def load_data(self, files, **kwargs):
-
         return [self._load_file(filename) for filename in files]
 
     def _load_file(self, filename):

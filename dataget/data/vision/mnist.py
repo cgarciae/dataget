@@ -7,8 +7,7 @@ import pandas as pd
 import asyncio
 
 from dataget import utils
-from dataget.api import register_dataset
-from dataget.datasets.dataset import Dataset
+from dataget.dataset import Dataset
 
 TRAIN_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz"
 TRAIN_LABELS_URL = "http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz"
@@ -16,8 +15,11 @@ TEST_FEATURES_URL = "http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz"
 TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
 
 
-@register_dataset("vision/mnist")
-class MNIST(Dataset):
+class mnist(Dataset):
+    @property
+    def name(self):
+        return "vision_mnist"
+
     async def download(self, **kwargs):
 
         async with httpx.AsyncClient() as client:
