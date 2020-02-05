@@ -249,8 +249,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kaggle" class="md-nav__link">
-    Kaggle
+  <a href="#kaggle-support" class="md-nav__link">
+    Kaggle Support
   </a>
   
 </li>
@@ -294,6 +294,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
       
       
       
@@ -330,8 +337,20 @@
 
 
   <li class="md-nav__item">
-    <a href="datasets/kaggle/" title="Kaggle" class="md-nav__link">
-      Kaggle
+    <a href="datasets/overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="datasets/kaggle/" title="kaggle" class="md-nav__link">
+      kaggle
     </a>
   </li>
 
@@ -343,14 +362,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
     
-    <label class="md-nav__link" for="nav-2-2">
-      Vision
+    <label class="md-nav__link" for="nav-2-3">
+      vision
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-2-2">
-        Vision
+      <label class="md-nav__title" for="nav-2-3">
+        vision
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -361,8 +380,8 @@
 
 
   <li class="md-nav__item">
-    <a href="datasets/vision/mnist/" title="MNIST" class="md-nav__link">
-      MNIST
+    <a href="datasets/vision/mnist/" title="mnist" class="md-nav__link">
+      mnist
     </a>
   </li>
 
@@ -430,8 +449,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kaggle" class="md-nav__link">
-    Kaggle
+  <a href="#kaggle-support" class="md-nav__link">
+    Kaggle Support
   </a>
   
 </li>
@@ -475,6 +494,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
       
       
       
@@ -508,7 +534,7 @@
 <p>In dataget you just have to do two things:</p>
 <ul>
 <li>Select a dataset from the <code>data</code> module.</li>
-<li>Use the <code>get</code> to download the data to disk and load it into memory.</li>
+<li>Use the <code>get</code> method to download the data to disk and load it into memory.</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
@@ -516,17 +542,16 @@
 <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
-<p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
-<h3 id="kaggle">Kaggle<a class="headerlink" href="#kaggle" title="Permanent link">&para;</a></h3>
-<p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! You can download any dataset from the platform and have immediate access to the data on your local machine:</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
+<p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> dataset to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
+<h3 id="kaggle-support">Kaggle Support<a class="headerlink" href="#kaggle-support" title="Permanent link">&para;</a></h3>
+<p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! With dataget you can quickly download any dataset from the platform and have immediate access to the data:</p>
+<p><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
 
 <span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
     <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
-
-<p>In the future we want to expand Kaggle support in the following ways:</p>
+To start using Kaggle datasets just make sure you have properly installed and configured the <a href="https://github.com/Kaggle/kaggle-api">Kaggle API</a>. In the future we want to expand Kaggle support in the following ways:</p>
 <ul>
 <li>Be able to load any file that <code>numpy</code> or <code>pandas</code> can read.</li>
 <li>Have generic support for other types of datasets like images, audio, video, etc. <ul>
@@ -547,6 +572,9 @@
 <h4 id="poetry">poetry<a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span>poetry add dataget
 </pre></div>
+
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p>MIT License</p>
                 
                   
                 
@@ -569,13 +597,13 @@
       <nav class="md-footer-nav__inner md-grid">
         
         
-          <a href="datasets/kaggle/" title="Kaggle" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="datasets/overview/" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Kaggle
+                Overview
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
