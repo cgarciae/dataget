@@ -1,6 +1,6 @@
-import dataget as dg
+import dataget
 
-df_train, df_test = dg.kaggle("cristiangarcia/pointcloudmnist2d").get(
+df_train, df_test = dataget.kaggle("cristiangarcia/pointcloudmnist2d").get(
     files=["train.csv", "test.csv"]
 )
 

@@ -5,18 +5,18 @@ description = "A framework-agnostic datasets library for Machine Learning resear
 authors = ["Cristian Garcia <cgarcia.e88@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/cgarciae/dataget"
+homepage = "https://cgarciae.github.io/dataget"
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-httpx = "*"
-numpy = "*"
-pandas = "*"
-idx2numpy = "*"
-aiofiles = "*"
-tqdm = "*"
-pyarrow = "*"
 kaggle = "^1.5.6"
+httpx = "^0.11.1"
+numpy = "^1.18.1"
+aiofiles = "^0.4.0"
+tqdm = "^4.42.1"
+idx2numpy = "^1.2.2"
+pandas = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.5"
