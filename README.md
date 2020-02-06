@@ -10,7 +10,7 @@ Main features:
 * **Memory Efficient**: When a dataset doesn't fit in memory it will return metadata instead so you can iteratively load it.
 * **Integrates with Kaggle**: Supports loading datasets directly from Kaggle in a variety of formats.
 
-Checkout the [documentation](https://cgarciae.github.io/dataget/) for the list of avaiable datasets.
+Checkout the [documentation](https://cgarciae.github.io/dataget/) for the list of available datasets.
 
 ## Getting Started
 
@@ -28,7 +28,7 @@ import dataget
 X_train, y_train, X_test, y_test = dataget.vision.mnist().get()
 ```
 
-This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/vision_mnist` and loads it as `numpy` arrays.
+This example downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/vision_mnist` and loads it as `numpy` arrays.
 
 ### Kaggle Support
 
@@ -50,7 +50,7 @@ To start using Kaggle datasets just make sure you have properly installed and co
 
 ## Installation
 
-`dataget` is avaiable at [pypi](https://pypi.org/) so you can use your favorite package manager.
+`dataget` is available at [pypi](https://pypi.org/) so you can use your favorite package manager.
 
 ##### pip
 ```bash
