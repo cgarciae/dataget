@@ -6,7 +6,7 @@ The `Dataset` class defined these 4 abstract methods which you must implement:
 * `name`: a property that should return the name of the dataset e.g. `vision_mnist`.
 * `download`: the method that should download the dataset to disk and possibly perform other tasks such as file extraction, organization, and clean_cacheup.
 * `load`: the method that loads the data into memory and possibly structures it in the most convenient format for the user.
-* `is_valid`: a method which validates that the data on disk is valid to guarantee that the download process succeded.
+* `is_valid`: a method which validates that the data on disk is valid to guarantee that the download process succeeded.
 
 
 !!! path
