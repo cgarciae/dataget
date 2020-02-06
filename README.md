@@ -68,7 +68,7 @@ poetry add dataget
 
 ## Contributing
 
-Read our guide one [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
+Read our guide on [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
 
 ## License
 MIT License

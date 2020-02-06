@@ -7,6 +7,7 @@ theme:
 
 nav:
   - Introduction: index.md
+  - Advanced Usage: advanced-usage.md
   - Available Datasets:
       - kaggle: datasets/kaggle.md
       - vision:
