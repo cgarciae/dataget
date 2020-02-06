@@ -19,7 +19,7 @@ class Dataset(ABC):
 
     def __init__(self, path: Path = None, global_cache: bool = False):
 
-        if not isinstance(path, Path):
+        if path and not isinstance(path, Path):
             path = Path(path)
 
         if path:
@@ -31,9 +31,9 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean: bool = False, **kwargs):
+    def get(self, clean_cache: bool = False, **kwargs):
 
-        if clean or not self.is_valid(**kwargs):
+        if clean_cache or not self.is_valid(**kwargs):
             shutil.rmtree(self.path, ignore_errors=True)
             self.path.mkdir(parents=True)
 
