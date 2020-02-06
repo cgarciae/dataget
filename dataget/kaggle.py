@@ -13,6 +13,10 @@ class kaggle(Dataset):
         return f"kaggle_{self.kaggle_dataset.replace('/', '_')}"
 
     def __init__(self, dataset: str, **kwargs):
+        """
+        Arguments:
+            dataset: the id of the kaggle dataset in the format `username/dataset_name`
+        """
         self.kaggle_dataset = dataset
 
         super().__init__(**kwargs)
@@ -23,7 +27,11 @@ class kaggle(Dataset):
             shell=True,
         )
 
-    def load_data(self, files, **kwargs):
+    def load(self, files: list, **kwargs):
+        """
+        Arguments:
+            files: the list of files that will be loaded into memory
+        """
         return [self._load_file(filename) for filename in files]
 
     def _load_file(self, filename):

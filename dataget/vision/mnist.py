@@ -53,7 +53,7 @@ class mnist(Dataset):
             and (self.path / "test-labels.idx").exists()
         )
 
-    def load_data(self, **kwargs):
+    def load(self, **kwargs):
 
         with open(self.path / "train-features.idx", "rb") as f:
             X_train = idx2numpy.convert_from_file(f)

@@ -7,23 +7,25 @@ Main features:
 * **Minimal**: Downloads entire datasets with just 1 line of code.
 * **Compatible**: Loads data as `numpy` arrays or `pandas` dataframes which can be easily used with the majority of Machine Learning frameworks.
 * **Transparent**: By default stores the data in your current project so you can easily inspect it.
-* **Memory Efficient**: When a dataset doesn't fit in memory it will return metadata instead you can iteratively load it.
+* **Memory Efficient**: When a dataset doesn't fit in memory it will return metadata instead so you can iteratively load it.
 * **Integrates with Kaggle**: Supports loading datasets directly from Kaggle in a variety of formats.
 
-Checkout our list of [avaiable datasets](https://cgarciae.github.io/dataget/datasets/overview/).
+Checkout the [documentation](https://cgarciae.github.io/dataget/) for the list of avaiable datasets.
 
 ## Getting Started
 
 In dataget you just have to do two things:
 
-* Select a dataset from the `data` module.
-* Use the `get` method to download the data to disk and load it into memory.
+* Instantiate a `Dataset` from our collection.
+* Call the `get` method to download the data to disk and load it into memory.
+
+Both are usually done in one line:
 
 ```python
 import dataget as dg
 
 
-X_train, y_train, X_test, y_test = dg.data.vision.mnist().get()
+X_train, y_train, X_test, y_test = dg.vision.mnist().get()
 ```
 
 This examples downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/vision_mnist` and loads it as `numpy` arrays.
@@ -35,7 +37,7 @@ Kaggle [promotes](https://www.kaggle.com/docs/datasets#supported-file-types) the
 ```python
 import dataget as dg
 
-df_train, df_test = dg.data.kaggle("cristiangarcia/pointcloudmnist2d").get(
+df_train, df_test = dg.kaggle("cristiangarcia/pointcloudmnist2d").get(
     files=["train.csv", "test.csv"]
 )
 ```
@@ -48,21 +50,25 @@ To start using Kaggle datasets just make sure you have properly installed and co
 
 ## Installation
 
-`dataget` is avaiable at [pypi](https://pypi.org/) so you can use your favorite package manager install to it:
+`dataget` is avaiable at [pypi](https://pypi.org/) so you can use your favorite package manager.
 
-#### pip
+##### pip
 ```bash
 pip install dataget
 ```
 
-#### pipenv
+##### pipenv
 ```bash
 pipenv install pytest
 ```
-#### poetry
+##### poetry
 ```bash
 poetry add dataget
 ```
+
+## Contributing
+
+Read our guide one [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
 
 ## License
 MIT License

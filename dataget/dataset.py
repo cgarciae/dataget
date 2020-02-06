@@ -8,6 +8,10 @@ from dataget import utils
 
 
 class Dataset(ABC):
+    """
+    DATASETTTT
+    """
+
     @property
     @abstractmethod
     def name(self):
@@ -41,14 +45,14 @@ class Dataset(ABC):
                     f"Failed download for '{self.name}' at '{self.path}'"
                 )
 
-        return self.load_data(**kwargs)
+        return self.load(**kwargs)
 
     @abstractmethod
     def download(self, **kwargs):
         pass
 
     @abstractmethod
-    def load_data(self, **kwargs):
+    def load(self, **kwargs):
         pass
 
     @abstractmethod

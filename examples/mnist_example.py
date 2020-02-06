@@ -1,8 +1,8 @@
 import dataget as dg
 
-X_train, y_train, X_test, y_test = dg.data.vision.mnist().get()
+X_train, y_train, X_test, y_test = dg.vision.mnist().get()
 
-print(X_train.shape)
-print(y_train.shape)
-print(X_test.shape)
-print(y_test.shape)
+print(X_train.shape, X_train.dtype)
+print(y_train.shape, y_train.dtype)
+print(X_test.shape, X_test.dtype)
+print(y_test.shape, y_test.dtype)
