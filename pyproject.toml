@@ -1,12 +1,14 @@
 [tool.poetry]
 name = "dataget"
-version = "0.4.0"
-description = ""
+version = "0.4.1"
+description = "A framework-agnostic datasets library for Machine Learning research and education."
 authors = ["Cristian Garcia <cgarcia.e88@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/cgarciae/dataget"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.7.6"
+python = "^3.7"
 httpx = "*"
 numpy = "*"
 pandas = "*"
