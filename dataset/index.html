@@ -306,22 +306,46 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Creating a Dataset
+      </label>
+    
     <a href="./" title="Creating a Dataset" class="md-nav__link md-nav__link--active">
       Creating a Dataset
     </a>
     
-  </li>
-
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
     
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-kwargs" class="md-nav__link">
+    get kwargs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    Template
+  </a>
+  
+</li>
       
       
       
-
-
-  <li class="md-nav__item">
-    <a href="../api/" title="Reference API" class="md-nav__link">
-      Reference API
-    </a>
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
     
@@ -342,6 +366,29 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-kwargs" class="md-nav__link">
+    get kwargs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    Template
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -356,6 +403,65 @@
                 
                 
                 <h1 id="creating-a-dataset">Creating a Dataset<a class="headerlink" href="#creating-a-dataset" title="Permanent link">&para;</a></h1>
+<p>The <code>Dataset</code> class defined these 4 abstract methods which you must implement:</p>
+<ul>
+<li><code>name</code>: a property that should return the name of the dataset e.g. <code>vision_mnist</code>.</li>
+<li><code>download</code>: the method that should download the dataset to disk and possibly perform other tasks such as file extraction, organization, and cleanup.</li>
+<li><code>load</code>: the method that loads the data into memory and possibly structures it in the most convenient format for the user.</li>
+<li><code>is_valid</code>: a method which validates that the data on disk is valid to guarantee that the download process succeded.</li>
+</ul>
+<div class="admonition path">
+<p class="admonition-title">Path</p>
+<p>The <code>self.path</code> field is a <code>pathlib.Path</code> that tells the dataset where the data should be stored. The <code>get</code> method ensures this path exists before calling <code>is_valid</code>, <code>download</code>, or <code>load</code>; use this field when implementing these methods.</p>
+</div>
+<h3 id="get-kwargs">get kwargs<a class="headerlink" href="#get-kwargs" title="Permanent link">&para;</a></h3>
+<p>The <code>get</code> method will accept <code>**kwargs</code> which it will forward to <code>download</code>, <code>load</code>, and <code>is_valid</code> so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept <code>**kwargs</code> to accumulate the additional it doesn't need. For example:</p>
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># code</span>
+
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># code</span>
+</pre></div>
+
+<p>With this implementation you the <code>get</code> method could be called like this:</p>
+<div class="codehilite"><pre><span></span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.2&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+</pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the previous example the <code>version</code> argument is required because <code>download</code> uses it as a positional argument although for <code>get</code> its just a keyword argument, if it were not passed a <code>TypeError</code> would've been raised.</p>
+</div>
+<h3 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
+<p>You can use this template to get started. </p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">dataget.dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+<span class="k">class</span> <span class="nc">SomeDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+
+    <span class="c1"># OPTIONAL</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># code</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># !!IMPORTANT</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;some_dataset_name&quot;</span>
+
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">some_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># code </span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># code</span>
+        <span class="k">return</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">,</span> <span class="n">data3</span><span class="p">,</span> <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">another_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># code</span>
+        <span class="k">return</span> <span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span>
+</pre></div>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are definint you own <code>__init__</code> remenber to always forward <code>**kwargs</code> to <code>super().__init__</code> since its important that all datasets support the <code>root</code> and <code>use_global</code> keyword arguments defined in the <code>Dataset</code> class. If <code>super().__init__</code> is not called at all the <code>path</code> field will not be instantiated and errors will occure.</p>
+</div>
                 
                   
                 
@@ -391,20 +497,6 @@
             </div>
           </a>
         
-        
-          <a href="../api/" title="Reference API" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Reference API
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
         
       </nav>
     </div>
