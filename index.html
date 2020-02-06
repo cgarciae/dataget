@@ -528,18 +528,18 @@
 <li>Call the <code>get</code> method to download the data to disk and load it into memory.</li>
 </ul>
 <p>Both are usually done in one line:</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span>
 
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataget</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 <p>This examples downloads the <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> dataset to <code>./data/vision_mnist</code> and loads it as <code>numpy</code> arrays.</p>
 <h3 id="kaggle-support">Kaggle Support<a class="headerlink" href="#kaggle-support" title="Permanent link">&para;</a></h3>
 <p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! With dataget you can quickly download any dataset from the platform and have immediate access to the data:</p>
-<p><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span> <span class="k">as</span> <span class="nn">dg</span>
+<p><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span>
 
-<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dataget</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
     <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
@@ -547,7 +547,7 @@ To start using Kaggle datasets just make sure you have properly installed and co
 <ul>
 <li>Be able to load any file that <code>numpy</code> or <code>pandas</code> can read.</li>
 <li>Have generic support for other types of datasets like images, audio, video, etc. <ul>
-<li>e.g <code>dg.data.kaggle(..., type="vision").get(...)</code></li>
+<li>e.g <code>dataget.data.kaggle(..., type="vision").get(...)</code></li>
 </ul>
 </li>
 </ul>
