@@ -63,4 +63,4 @@ class SomeDataset(Dataset):
 ```
 
 !!! warning
-    If you are definint you own `__init__` remenber to always forward `**kwargs` to `super().__init__` since its important that all datasets support the `root` and `use_global` keyword arguments defined in the `Dataset` class. If `super().__init__` is not called at all the `path` field will not be instantiated and errors will occure.
+    If you are definint you own `__init__` remenber to always forward `**kwargs` to `super().__init__` since its important that all datasets support the `path` and `global_cache` keyword arguments defined in the `Dataset` class. If `super().__init__` is not called at all the `path` field will not be instantiated and errors will occure.

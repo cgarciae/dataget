@@ -17,20 +17,23 @@ class Dataset(ABC):
     def name(self):
         pass
 
-    def __init__(self, root: Path = None, use_global: bool = False):
+    def __init__(self, path: Path = None, global_cache: bool = False):
 
-        if root:
+        if not isinstance(path, Path):
+            path = Path(path)
+
+        if path:
             pass
-        elif use_global:
-            root = Path("~").expanduser() / ".dataget"
+        elif global_cache:
+            path = Path("~").expanduser() / ".dataget" / self.name
         else:
-            root = Path("data")
+            path = Path("data") / self.name
 
-        self.path = root / self.name
+        self.path = path
 
-    def get(self, use_cache: bool = True, **kwargs):
+    def get(self, clean: bool = False, **kwargs):
 
-        if not self.is_valid(**kwargs) or not use_cache:
+        if clean or not self.is_valid(**kwargs):
             shutil.rmtree(self.path, ignore_errors=True)
             self.path.mkdir(parents=True)
 
