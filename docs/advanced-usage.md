@@ -1,6 +1,6 @@
 # Advanced Usage
 
-## Dataset Directory
+## Specifying Download Directory
 
 By default every dataset is downloaded inside a `./data/{dataset_name}` folder in the current directory. There are two ways you can control where the data is stored: the first one is use the `global_cache` keyword argument on the constructor of any `Dataset`
 

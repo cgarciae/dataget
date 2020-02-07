@@ -50,7 +50,7 @@ To start using Kaggle datasets just make sure you have properly installed and co
 
 ## Installation
 
-`dataget` is avaiable at [pypi](https://pypi.org/) so you can use your favorite package manager.
+`dataget` is available at [pypi](https://pypi.org/) so you can use your favorite package manager.
 
 ##### pip
 ```bash
@@ -68,7 +68,7 @@ poetry add dataget
 
 ## Contributing
 
-Read our guide one [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
+Read our guide on [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
 
 ## License
 MIT License
