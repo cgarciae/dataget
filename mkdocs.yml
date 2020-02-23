@@ -10,6 +10,8 @@ nav:
   - Advanced Usage: advanced-usage.md
   - Available Datasets:
       - kaggle: datasets/kaggle.md
+      - toy:
+          - spirals: datasets/toy/spirals.md
       - vision:
           - mnist: datasets/vision/mnist.md
   - Creating a Dataset: dataset.md
