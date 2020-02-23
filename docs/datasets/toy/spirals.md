@@ -17,7 +17,7 @@ df_train, df_test = dataget.toy.spirals().get()
 |              | type         | shape      |
 | ------------ | ------------ | ---------- |
 | **df_train** | pd.DataFrame | `(399, 3)` |
-| **df_test**  | pd.DataFrame | `(99, 3)`  |
+| **df_test**  | pd.DataFrame | `(45, 3)`  |
 
 ## Features
 
@@ -27,4 +27,4 @@ df_train, df_test = dataget.toy.spirals().get()
 
 ## Info
 * **Folder name**: `toy_spirals`
-* **Size on disk**: `36KB`
+* **Size on disk**: `24KB`
