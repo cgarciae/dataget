@@ -1,11 +1,7 @@
 # Changelog
 
-## [1.1.0] - 2019-02-15
+## [0.4.2] - 2020-02-22
 
-### Added
+### Datasets
 
-- Changelog inconsistency section in Bad Practices
-
-## [1.0.0] - 2017-06-20
-
-### Added
+- Added `toy.spirals` dataset.
