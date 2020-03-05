@@ -16,6 +16,7 @@ nav:
           - mnist: datasets/vision/mnist.md
           - cifar10: datasets/vision/cifar10.md
           - cifar100: datasets/vision/cifar100.md
+          - fashion_mnist: datasets/vision/fashion_mnist.md
   - Creating a Dataset: dataset.md
 
 extra:

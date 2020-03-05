@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5] - 2020-03-05
+### Adds
+- Adds the `fashion_mnist` dataset.
+### Changes
+- Changes download progress smoothing parameters.
+
+
 ## [0.4.4] - 2020-03-05
 ### Adds
 - Adds the `cifar10` and `cifar100` datasets.

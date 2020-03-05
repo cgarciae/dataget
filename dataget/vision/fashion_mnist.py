@@ -10,10 +10,10 @@ from dataget import utils
 from dataget.dataset import Dataset
 
 
-class fasion_mnist(Dataset):
+class fashion_mnist(Dataset):
     @property
     def name(self):
-        return "vision_fasion_mnist"
+        return "vision_fashion_mnist"
 
     async def download(self, **kwargs):
 

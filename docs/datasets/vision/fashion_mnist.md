@@ -1,18 +1,18 @@
 
-# dataget.vision.fasion_mnist
+# dataget.vision.fashion_mnist
 
-Downloads the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) and loads it as `numpy` arrays.
+Downloads the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) dataset and loads it as `numpy` arrays.
 
 ```python
 import dataget
 
-X_train, y_train, X_test, y_test = dataget.vision.fasion_mnist().get()
+X_train, y_train, X_test, y_test = dataget.vision.fashion_mnist().get()
 ```
 
 ## Sample
 <img 
     src="https://www.researchgate.net/profile/Lina_Yao4/publication/325921786/figure/fig2/AS:640163516522496@1529638284313/Example-for-fashion-MNIST-Each-class-is-represented-by-nine-cases.png" 
-    alt="fasion-mnist-sample" 
+    alt="fashion-mnist-sample" 
     width="100%" 
 />
 
@@ -26,5 +26,5 @@ X_train, y_train, X_test, y_test = dataget.vision.fasion_mnist().get()
 | **y_test**  | np.array | `(10_000,)`        | uint8 |
 
 ## Info
-* **Folder name**: `vision_fasion_mnist`
+* **Folder name**: `vision_fashion_mnist`
 * **Size on disk**: `53MB`
