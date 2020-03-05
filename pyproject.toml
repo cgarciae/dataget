@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dataget"
-version = "0.4.3"
+version = "0.4.4"
 description = "A framework-agnostic datasets library for Machine Learning research and education."
 authors = ["Cristian Garcia <cgarcia.e88@gmail.com>"]
 readme = "README.md"
