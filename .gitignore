@@ -97,3 +97,4 @@ ENV/
 /data
 /.vscode
 /site
+/scratch.py

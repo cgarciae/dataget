@@ -30,8 +30,6 @@ class mnist(Dataset):
                 self._download_file(client, TEST_LABELS_URL, "test-labels"),
             ]
 
-            tasks = [asyncio.create_task(task) for task in tasks]
-
             await asyncio.gather(*tasks)
 
     async def _download_file(self, client, url, name):
@@ -44,14 +42,6 @@ class mnist(Dataset):
         )
 
         gz_path.unlink()
-
-    def is_valid(self, **kwargs):
-        return (
-            (self.path / "train-features.idx").exists()
-            and (self.path / "train-labels.idx").exists()
-            and (self.path / "test-features.idx").exists()
-            and (self.path / "test-labels.idx").exists()
-        )
 
     def load(self, **kwargs):
 
