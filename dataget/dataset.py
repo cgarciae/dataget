@@ -31,11 +31,13 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean_cache: bool = False, **kwargs):
+    def get(self, clean_cache: bool = False, debug: bool = False, **kwargs):
 
         if clean_cache or not self.is_valid(**kwargs):
-            shutil.rmtree(self.path, ignore_errors=True)
-            self.path.mkdir(parents=True)
+
+            if not debug:
+                shutil.rmtree(self.path, ignore_errors=True)
+                self.path.mkdir(parents=True)
 
             # get data
             coro = self.download(**kwargs)
