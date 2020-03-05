@@ -1,10 +1,11 @@
+import asyncio
 import os
+import subprocess
 
 import aiofiles
 import httpx
 import idx2numpy
 import pandas as pd
-import asyncio
 
 from dataget import utils
 from dataget.dataset import Dataset
@@ -15,22 +16,17 @@ class imagenet(Dataset):
     def name(self):
         return "vision_imagenet"
 
-    async def download(self, **kwargs):
+    def download(self, **kwargs):
 
         subprocess.check_call(
-            f"kaggle datasets download -p {self.path} --unzip {self.kaggle_dataset}",
+            f"kaggle competitions download -p {self.path} imagenet-object-localization-challenge",
             shell=True,
         )
 
-        async with httpx.AsyncClient() as client:
-            tasks = [
-                self._download_file(client, TRAIN_FEATURES_URL, "train-features"),
-                self._download_file(client, TRAIN_LABELS_URL, "train-labels"),
-                self._download_file(client, TEST_FEATURES_URL, "test-features"),
-                self._download_file(client, TEST_LABELS_URL, "test-labels"),
-            ]
+        zip_path = self.path / "imagenet-object-localization-challenge.zip"
 
-            await asyncio.gather(*tasks)
+        utils.ungzip(zip_path, self.path)
+        zip_path.unlink()
 
     async def _download_file(self, client, url, name):
         gz_path = self.path / f"{name}.gz"

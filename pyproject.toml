@@ -9,7 +9,7 @@ homepage = "https://cgarciae.github.io/dataget"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 kaggle = "^1.5.6"
 httpx = "^0.11.1"
 numpy = "^1.18.1"
