@@ -21,5 +21,5 @@ In this example we downloaded the [Point Cloud Mnist 2D](https://www.kaggle.com/
 
 Right now we only support the `csv` format. In the future we want to be able to load any file that `numpy` or `pandas` can read.
 
-## Reference API
+## API Reference
 ::: dataget.kaggle

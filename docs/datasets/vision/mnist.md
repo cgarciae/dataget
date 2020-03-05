@@ -20,8 +20,8 @@ X_train, y_train, X_test, y_test = dataget.vision.mnist().get()
 
 |             | type     | shape              | dtype |
 | ----------- | -------- | ------------------ | ----- |
-| **X_train** | np.array | `(50_000, 28, 28)` | uint8 |
-| **y_train** | np.array | `(50_000,)`        | uint8 |
+| **X_train** | np.array | `(60_000, 28, 28)` | uint8 |
+| **y_train** | np.array | `(60_000,)`        | uint8 |
 | **X_test**  | np.array | `(10_000, 28, 28)` | uint8 |
 | **y_test**  | np.array | `(10_000,)`        | uint8 |
 
