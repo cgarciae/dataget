@@ -1,16 +1,19 @@
 
-# Spirals Challenge
-## Description
-This is an artificial set created using polar functions inspired by a similar one found in [tensorflow playground](http://playground.tensorflow.org).
+# dataget.toy.spirals
+This is an artificial dataset created using polar functions inspired by a similar dataset found in [tensorflow playground](http://playground.tensorflow.org).
 
-![graph](https://github.com/colomb-ia/supervised-basico-spirals/raw/master/images/graph.png)
-
-## Example
 ```python
 import dataget
 
 df_train, df_test = dataget.toy.spirals().get()
 ```
+
+## Sample
+<img 
+    src="https://github.com/colomb-ia/supervised-basico-spirals/raw/master/images/graph.png" 
+    alt="spirals-sample" 
+    width="80%" 
+/>
 
 ## Format
 
