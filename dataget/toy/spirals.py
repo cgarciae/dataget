@@ -18,23 +18,14 @@ class spirals(Dataset):
     async def download(self, **kwargs):
         async with httpx.AsyncClient() as client:
             await asyncio.gather(
-                asyncio.create_task(
-                    utils.download_file(client, TRAIN_URL, self.path / "train.csv"),
-                ),
-                asyncio.create_task(
-                    utils.download_file(client, TEST_URL, self.path / "test.csv"),
-                ),
+                utils.download_file(client, TRAIN_URL, self.path / "train.csv"),
+                utils.download_file(client, TEST_URL, self.path / "test.csv"),
             )
 
     def load(self, **kwargs):
         return (
             pd.read_csv(self.path / "train.csv"),
             pd.read_csv(self.path / "test.csv"),
-        )
-
-    def is_valid(self, **kwargs):
-        return all(
-            [(self.path / "train.csv").exists(), (self.path / "test.csv").exists(),]
         )
 
 

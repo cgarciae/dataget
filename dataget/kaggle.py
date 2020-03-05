@@ -44,6 +44,3 @@ class kaggle(Dataset):
 
         return df
 
-    def is_valid(self, files, **kwargs):
-        return all((self.path / filename).exists() for filename in files)
-

@@ -41,14 +41,15 @@ class Dataset(ABC):
             coro = self.download(**kwargs)
 
             if coro is not None:
-                asyncio.get_event_loop().run_until_complete(coro)
+                asyncio.run(coro)
 
-            if not self.is_valid(**kwargs):
-                raise DownloadError(
-                    f"Failed download for '{self.name}' at '{self.path}'"
-                )
+            # mark as valid
+            (self.path / ".valid").touch()
 
         return self.load(**kwargs)
+
+    def is_valid(self, **kwargs):
+        return (self.path / ".valid").exists()
 
     @abstractmethod
     def download(self, **kwargs):
@@ -56,10 +57,6 @@ class Dataset(ABC):
 
     @abstractmethod
     def load(self, **kwargs):
-        pass
-
-    @abstractmethod
-    def is_valid(self, **kwargs):
         pass
 
 
