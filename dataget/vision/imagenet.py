@@ -10,24 +10,24 @@ from dataget import utils
 from dataget.dataset import Dataset
 
 
-class fashion_mnist(Dataset):
+class imagenet(Dataset):
     @property
     def name(self):
-        return "vision_fashion_mnist"
+        return "vision_imagenet"
 
     async def download(self, **kwargs):
 
-        base_url = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
-        files = {
-            "train-labels": base_url + "train-labels-idx1-ubyte.gz",
-            "train-features": base_url + "train-images-idx3-ubyte.gz",
-            "test-labels": base_url + "t10k-labels-idx1-ubyte.gz",
-            "test-features": base_url + "t10k-images-idx3-ubyte.gz",
-        }
+        subprocess.check_call(
+            f"kaggle datasets download -p {self.path} --unzip {self.kaggle_dataset}",
+            shell=True,
+        )
 
         async with httpx.AsyncClient() as client:
             tasks = [
-                self._download_file(client, url, name) for name, url in files.items()
+                self._download_file(client, TRAIN_FEATURES_URL, "train-features"),
+                self._download_file(client, TRAIN_LABELS_URL, "train-labels"),
+                self._download_file(client, TEST_FEATURES_URL, "test-features"),
+                self._download_file(client, TEST_LABELS_URL, "test-labels"),
             ]
 
             await asyncio.gather(*tasks)
@@ -37,7 +37,9 @@ class fashion_mnist(Dataset):
         idx_path = self.path / f"{name}.idx"
 
         await utils.download_file(client, url, gz_path)
-        await utils.run_in_executor(lambda: utils.ungzip(gz_path, idx_path))
+        await asyncio.get_event_loop().run_in_executor(
+            None, lambda: utils.ungzip(gz_path, idx_path)
+        )
 
         gz_path.unlink()
 

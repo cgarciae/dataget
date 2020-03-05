@@ -1,2 +1,1 @@
 from .spirals import spirals
-
