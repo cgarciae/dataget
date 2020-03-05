@@ -456,14 +456,13 @@
 <li><code>name</code>: a property that should return the name of the dataset e.g. <code>vision_mnist</code>.</li>
 <li><code>download</code>: the method that should download the dataset to disk and possibly perform other tasks such as file extraction, organization, and clean_cacheup.</li>
 <li><code>load</code>: the method that loads the data into memory and possibly structures it in the most convenient format for the user.</li>
-<li><code>is_valid</code>: a method which validates that the data on disk is valid to guarantee that the download process succeeded.</li>
 </ul>
 <div class="admonition path">
 <p class="admonition-title">Path</p>
-<p>The <code>self.path</code> field is a <code>pathlib.Path</code> that tells the dataset where the data should be stored. The <code>get</code> method ensures this path exists before calling <code>is_valid</code>, <code>download</code>, or <code>load</code>; use this field when implementing these methods.</p>
+<p>The <code>self.path</code> field is a <code>pathlib.Path</code> that tells the dataset where the data should be stored. The <code>get</code> method ensures this path exists before calling <code>download</code> or <code>load</code>; use this field when implementing these methods.</p>
 </div>
 <h3 id="get-kwargs">get kwargs<a class="headerlink" href="#get-kwargs" title="Permanent link">&para;</a></h3>
-<p>The <code>get</code> method will accept <code>**kwargs</code> which it will forward to <code>download</code>, <code>load</code>, and <code>is_valid</code> so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept <code>**kwargs</code> to accumulate the additional it doesn't need. For example:</p>
+<p>The <code>get</code> method will accept <code>**kwargs</code> which it will forward to <code>download</code> and <code>load</code> so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept <code>**kwargs</code> to accumulate the additional it doesn't need. For example:</p>
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># code</span>
 
@@ -500,10 +499,6 @@
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># code</span>
         <span class="k">return</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">,</span> <span class="n">data3</span><span class="p">,</span> <span class="o">...</span>
-
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">another_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># code</span>
-        <span class="k">return</span> <span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span>
 </pre></div>
 
 <div class="admonition warning">
