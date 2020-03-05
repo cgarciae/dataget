@@ -14,6 +14,8 @@ nav:
           - spirals: datasets/toy/spirals.md
       - vision:
           - mnist: datasets/vision/mnist.md
+          - cifar10: datasets/vision/cifar10.md
+          - cifar100: datasets/vision/cifar100.md
   - Creating a Dataset: dataset.md
 
 extra:
