@@ -81,6 +81,7 @@ async def download_file(
                 bar_format="{desc}:{percentage:3.0f}%|{bar}|{n:.2f}MB/{total:.2f}MB [{elapsed}<{remaining},{rate_noinv_fmt}]",
                 unit_scale=1 / (1024 ** 2),
                 unit="MB",
+                smoothing=0.05,
             )
 
         async with aiofiles.open(path, "ab") as f:
