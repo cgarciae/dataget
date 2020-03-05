@@ -74,12 +74,14 @@ async def download_file(
         total = show_progress and response.headers.get("Content-Length", None)
 
         if total:
+            desc = path.name
             progress = tqdm(
                 total=int(total),
-                desc=f"Downloading {url}",
+                desc=f"Downloading {desc}",
                 bar_format="{desc}:{percentage:3.0f}%|{bar}|{n:.2f}MB/{total:.2f}MB [{elapsed}<{remaining},{rate_noinv_fmt}]",
                 unit_scale=1 / (1024 ** 2),
                 unit="MB",
+                smoothing=0.05,
             )
 
         async with aiofiles.open(path, "ab") as f:
