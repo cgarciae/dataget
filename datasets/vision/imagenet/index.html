@@ -536,7 +536,7 @@
 
 <span class="n">df_train</span><span class="p">,</span> <span class="n">df_val</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dataget</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">imagenet</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
-Dataget doesn't load the images of this dataset into memory, instead the <code>df_train</code>, <code>df_val</code>, and <code>df_test</code> dataframes contain the <code>image_path</code> column which contains the relative path of each sample which you can latter use to iteratively load each image during training.</p>
+Dataget doesn't load the images of this dataset into memory, instead the <code>df_train</code>, <code>df_val</code>, and <code>df_test</code> dataframes has the <code>image_path</code> column which contains the relative path of each sample which you can latter use to iteratively load each image during training.</p>
 <h2 id="sample">Sample<a class="headerlink" href="#sample" title="Permanent link">&para;</a></h2>
 <p><img 
     src="https://www.researchgate.net/profile/Yuzhuo_Ren/publication/314646236/figure/fig7/AS:668983594336276@1536509526997/Examples-in-the-ImageNet-dataset.png" 
@@ -566,7 +566,7 @@ Dataget doesn't load the images of this dataset into memory, instead the <code>d
 <tr>
 <td><strong>df_test</strong></td>
 <td>pd.DataFrame</td>
-<td><code>(100000, 2)</code></td>
+<td><code>(100_000, 2)</code></td>
 </tr>
 </tbody>
 </table>
