@@ -1,12 +1,12 @@
 
-# dataget.vision.cifar100
+# dataget.image.cifar100
 
 Downloads the [Cifar 100](https://www.cs.toronto.edu/~kriz/cifar.html) dataset from University of Toronto's website and loads it as `numpy` arrays.
 
 ```python
 import dataget
 
-X_train, y_train, X_test, y_test = dataget.vision.cifar100().get()
+X_train, y_train, X_test, y_test = dataget.image.cifar100().get()
 ```
 
 ## Sample

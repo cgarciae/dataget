@@ -1,12 +1,12 @@
 
-# dataget.vision.imagenet
+# dataget.image.imagenet
 
 Downloads the [ImageNet](https://www.kaggle.com/c/imagenet-object-localization-challenge) dataset from their official **ImageNet Object Localization Challenge** Kaggle competition and loads its metadata as `pandas` dataframes. You need the [Kaggle CLI](https://github.com/Kaggle/kaggle-api) installed and configured to use this dataset.
 
 ```python
 import dataget
 
-df_train, df_val, df_test = dataget.vision.imagenet().get()
+df_train, df_val, df_test = dataget.image.imagenet().get()
 ```
 Dataget doesn't load the images of this dataset into memory, instead the `df_train`, `df_val`, and `df_test` dataframes has the `image_path` column which contains the relative path of each sample which you can latter use to iteratively load each image during training.
 
