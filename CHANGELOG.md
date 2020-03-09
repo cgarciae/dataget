@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.6] - 2020-03-09
+### Adds
+- Adds the `imagenet` dataset.
+
 ## [0.4.5] - 2020-03-05
 ### Adds
 - Adds the `fashion_mnist` dataset.
