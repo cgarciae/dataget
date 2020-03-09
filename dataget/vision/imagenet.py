@@ -68,24 +68,10 @@ class imagenet(Dataset):
 
         labels_list = df["PredictionString"].str.split(" ")
         df["label"] = labels_list.map(lambda x: x[0])
-        df["xmin"] = labels_list.map(lambda x: x[1])
-        df["ymin"] = labels_list.map(lambda x: x[2])
-        df["xmax"] = labels_list.map(lambda x: x[3])
-        df["ymax"] = labels_list.map(lambda x: x[4])
-
-        return df
-
-    def load_test(self):
-        df = pd.read_csv(self.path / f"LOC_sample_submission.csv")
-
-        df["image_path"] = (
-            str(self.path / "ILSVRC" / "Data" / "CLS-LOC" / "test")
-            + os.sep
-            + df["ImageId"]
-            + ".JPEG"
-        )
-
-        df.drop(columns=["PredictionString"], inplace=True)
+        df["xmin"] = labels_list.map(lambda x: int(x[1]))
+        df["ymin"] = labels_list.map(lambda x: int(x[2]))
+        df["xmax"] = labels_list.map(lambda x: int(x[3]))
+        df["ymax"] = labels_list.map(lambda x: int(x[4]))
 
         return df
 
@@ -101,9 +87,23 @@ class imagenet(Dataset):
 
         labels_list = df["PredictionString"].str.split(" ")
         df["label"] = labels_list.map(lambda x: x[0])
-        df["xmin"] = labels_list.map(lambda x: x[1])
-        df["ymin"] = labels_list.map(lambda x: x[2])
-        df["xmax"] = labels_list.map(lambda x: x[3])
-        df["ymax"] = labels_list.map(lambda x: x[4])
+        df["xmin"] = labels_list.map(lambda x: int(x[1]))
+        df["ymin"] = labels_list.map(lambda x: int(x[2]))
+        df["xmax"] = labels_list.map(lambda x: int(x[3]))
+        df["ymax"] = labels_list.map(lambda x: int(x[4]))
+
+        return df
+
+    def load_test(self):
+        df = pd.read_csv(self.path / f"LOC_sample_submission.csv")
+
+        df["image_path"] = (
+            str(self.path / "ILSVRC" / "Data" / "CLS-LOC" / "test")
+            + os.sep
+            + df["ImageId"]
+            + ".JPEG"
+        )
+
+        df.drop(columns=["PredictionString"], inplace=True)
 
         return df
