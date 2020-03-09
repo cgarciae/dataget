@@ -26,38 +26,20 @@ Dataget doesn't load the images of this dataset into memory, instead the `df_tra
 | **df_test**  | pd.DataFrame | `(100000, 2)`   |
 
 ## Features
-#### df_train
-| column           | type  | description                |
-| ---------------- | ----- | -------------------------- |
-| image_path       | str   | relative path of the image |
-| label            | str   | label id                   |
-| xmin             | int64 | bouding box annotation     |
-| ymin             | int64 | bouding box annotation     |
-| xmax             | int64 | bouding box annotation     |
-| ymax             | int64 | bouding box annotation     |
-| label_name       | str   | full label name            |
-| wnid             | str   | wnid                       |
-| ImageId          | str   | image id                   |
-| PredictionString | str   | full prediction string     |
+| column           | type  | description                                     | df_train | df_val | df_test |
+| ---------------- | ----- | ----------------------------------------------- | :------: | :----: | :-----: |
+| ImageId          | str   | image id                                        |  **x**   | **x**  |  **x**  |
+| image_path       | str   | relative path to jpeg image                     |  **x**   | **x**  |  **x**  |
+| annotations_path | str   | relative path to pascal voc xml                 |  **x**   | **x**  |         |
+| label            | str   | label id                                        |  **x**   | **x**  |         |
+| label_name       | str   | label name                                      |  **x**   | **x**  |         |
+| PredictionString | str   | prediction string                               |  **x**   | **x**  |         |
+| xmin             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
+| ymin             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
+| xmax             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
+| ymax             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
+| wnid             | str   | [WordNet ID](http://image-net.org/download-API) |  **x**   |        |         |
 
-#### df_val
-| column           | type  | description                |
-| ---------------- | ----- | -------------------------- |
-| image_path       | str   | relative path of the image |
-| label            | str   | label id                   |
-| xmin             | int64 | bouding box annotation     |
-| ymin             | int64 | bouding box annotation     |
-| xmax             | int64 | bouding box annotation     |
-| ymax             | int64 | bouding box annotation     |
-| label_name       | str   | full label name            |
-| ImageId          | str   | image id                   |
-| PredictionString | str   | full prediction string     |
-
-#### df_test
-| column     | type | description                |
-| ---------- | ---- | -------------------------- |
-| image_path | str  | relative path of the image |
-| ImageId    | str  | image id                   |
 
 
 ## Info

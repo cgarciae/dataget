@@ -66,6 +66,15 @@ class imagenet(Dataset):
             + ".JPEG"
         )
 
+        df["annotations_path"] = (
+            str(self.path / "ILSVRC" / "Annotations" / "CLS-LOC" / "train")
+            + os.sep
+            + df["wnid"]
+            + os.sep
+            + df["ImageId"]
+            + ".xml"
+        )
+
         labels_list = df["PredictionString"].str.split(" ")
         df["label"] = labels_list.map(lambda x: x[0])
         df["xmin"] = labels_list.map(lambda x: int(x[1]))
@@ -83,6 +92,13 @@ class imagenet(Dataset):
             + os.sep
             + df["ImageId"]
             + ".JPEG"
+        )
+
+        df["annotations_path"] = (
+            str(self.path / "ILSVRC" / "Annotations" / "CLS-LOC" / "train")
+            + os.sep
+            + df["ImageId"]
+            + ".xml"
         )
 
         labels_list = df["PredictionString"].str.split(" ")
