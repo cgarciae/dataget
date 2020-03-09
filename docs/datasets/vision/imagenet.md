@@ -8,7 +8,7 @@ import dataget
 
 df_train, df_val, df_test = dataget.vision.imagenet().get()
 ```
-Dataget doesn't load the images of this dataset into memory, instead the `df_train`, `df_val`, and `df_test` dataframes contain the `image_path` column which contains the relative path of each sample image which you can latter load iteratively during training.
+Dataget doesn't load the images of this dataset into memory, instead the `df_train`, `df_val`, and `df_test` dataframes contain the `image_path` column which contains the relative path of each sample which you can latter use to iteratively load each image during training.
 
 ## Sample
 <img 
