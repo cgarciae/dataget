@@ -34,10 +34,10 @@ Dataget doesn't load the images of this dataset into memory, instead the `df_tra
 | label            | str   | label id                                        |  **x**   | **x**  |         |
 | label_name       | str   | label name                                      |  **x**   | **x**  |         |
 | PredictionString | str   | prediction string                               |  **x**   | **x**  |         |
-| xmin             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
-| ymin             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
-| xmax             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
-| ymax             | int64 | prediction string bouding box                   |  **x**   | **x**  |         |
+| xmin             | int64 | prediction string bouding box coord             |  **x**   | **x**  |         |
+| ymin             | int64 | prediction string bouding box coord             |  **x**   | **x**  |         |
+| xmax             | int64 | prediction string bouding box coord             |  **x**   | **x**  |         |
+| ymax             | int64 | prediction string bouding box coord             |  **x**   | **x**  |         |
 | wnid             | str   | [WordNet ID](http://image-net.org/download-API) |  **x**   |        |         |
 
 
