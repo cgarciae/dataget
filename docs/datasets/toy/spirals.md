@@ -24,9 +24,11 @@ df_train, df_test = dataget.toy.spirals().get()
 
 ## Features
 
-| x0    | x1    | y   |
-| ----- | ----- | --- |
-| float | float | int |
+| column | type  | description |
+| ------ | ----- | ----------- |
+| x0     | float | coordinate  |
+| x1     | float | coordinate  |
+| y      | int   | label       |
 
 ## Info
 * **Folder name**: `toy_spirals`

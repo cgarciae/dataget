@@ -98,3 +98,4 @@ ENV/
 /.vscode
 /site
 /scratch.py
+/sync

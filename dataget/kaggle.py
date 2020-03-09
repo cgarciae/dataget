@@ -10,22 +10,39 @@ from dataget.dataset import Dataset
 class kaggle(Dataset):
     @property
     def name(self):
-        return f"kaggle_{self.kaggle_dataset.replace('/', '_')}"
+        name = self.kaggle_dataset if self.kaggle_dataset else self.kaggle_competition
+        return f"kaggle_{name.replace('/', '_')}"
 
-    def __init__(self, dataset: str, **kwargs):
+    def __init__(self, dataset: str = None, competition: str = None, **kwargs):
         """
         Arguments:
             dataset: the id of the kaggle dataset in the format `username/dataset_name`
         """
+        assert (
+            dataset is not None != competition is not None
+        ), "Set either dataset or competition"
+
         self.kaggle_dataset = dataset
+        self.kaggle_competition = competition
 
         super().__init__(**kwargs)
 
     def download(self, **kwargs):
-        subprocess.check_call(
-            f"kaggle datasets download -p {self.path} --unzip {self.kaggle_dataset}",
-            shell=True,
-        )
+
+        if self.kaggle_dataset:
+            cmd = (
+                f"kaggle datasets download -p {self.path} --unzip {self.kaggle_dataset}"
+            )
+        else:
+            cmd = f"kaggle competitions download -p {self.path} --unzip {self.kaggle_competition}"
+
+        subprocess.check_call(cmd, shell=True)
+
+        if self.kaggle_competition:
+            zip_path = self.path / f"{self.kaggle_competition}.zip"
+
+            utils.ungzip(zip_path, self.path)
+            zip_path.unlink()
 
     def load(self, files: list, **kwargs):
         """
@@ -43,4 +60,3 @@ class kaggle(Dataset):
             raise ValueError(f"Extension not supported for '{filename}'")
 
         return df
-

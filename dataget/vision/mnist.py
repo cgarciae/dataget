@@ -58,4 +58,3 @@ class mnist(Dataset):
             y_test = idx2numpy.convert_from_file(f)
 
         return X_train, y_train, X_test, y_test
-

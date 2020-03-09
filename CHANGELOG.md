@@ -1,17 +1,21 @@
 # Changelog
 
+## [0.4.6] - 2020-03-09
+### Adds
+- Adds the `vision.imagenet` dataset.
+
 ## [0.4.5] - 2020-03-05
 ### Adds
-- Adds the `fashion_mnist` dataset.
+- Adds the `vision.fashion_mnist` dataset.
 ### Changes
 - Changes download progress smoothing parameters.
 
 
 ## [0.4.4] - 2020-03-05
 ### Adds
-- Adds the `cifar10` and `cifar100` datasets.
+- Adds the `vision.cifar10` and `vision.cifar100` datasets.
 ### Changes
-- Improves docs for `spirals` and `mnist` datasets.
+- Improves docs for `toy.spirals` and `vision.mnist` datasets.
 - Improves download progressbar info.
 
 

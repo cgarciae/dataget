@@ -1,14 +1,15 @@
 import asyncio
 import gzip
+import os
 import re
+from functools import partial, wraps
 from pathlib import Path
+from zipfile import ZipFile
+import tarfile
 
 import aiofiles
 import httpx
 from tqdm import tqdm
-import asyncio
-from functools import partial, wraps
-import os
 
 ########################################################################
 # aiofiles.os
@@ -39,10 +40,37 @@ if hasattr(os, "sendfile"):
 ########################################################################
 
 
-def ungzip(src_name, dest_name):
+def unzip(src_path, dst_path):
 
-    with gzip.open(src_name, "rb") as infile:
-        with open(dest_name, "wb") as outfile:
+    with ZipFile(src_path, "r") as f:
+        # Extract all the contents of zip file in current directory
+        f.extractall(path=dst_path)
+
+
+def untar(src_path, dst_path, fast=False, show_progress: bool = True):
+
+    with tarfile.open(src_path, "r:gz") as f:
+
+        if fast:
+            f.extractall(path=dst_path)
+        else:
+            if show_progress:
+                bar = tqdm(desc=f"Extracting {src_path.name}")
+
+            member = True
+
+            while member:
+                member = f.next()
+                f.extract(member, path=dst_path / member.name)
+
+                if show_progress:
+                    bar.update()
+
+
+def ungzip(src_path, dst_path, show_progress: bool = True):
+
+    with gzip.open(src_path, "rb") as infile:
+        with open(dst_path, "wb") as outfile:
             for line in infile:
                 outfile.write(line)
 
