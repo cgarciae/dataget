@@ -95,7 +95,7 @@ class imagenet(Dataset):
         )
 
         df["annotations_path"] = (
-            str(self.path / "ILSVRC" / "Annotations" / "CLS-LOC" / "train")
+            str(self.path / "ILSVRC" / "Annotations" / "CLS-LOC" / "val")
             + os.sep
             + df["ImageId"]
             + ".xml"
