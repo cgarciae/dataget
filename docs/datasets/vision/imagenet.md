@@ -1,7 +1,7 @@
 
 # dataget.vision.imagenet
 
-Downloads the [ImageNet](https://www.kaggle.com/c/imagenet-object-localization-challenge) dataset from their official ImageNet Object Localization Challenge Kaggle competition and loads its metadata as `pandas` dataframes. You need the `kaggle` cli installed and configured to use this dataset.
+Downloads the [ImageNet](https://www.kaggle.com/c/imagenet-object-localization-challenge) dataset from their official **ImageNet Object Localization Challenge** Kaggle competition and loads its metadata as `pandas` dataframes. You need the [Kaggle CLI](https://github.com/Kaggle/kaggle-api) installed and configured to use this dataset.
 
 ```python
 import dataget
