@@ -17,7 +17,7 @@ class imdb_reviews(Dataset):
     def get(self, include_unlabeled: bool = False, **kwargs):
         """
         Arguments:
-            include_unlabeled: wether or not to include the unlabeled samples.
+            include_unlabeled: whether or not to include the unlabeled samples.
             kwargs: common arguments  consumed by `download`.
         """
         self.download(**kwargs)

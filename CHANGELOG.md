@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.7] - 2020-03-10
+### Adds
+- Adds the `structured.movielens_*` dataset family.
+- Add the `text.imdb_reviews` dataset. 
+### Changes
+- `get` method is now strict with all arguments.
+
 ## [0.4.6] - 2020-03-09
 ### Adds
 - Adds the `image.imagenet` dataset.
