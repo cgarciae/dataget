@@ -1,11 +1,12 @@
 import asyncio
+import copy
 import gzip
 import os
 import re
+import tarfile
 from functools import partial, wraps
 from pathlib import Path
 from zipfile import ZipFile
-import tarfile
 
 import aiofiles
 import httpx
@@ -40,31 +41,65 @@ if hasattr(os, "sendfile"):
 ########################################################################
 
 
-def unzip(src_path, dst_path):
+def unzip(src_path, dst_path, show_progress: bool = True):
 
     with ZipFile(src_path, "r") as f:
-        # Extract all the contents of zip file in current directory
-        f.extractall(path=dst_path)
+        if show_progress:
+            # Loop over each file
+            for file in tqdm(
+                iterable=f.namelist(),
+                total=len(f.namelist()),
+                desc=f"Extracting {src_path.name}",
+            ):
 
-
-def untar(src_path, dst_path, fast=False, show_progress: bool = True):
-
-    with tarfile.open(src_path, "r:gz") as f:
-
-        if fast:
-            f.extractall(path=dst_path)
+                # Extract each file to another directory
+                # If you want to extract to current working directory, don't specify path
+                f.extract(member=file, path=dst_path)
         else:
-            if show_progress:
-                bar = tqdm(desc=f"Extracting {src_path.name}")
+            # Extract all the contents of zip file in current directory
+            f.extractall(path=dst_path)
 
-            member = True
 
-            while member:
-                member = f.next()
-                f.extract(member, path=dst_path / member.name)
+def untar(src_path, dst_path, show_progress: bool = True):
 
-                if show_progress:
-                    bar.update()
+    mode = "r:gz" if str(src_path).endswith("gz") else "r"
+
+    with tarfile.open(src_path, mode) as f:
+
+        if show_progress:
+
+            directories = []
+
+            for tarinfo in tqdm(f.getmembers(), desc=f"Extracting {src_path.name}"):
+                if tarinfo.isdir():
+                    # Extract directories with a safe mode.
+                    directories.append(tarinfo)
+                    tarinfo = copy.copy(tarinfo)
+                    tarinfo.mode = 0o700
+                # Do not set_attrs directories, as we will do that further down
+                f.extract(
+                    tarinfo, dst_path, set_attrs=not tarinfo.isdir(),
+                )
+
+            # Reverse sort directories.
+            directories.sort(key=lambda a: a.name)
+            directories.reverse()
+
+            # Set correct owner, mtime and filemode on directories.
+            for tarinfo in directories:
+                dirpath = os.path.join(str(dst_path), tarinfo.name)
+                try:
+                    f.chown(tarinfo, dirpath, numeric_owner=False)
+                    f.utime(tarinfo, dirpath)
+                    f.chmod(tarinfo, dirpath)
+                except tarfile.ExtractError as e:
+                    if f.errorlevel > 1:
+                        raise
+                    else:
+                        f._dbg(1, "tarfile: %s" % e)
+
+        else:
+            f.extractall(path=dst_path)
 
 
 def ungzip(src_path, dst_path, show_progress: bool = True):

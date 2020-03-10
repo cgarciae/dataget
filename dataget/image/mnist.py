@@ -20,7 +20,7 @@ class mnist(Dataset):
     def name(self):
         return "vision_mnist"
 
-    async def download(self, **kwargs):
+    async def _download(self):
 
         async with httpx.AsyncClient() as client:
             tasks = [
@@ -43,7 +43,7 @@ class mnist(Dataset):
 
         gz_path.unlink()
 
-    def load(self, **kwargs):
+    def load(self):
 
         with open(self.path / "train-features.idx", "rb") as f:
             X_train = idx2numpy.convert_from_file(f)

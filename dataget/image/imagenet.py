@@ -16,7 +16,7 @@ class imagenet(Dataset):
     def name(self):
         return "vision_imagenet"
 
-    def download(self, **kwargs):
+    def _download(self):
 
         subprocess.check_call(
             f"kaggle competitions download -p {self.path} imagenet-object-localization-challenge",
@@ -35,7 +35,7 @@ class imagenet(Dataset):
         utils.untar(src_path=gz_path, dst_path=self.path, fast=True)
         gz_path.unlink()
 
-    def load(self, **kwargs):
+    def load(self):
 
         with open(self.path / "LOC_synset_mapping.txt") as f:
             label_map = {}

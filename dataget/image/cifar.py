@@ -19,7 +19,7 @@ class cifar10(Dataset):
     def name(self):
         return "vision_cifar10"
 
-    async def download(self, **kwargs):
+    async def _download(self):
 
         gz_path = self.path / "cifar-10-python.tar.gz"
 
@@ -35,7 +35,7 @@ class cifar10(Dataset):
 
         gz_path.unlink()
 
-    def load(self, **kwargs):
+    def load(self):
         batches_dir = self.path / "cifar-10-batches-py"
 
         num_train_samples = 50000
@@ -64,7 +64,7 @@ class cifar100(Dataset):
     def name(self):
         return "vision_cifar100"
 
-    async def download(self, **kwargs):
+    async def _download(self, **kwargs):
 
         gz_path = self.path / "cifar-10-python.tar.gz"
 

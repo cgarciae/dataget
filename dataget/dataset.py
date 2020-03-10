@@ -31,16 +31,21 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean_cache: bool = False, debug: bool = False, **kwargs):
+    def get(self, clean: bool = False, debug: bool = False):
+        self.download(clean=clean, debug=clean)
 
-        if clean_cache or not self.is_valid(**kwargs):
+        return self.load()
+
+    def download(self, clean: bool = False, debug: bool = False, **kwargs):
+
+        if clean or not self.is_valid():
 
             if not debug:
                 shutil.rmtree(self.path, ignore_errors=True)
                 self.path.mkdir(parents=True)
 
             # get data
-            coro = self.download(**kwargs)
+            coro = self._download(**kwargs)
 
             if coro is not None:
                 asyncio.run(coro)
@@ -48,13 +53,11 @@ class Dataset(ABC):
             # mark as valid
             (self.path / ".valid").touch()
 
-        return self.load(**kwargs)
-
-    def is_valid(self, **kwargs):
+    def is_valid(self):
         return (self.path / ".valid").exists()
 
     @abstractmethod
-    def download(self, **kwargs):
+    def _download(self, **kwargs):
         pass
 
     @abstractmethod

@@ -15,8 +15,12 @@ class kaggle(Dataset):
 
     def __init__(self, dataset: str = None, competition: str = None, **kwargs):
         """
+        Create a Kaggle dataset. You have to specify either `dataset` or `competition`.
+
         Arguments:
-            dataset: the id of the kaggle dataset in the format `username/dataset_name`
+            dataset: the id of the kaggle dataset in the format `username/dataset_name`.
+            competition: the name of the kaggle competition.
+            kwargs: common init kwargs.
         """
         assert (
             dataset is not None != competition is not None
@@ -27,7 +31,17 @@ class kaggle(Dataset):
 
         super().__init__(**kwargs)
 
-    def download(self, **kwargs):
+    def get(self, files: list, **kwargs):
+        """
+        Arguments:
+            files: the list of files that will be loaded into memory
+            kwargs: common arguments consumed by `download`
+        """
+        self.download(**kwargs)
+
+        return self.load(files)
+
+    def _download(self):
 
         if self.kaggle_dataset:
             cmd = (
@@ -44,11 +58,7 @@ class kaggle(Dataset):
             utils.ungzip(zip_path, self.path)
             zip_path.unlink()
 
-    def load(self, files: list, **kwargs):
-        """
-        Arguments:
-            files: the list of files that will be loaded into memory
-        """
+    def load(self, files: list):
         return [self._load_file(filename) for filename in files]
 
     def _load_file(self, filename):
