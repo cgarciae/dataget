@@ -347,11 +347,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3">
     
     <label class="md-nav__link" for="nav-3-3">
-      vision
+      image
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-3-3">
-        vision
+        image
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -362,7 +362,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/mnist/" title="mnist" class="md-nav__link">
+    <a href="../datasets/image/mnist/" title="mnist" class="md-nav__link">
       mnist
     </a>
   </li>
@@ -374,7 +374,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/cifar10/" title="cifar10" class="md-nav__link">
+    <a href="../datasets/image/cifar10/" title="cifar10" class="md-nav__link">
       cifar10
     </a>
   </li>
@@ -386,7 +386,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/cifar100/" title="cifar100" class="md-nav__link">
+    <a href="../datasets/image/cifar100/" title="cifar100" class="md-nav__link">
       cifar100
     </a>
   </li>
@@ -398,7 +398,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/fashion_mnist/" title="fashion_mnist" class="md-nav__link">
+    <a href="../datasets/image/fashion_mnist/" title="fashion_mnist" class="md-nav__link">
       fashion_mnist
     </a>
   </li>
@@ -410,8 +410,152 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/imagenet/" title="imagenet" class="md-nav__link">
+    <a href="../datasets/image/imagenet/" title="imagenet" class="md-nav__link">
       imagenet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-4" type="checkbox" id="nav-3-4">
+    
+    <label class="md-nav__link" for="nav-3-4">
+      structured
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-4">
+        structured
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-4-1" type="checkbox" id="nav-3-4-1">
+    
+    <label class="md-nav__link" for="nav-3-4-1">
+      movielens
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-3-4-1">
+        movielens
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_25m/" title="movielens_25m" class="md-nav__link">
+      movielens_25m
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_20m/" title="movielens_20m" class="md-nav__link">
+      movielens_20m
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_latest/" title="movielens_latest" class="md-nav__link">
+      movielens_latest
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_latest_small/" title="movielens_latest_small" class="md-nav__link">
+      movielens_latest_small
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_synthetic_1b/" title="movielens_synthetic_1b" class="md-nav__link">
+      movielens_synthetic_1b
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-5" type="checkbox" id="nav-3-5">
+    
+    <label class="md-nav__link" for="nav-3-5">
+      text
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-5">
+        text
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/text/imdb_reviews/" title="imdb_reviews" class="md-nav__link">
+      imdb_reviews
     </a>
   </li>
 
@@ -487,11 +631,11 @@
                 <h1 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h1>
 <h2 id="specifying-download-directory">Specifying Download Directory<a class="headerlink" href="#specifying-download-directory" title="Permanent link">&para;</a></h2>
 <p>By default every dataset is downloaded inside a <code>./data/{dataset_name}</code> folder in the current directory. There are two ways you can control where the data is stored: the first one is use the <code>global_cache</code> keyword argument on the constructor of any <code>Dataset</code></p>
-<div class="codehilite"><pre><span></span><span class="n">dataget</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">(</span><span class="n">global_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<div class="codehilite"><pre><span></span><span class="n">dataget</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">mnist</span><span class="p">(</span><span class="n">global_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 <p>This will download the dataset inside <code>~/.dataget/{dataset_name}</code> instead, this is useful if you want to reuse the same dataset across projects. The second is to specify the exact location yourself by using the <code>path</code> keyword argument instead:</p>
-<div class="codehilite"><pre><span></span><span class="n">dataget</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">mnist</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/my/dataset/path&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<div class="codehilite"><pre><span></span><span class="n">dataget</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">mnist</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/my/dataset/path&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
 
 <p>This gives you full control over the exact location, in this case the dataset will be downloaded <code>/my/dataset/path</code>.</p>

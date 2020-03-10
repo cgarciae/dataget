@@ -309,11 +309,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-3" type="checkbox" id="nav-3-3">
     
     <label class="md-nav__link" for="nav-3-3">
-      vision
+      image
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
       <label class="md-nav__title" for="nav-3-3">
-        vision
+        image
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -324,7 +324,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/mnist/" title="mnist" class="md-nav__link">
+    <a href="../datasets/image/mnist/" title="mnist" class="md-nav__link">
       mnist
     </a>
   </li>
@@ -336,7 +336,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/cifar10/" title="cifar10" class="md-nav__link">
+    <a href="../datasets/image/cifar10/" title="cifar10" class="md-nav__link">
       cifar10
     </a>
   </li>
@@ -348,7 +348,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/cifar100/" title="cifar100" class="md-nav__link">
+    <a href="../datasets/image/cifar100/" title="cifar100" class="md-nav__link">
       cifar100
     </a>
   </li>
@@ -360,7 +360,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/fashion_mnist/" title="fashion_mnist" class="md-nav__link">
+    <a href="../datasets/image/fashion_mnist/" title="fashion_mnist" class="md-nav__link">
       fashion_mnist
     </a>
   </li>
@@ -372,8 +372,152 @@
 
 
   <li class="md-nav__item">
-    <a href="../datasets/vision/imagenet/" title="imagenet" class="md-nav__link">
+    <a href="../datasets/image/imagenet/" title="imagenet" class="md-nav__link">
       imagenet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-4" type="checkbox" id="nav-3-4">
+    
+    <label class="md-nav__link" for="nav-3-4">
+      structured
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-4">
+        structured
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-4-1" type="checkbox" id="nav-3-4-1">
+    
+    <label class="md-nav__link" for="nav-3-4-1">
+      movielens
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-3-4-1">
+        movielens
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_25m/" title="movielens_25m" class="md-nav__link">
+      movielens_25m
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_20m/" title="movielens_20m" class="md-nav__link">
+      movielens_20m
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_latest/" title="movielens_latest" class="md-nav__link">
+      movielens_latest
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_latest_small/" title="movielens_latest_small" class="md-nav__link">
+      movielens_latest_small
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/structured/movielens/movielens_synthetic_1b/" title="movielens_synthetic_1b" class="md-nav__link">
+      movielens_synthetic_1b
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-5" type="checkbox" id="nav-3-5">
+    
+    <label class="md-nav__link" for="nav-3-5">
+      text
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-5">
+        text
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../datasets/text/imdb_reviews/" title="imdb_reviews" class="md-nav__link">
+      imdb_reviews
     </a>
   </li>
 
@@ -511,7 +655,7 @@
 </div>
 <h3 id="get-kwargs">get kwargs<a class="headerlink" href="#get-kwargs" title="Permanent link">&para;</a></h3>
 <p>The <code>get</code> method will accept <code>**kwargs</code> which it will forward to <code>download</code> and <code>load</code> so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept <code>**kwargs</code> to accumulate the additional it doesn't need. For example:</p>
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># code</span>
 
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -541,7 +685,7 @@
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;some_dataset_name&quot;</span>
 
-    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">some_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">some_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># code </span>
 
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -574,7 +718,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../datasets/vision/imagenet/" title="imagenet" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../datasets/text/imdb_reviews/" title="imdb_reviews" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -583,7 +727,7 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                imagenet
+                imdb_reviews
               </span>
             </div>
           </a>
