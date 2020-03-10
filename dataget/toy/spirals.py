@@ -15,14 +15,14 @@ class spirals(Dataset):
     def name(self):
         return "toy_spirals"
 
-    async def download(self, **kwargs):
+    async def _download(self):
         async with httpx.AsyncClient() as client:
             await asyncio.gather(
                 utils.download_file(client, TRAIN_URL, self.path / "train.csv"),
                 utils.download_file(client, TEST_URL, self.path / "test.csv"),
             )
 
-    def load(self, **kwargs):
+    def load(self):
         return (
             pd.read_csv(self.path / "train.csv"),
             pd.read_csv(self.path / "test.csv"),

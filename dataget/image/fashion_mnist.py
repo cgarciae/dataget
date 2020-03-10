@@ -15,7 +15,7 @@ class fashion_mnist(Dataset):
     def name(self):
         return "vision_fashion_mnist"
 
-    async def download(self, **kwargs):
+    async def _download(self):
 
         base_url = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
         files = {
@@ -41,7 +41,7 @@ class fashion_mnist(Dataset):
 
         gz_path.unlink()
 
-    def load(self, **kwargs):
+    def load(self):
 
         with open(self.path / "train-features.idx", "rb") as f:
             X_train = idx2numpy.convert_from_file(f)

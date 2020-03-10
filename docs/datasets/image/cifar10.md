@@ -1,12 +1,12 @@
 
-# dataget.vision.cifar10
+# dataget.image.cifar10
 
 Downloads the [Cifar 10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset from University of Toronto's website and loads it as `numpy` arrays.
 
 ```python
 import dataget
 
-X_train, y_train, X_test, y_test = dataget.vision.cifar10().get()
+X_train, y_train, X_test, y_test = dataget.image.cifar10().get()
 ```
 ## Sample
 <img alt="cifar-10-sample" src="https://miro.medium.com/max/944/1*6XQqOifwnmplS22zCRRVaw.png" width="80%" />

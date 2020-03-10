@@ -1,12 +1,12 @@
 
-# dataget.vision.fashion_mnist
+# dataget.image.fashion_mnist
 
 Downloads the [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist) dataset and loads it as `numpy` arrays.
 
 ```python
 import dataget
 
-X_train, y_train, X_test, y_test = dataget.vision.fashion_mnist().get()
+X_train, y_train, X_test, y_test = dataget.image.fashion_mnist().get()
 ```
 
 ## Sample

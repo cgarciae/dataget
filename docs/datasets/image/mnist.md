@@ -1,12 +1,12 @@
 
-# dataget.vision.mnist
+# dataget.image.mnist
 
 Downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset from Yann LeCun's website and loads it as `numpy` arrays.
 
 ```python
 import dataget
 
-X_train, y_train, X_test, y_test = dataget.vision.mnist().get()
+X_train, y_train, X_test, y_test = dataget.image.mnist().get()
 ```
 
 ## Sample

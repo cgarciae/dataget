@@ -1,21 +1,28 @@
 # Changelog
 
+## [0.4.7] - 2020-03-10
+### Adds
+- Adds the `structured.movielens_*` dataset family.
+- Add the `text.imdb_reviews` dataset. 
+### Changes
+- `get` method is now strict with all arguments.
+
 ## [0.4.6] - 2020-03-09
 ### Adds
-- Adds the `vision.imagenet` dataset.
+- Adds the `image.imagenet` dataset.
 
 ## [0.4.5] - 2020-03-05
 ### Adds
-- Adds the `vision.fashion_mnist` dataset.
+- Adds the `image.fashion_mnist` dataset.
 ### Changes
 - Changes download progress smoothing parameters.
 
 
 ## [0.4.4] - 2020-03-05
 ### Adds
-- Adds the `vision.cifar10` and `vision.cifar100` datasets.
+- Adds the `image.cifar10` and `image.cifar100` datasets.
 ### Changes
-- Improves docs for `toy.spirals` and `vision.mnist` datasets.
+- Improves docs for `toy.spirals` and `image.mnist` datasets.
 - Improves download progressbar info.
 
 

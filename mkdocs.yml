@@ -12,12 +12,22 @@ nav:
       - kaggle: datasets/kaggle.md
       - toy:
           - spirals: datasets/toy/spirals.md
-      - vision:
-          - mnist: datasets/vision/mnist.md
-          - cifar10: datasets/vision/cifar10.md
-          - cifar100: datasets/vision/cifar100.md
-          - fashion_mnist: datasets/vision/fashion_mnist.md
-          - imagenet: datasets/vision/imagenet.md
+      - image:
+          - mnist: datasets/image/mnist.md
+          - cifar10: datasets/image/cifar10.md
+          - cifar100: datasets/image/cifar100.md
+          - fashion_mnist: datasets/image/fashion_mnist.md
+          - imagenet: datasets/image/imagenet.md
+
+      - structured:
+          - movielens:
+              - movielens_25m: datasets/structured/movielens/movielens_25m.md
+              - movielens_20m: datasets/structured/movielens/movielens_20m.md
+              - movielens_latest: datasets/structured/movielens/movielens_latest.md
+              - movielens_latest_small: datasets/structured/movielens/movielens_latest_small.md
+              - movielens_synthetic_1b: datasets/structured/movielens/movielens_synthetic_1b.md
+      - text:
+          - imdb_reviews: datasets/text/imdb_reviews.md
   - Creating a Dataset: dataset.md
 
 extra:

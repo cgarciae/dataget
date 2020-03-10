@@ -25,7 +25,7 @@ Both are usually done in one line:
 import dataget
 
 
-X_train, y_train, X_test, y_test = dataget.vision.mnist().get()
+X_train, y_train, X_test, y_test = dataget.image.mnist().get()
 ```
 
 This example downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/vision_mnist` and loads it as `numpy` arrays.
@@ -45,7 +45,7 @@ To start using Kaggle datasets just make sure you have properly installed and co
 
 * Be able to load any file that `numpy` or `pandas` can read.
 * Have generic support for other types of datasets like images, audio, video, etc. 
-    * e.g `dataget.data.kaggle(..., type="vision").get(...)`
+    * e.g `dataget.data.kaggle(..., type="image").get(...)`
 
 
 ## Installation

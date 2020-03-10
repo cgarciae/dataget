@@ -15,7 +15,7 @@ The `Dataset` class defined these 4 abstract methods which you must implement:
 The `get` method will accept `**kwargs` which it will forward to `download` and `load` so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept `**kwargs` to accumulate the additional it doesn't need. For example:
 
 ```python
-def download(self, version, limit=None, **kwargs):
+def _download(self, version, limit=None, **kwargs):
     # code
 
 def load(self, dtype=np.float32, **kwargs):
@@ -49,7 +49,7 @@ class SomeDataset(Dataset):
     def name(self):
         return "some_dataset_name"
 
-    def download(self, some_arg, **kwargs):
+    def _download(self, some_arg, **kwargs):
         # code 
 
     def load(self, other_arg, **kwargs):
