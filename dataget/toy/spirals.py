@@ -15,7 +15,7 @@ class spirals(Dataset):
     def name(self):
         return "toy_spirals"
 
-    async def _download(self):
+    async def download(self):
         async with httpx.AsyncClient() as client:
             await asyncio.gather(
                 utils.download_file(client, TRAIN_URL, self.path / "train.csv"),

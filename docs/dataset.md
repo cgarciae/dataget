@@ -3,7 +3,7 @@
 
 The `Dataset` class defined these 4 abstract methods which you must implement:
 
-* `name`: a property that should return the name of the dataset e.g. `vision_mnist`.
+* `name`: a property that should return the name of the dataset e.g. `image_mnist`.
 * `download`: the method that should download the dataset to disk and possibly perform other tasks such as file extraction, organization, and clean_cacheup.
 * `load`: the method that loads the data into memory and possibly structures it in the most convenient format for the user.
 
@@ -12,24 +12,18 @@ The `Dataset` class defined these 4 abstract methods which you must implement:
     The `self.path` field is a `pathlib.Path` that tells the dataset where the data should be stored. The `get` method ensures this path exists before calling `download` or `load`; use this field when implementing these methods.
 
 ### get kwargs
-The `get` method will accept `**kwargs` which it will forward to `download` and `load` so all these methods have to accept the same arguments. An alternatively strategy is have each accept its desired required or optional arguments and accept `**kwargs` to accumulate the additional it doesn't need. For example:
+The `get` method will accept `**kwargs` which it will forward to `load`. For example:
 
 ```python
-def _download(self, version, limit=None, **kwargs):
-    # code
-
-def load(self, dtype=np.float32, **kwargs):
+def load(self, dtype=np.float32):
     # code
 ```
 
-With this implementation you the `get` method could be called like this:
+With this implementation the `get` method can be called like this:
 
 ```python
-.get(version="0.0.2", dtype=np.uint8)
+.get(dtype=np.uint8)
 ```
-
-!!! note
-    In the previous example the `version` argument is required because `download` uses it as a positional argument although for `get` its just a keyword argument, if it were not passed a `TypeError` would've been raised.
 
 ### Template
 
@@ -47,14 +41,14 @@ class SomeDataset(Dataset):
     
     @property
     def name(self):
-        return "some_dataset_name"
+        return "{dataset_type}_{dataset_name}"
 
-    def _download(self, some_arg, **kwargs):
+    def download(self):
         # code 
 
-    def load(self, other_arg, **kwargs):
+    def load(self, some_arg):
         # code
-        return data1, data2, data3, ...
+        return a, b, c, ...
 ```
 
 !!! warning

@@ -14,17 +14,7 @@ class imdb_reviews(Dataset):
     def name(self):
         return "text_imdb_reviews"
 
-    def get(self, include_unlabeled: bool = False, **kwargs):
-        """
-        Arguments:
-            include_unlabeled: whether or not to include the unlabeled samples.
-            kwargs: common arguments  consumed by `download`.
-        """
-        self.download(**kwargs)
-
-        return self.load(include_unlabeled=include_unlabeled)
-
-    async def _download(self):
+    async def download(self):
 
         gz_path = self.path / "aclImdb_v1.tar.gz"
 
@@ -40,6 +30,10 @@ class imdb_reviews(Dataset):
         gz_path.unlink()
 
     def load(self, include_unlabeled=False):
+        """
+        Arguments:
+            include_unlabeled: whether or not to include the unlabeled samples.
+        """
         train_path = self.path / "aclImdb" / "train"
         test_path = self.path / "aclImdb" / "test"
 

@@ -21,5 +21,5 @@ X_train, y_train, X_test, y_test = dataget.image.cifar10().get()
 | **y_test**  | np.array | `(10_000, 1)`         | uint8 |
 
 ## Info
-* **Folder name**: `vision_cifar10`
+* **Folder name**: `image_cifar10`
 * **Size on disk**: `178M`

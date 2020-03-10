@@ -14,9 +14,9 @@ from dataget.dataset import Dataset
 class imagenet(Dataset):
     @property
     def name(self):
-        return "vision_imagenet"
+        return "image_imagenet"
 
-    def _download(self):
+    def download(self):
 
         subprocess.check_call(
             f"kaggle competitions download -p {self.path} imagenet-object-localization-challenge",

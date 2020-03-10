@@ -13,9 +13,9 @@ from dataget.dataset import Dataset
 class fashion_mnist(Dataset):
     @property
     def name(self):
-        return "vision_fashion_mnist"
+        return "image_fashion_mnist"
 
-    async def _download(self):
+    async def download(self):
 
         base_url = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
         files = {

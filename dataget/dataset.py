@@ -31,13 +31,7 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean: bool = False, debug: bool = False):
-        self.download(clean=clean, debug=clean)
-
-        return self.load()
-
-    def download(self, clean: bool = False, debug: bool = False, **kwargs):
-
+    def get(self, clean: bool = False, debug: bool = False, **kwargs):
         if clean or not self.is_valid():
 
             if not debug:
@@ -45,7 +39,7 @@ class Dataset(ABC):
                 self.path.mkdir(parents=True)
 
             # get data
-            coro = self._download(**kwargs)
+            coro = self.download()
 
             if coro is not None:
                 asyncio.run(coro)
@@ -53,15 +47,17 @@ class Dataset(ABC):
             # mark as valid
             (self.path / ".valid").touch()
 
+        return self.load(**kwargs)
+
     def is_valid(self):
         return (self.path / ".valid").exists()
 
     @abstractmethod
-    def _download(self, **kwargs):
+    def download(self):
         pass
 
     @abstractmethod
-    def load(self, **kwargs):
+    def load(self):
         pass
 
 

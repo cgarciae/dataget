@@ -28,7 +28,7 @@ import dataget
 X_train, y_train, X_test, y_test = dataget.image.mnist().get()
 ```
 
-This example downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/vision_mnist` and loads it as `numpy` arrays.
+This example downloads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset to `./data/image_mnist` and loads it as `numpy` arrays.
 
 ### Kaggle Support
 

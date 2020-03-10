@@ -16,7 +16,7 @@ class MovieLensBase(Dataset):
         size = "_".join(size)
         return f"structured_movielens_{size}"
 
-    async def _download(self):
+    async def download(self):
         zip_path = self.path / f"{self.size}.zip"
 
         async with httpx.AsyncClient() as client:
@@ -75,12 +75,7 @@ class movielens_synthetic_1b(Dataset):
     def name(self):
         return f"structured_movielens_synthetic_1b"
 
-    def get(self, batch_size=None, **kwargs):
-        self.download(**kwargs)
-
-        return self.load(batch_size=batch_size)
-
-    async def _download(self):
+    async def download(self):
         tar_path = self.path / "ml-20mx16x32.tar"
 
         async with httpx.AsyncClient() as client:

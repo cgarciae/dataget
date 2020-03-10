@@ -31,17 +31,7 @@ class kaggle(Dataset):
 
         super().__init__(**kwargs)
 
-    def get(self, files: list, **kwargs):
-        """
-        Arguments:
-            files: the list of files that will be loaded into memory
-            kwargs: common arguments consumed by `download`
-        """
-        self.download(**kwargs)
-
-        return self.load(files)
-
-    def _download(self):
+    def download(self):
 
         if self.kaggle_dataset:
             cmd = (
@@ -59,6 +49,11 @@ class kaggle(Dataset):
             zip_path.unlink()
 
     def load(self, files: list):
+        """
+        Arguments:
+            files: the list of files that will be loaded into memory
+        """
+
         return [self._load_file(filename) for filename in files]
 
     def _load_file(self, filename):

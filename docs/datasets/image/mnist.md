@@ -26,5 +26,5 @@ X_train, y_train, X_test, y_test = dataget.image.mnist().get()
 | **y_test**  | np.array | `(10_000,)`        | uint8 |
 
 ## Info
-* **Folder name**: `vision_mnist`
+* **Folder name**: `image_mnist`
 * **Size on disk**: `53MB`

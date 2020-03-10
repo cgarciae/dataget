@@ -43,5 +43,5 @@ Dataget doesn't load the images of this dataset into memory, instead the `df_tra
 
 
 ## Info
-* **Folder name**: `vision_imagenet`
+* **Folder name**: `image_imagenet`
 * **Size on disk**: `161GB`

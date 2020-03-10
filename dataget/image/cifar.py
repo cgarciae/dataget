@@ -17,9 +17,9 @@ from dataget.dataset import Dataset
 class cifar10(Dataset):
     @property
     def name(self):
-        return "vision_cifar10"
+        return "image_cifar10"
 
-    async def _download(self):
+    async def download(self):
 
         gz_path = self.path / "cifar-10-python.tar.gz"
 
@@ -62,9 +62,9 @@ class cifar10(Dataset):
 class cifar100(Dataset):
     @property
     def name(self):
-        return "vision_cifar100"
+        return "image_cifar100"
 
-    async def _download(self, **kwargs):
+    async def download(self):
 
         gz_path = self.path / "cifar-10-python.tar.gz"
 
@@ -80,7 +80,7 @@ class cifar100(Dataset):
 
         gz_path.unlink()
 
-    def load(self, **kwargs):
+    def load(self):
         path = self.path / "cifar-100-python"
 
         fpath = path / "train"

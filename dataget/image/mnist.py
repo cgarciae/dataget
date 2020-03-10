@@ -18,9 +18,9 @@ TEST_LABELS_URL = "http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz"
 class mnist(Dataset):
     @property
     def name(self):
-        return "vision_mnist"
+        return "image_mnist"
 
-    async def _download(self):
+    async def download(self):
 
         async with httpx.AsyncClient() as client:
             tasks = [
