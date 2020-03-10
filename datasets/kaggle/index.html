@@ -315,8 +315,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dataget.kaggle.kaggle.get" class="md-nav__link">
-    get()
+  <a href="#dataget.kaggle.kaggle.load" class="md-nav__link">
+    load()
   </a>
   
 </li>
@@ -668,8 +668,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dataget.kaggle.kaggle.get" class="md-nav__link">
-    get()
+  <a href="#dataget.kaggle.kaggle.load" class="md-nav__link">
+    load()
   </a>
   
 </li>
@@ -789,25 +789,21 @@
 </tbody>
 </table>
 </div>
-<h3 id="dataget.kaggle.kaggle.get"><code class="codehilite"><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code><a class="headerlink" href="#dataget.kaggle.kaggle.get" title="Permanent link">&para;</a></h3>
+<h3 id="dataget.kaggle.kaggle.load"><code class="codehilite"><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span></code><a class="headerlink" href="#dataget.kaggle.kaggle.load" title="Permanent link">&para;</a></h3>
 <div class="autodoc">
-<details class="note"><summary>Show source code in kaggle.py</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>34
-35
-36
-37
-38
-39
-40
-41
-42</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<details class="note"><summary>Show source code in kaggle.py</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>51
+52
+53
+54
+55
+56
+57</pre></div></td><td class="code"><div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Arguments:</span>
 <span class="sd">            files: the list of files that will be loaded into memory</span>
-<span class="sd">            kwargs: common arguments consumed by `download`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
 </pre></div>
 </td></tr></table>
 
@@ -828,12 +824,6 @@
 <td><code>list</code></td>
 <td>the list of files that will be loaded into memory</td>
 <td><em>required</em></td>
-</tr>
-<tr>
-<td><code>**kwargs</code></td>
-<td><code>_empty</code></td>
-<td>common arguments consumed by <code>download</code></td>
-<td><code>{}</code></td>
 </tr>
 </tbody>
 </table>
