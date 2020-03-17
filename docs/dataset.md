@@ -1,7 +1,7 @@
 
 # Creating a Dataset
 
-The `Dataset` class defined these 3 abstract methods which you must implement:
+Creating a new dataset is relatively easy, the `Dataset` class only defined these 3 abstract methods which you must implement:
 
 * `name`: a property that returns the folder name of the dataset e.g. `image_mnist`.
 * `download`: a method that downloads the data to disk and possibly perform other tasks such as file extraction, organization, and cleanup.
