@@ -1,11 +1,11 @@
 
 # Creating a Dataset
 
-The `Dataset` class defined these 4 abstract methods which you must implement:
+The `Dataset` class defined these 3 abstract methods which you must implement:
 
-* `name`: a property that should return the name of the dataset e.g. `image_mnist`.
-* `download`: the method that should download the dataset to disk and possibly perform other tasks such as file extraction, organization, and clean_cacheup.
-* `load`: the method that loads the data into memory and possibly structures it in the most convenient format for the user.
+* `name`: a property that returns the folder name of the dataset e.g. `image_mnist`.
+* `download`: a method that downloads the data to disk and possibly perform other tasks such as file extraction, organization, and cleanup.
+* `load`: the method that loads the data into memory and structures it in the most convenient format for the user.
 
 
 !!! path
@@ -32,7 +32,7 @@ You can use this template to get started.
 ```python
 from dataget.dataset import Dataset
 
-class SomeDataset(Dataset):
+class some_dataset(Dataset):
 
     # OPTIONAL
     def __init__(self, init_arg, **kwargs):
@@ -52,4 +52,4 @@ class SomeDataset(Dataset):
 ```
 
 !!! warning
-    If you are definint you own `__init__` remenber to always forward `**kwargs` to `super().__init__` since its important that all datasets support the `path` and `global_cache` keyword arguments defined in the `Dataset` class. If `super().__init__` is not called at all the `path` field will not be instantiated and errors will occure.
+    If you are defining your own `__init__` remenber to always forward `**kwargs` to `super().__init__` since its very important that all datasets support the `path` and `global_cache` keyword arguments defined in the `Dataset` class. If `super().__init__` is not called at all the `path` field will not be instantiated and errors will occure.

@@ -7,7 +7,6 @@ theme:
 
 nav:
   - Introduction: index.md
-  - Advanced Usage: advanced-usage.md
   - Available Datasets:
       - kaggle: datasets/kaggle.md
       - toy:
@@ -29,6 +28,7 @@ nav:
               - movielens_synthetic_1b: datasets/structured/movielens/movielens_synthetic_1b.md
       - text:
           - imdb_reviews: datasets/text/imdb_reviews.md
+  - API Reference: api-reference.md
   - Creating a Dataset: dataset.md
 
 extra:

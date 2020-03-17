@@ -8,16 +8,33 @@ from dataget import utils
 
 
 class Dataset(ABC):
-    """
-    DATASETTTT
-    """
-
     @property
     @abstractmethod
     def name(self):
         pass
 
     def __init__(self, path: Path = None, global_cache: bool = False):
+        """
+        By default every dataset is downloaded inside `./data/{dataset_name}` in the current directory, however, you can use the the parameters from the base `dataget.Dataset` class constructor to constrol where the data is stored.
+
+        Parameters:
+            path: 
+            global_cache: dcd
+
+        ### Examples
+
+        Setting `global_cache=True` on any dataset constructor downloads the data to global folder:
+
+        ```python
+        dataget.image.mnist(global_cache=True).get()
+        ```
+
+        By setting the `path` argument you can specify the exact location for the dataset:
+
+        ```python
+        dataget.image.mnist(path="/my/dataset/path").get()
+        ```
+        """
 
         if path and not isinstance(path, Path):
             path = Path(path)
@@ -31,10 +48,19 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean: bool = False, debug: bool = False, **kwargs):
+    def get(self, clean: bool = False, _debug: bool = False, **kwargs):
+        """
+        Downloads and load the dataset into memory.
+
+        Parameters:
+            clean: deletes the dataset folder and forces a new download of the data.
+            kwargs: all keyword arguments are forwarded to the `load` method. Consult the documentation on a specific dataset to see which options are available.
+
+        """
+
         if clean or not self.is_valid():
 
-            if not debug:
+            if not _debug:
                 shutil.rmtree(self.path, ignore_errors=True)
                 self.path.mkdir(parents=True)
 
