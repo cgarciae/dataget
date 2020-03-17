@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.8] - 2020-03-17
+### Adds
+- Adds the `audio.free_spoken_digit` dataset.
+
 ## [0.4.7] - 2020-03-10
 ### Adds
 - Adds the `structured.movielens_*` dataset family.
