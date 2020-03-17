@@ -761,8 +761,8 @@
 <span class="sd">        By default every dataset is downloaded inside `./data/{dataset_name}` in the current directory, however, you can use the the parameters from the base `dataget.Dataset` class constructor to constrol where the data is stored.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            path: </span>
-<span class="sd">            global_cache: dcd</span>
+<span class="sd">            path: if set defines the exact location where the dataset will be stored. Takes precedence over `global_cache`.</span>
+<span class="sd">            global_cache: if `True` the data is downloaded to `~/.dataget/{dataset_name}` instead. Use this to reuse datasets across projects.</span>
 
 <span class="sd">        ### Examples</span>
 
@@ -809,13 +809,13 @@
 <tr>
 <td><code>path</code></td>
 <td><code>Path</code></td>
-<td></td>
+<td>if set defines the exact location where the dataset will be stored. Takes precedence over <code>global_cache</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr>
 <td><code>global_cache</code></td>
 <td><code>bool</code></td>
-<td>dcd</td>
+<td>if <code>True</code> the data is downloaded to <code>~/.dataget/{dataset_name}</code> instead. Use this to reuse datasets across projects.</td>
 <td><code>False</code></td>
 </tr>
 </tbody>
