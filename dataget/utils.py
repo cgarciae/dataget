@@ -134,22 +134,25 @@ async def download_file(
 
     async with client.stream("GET", url) as response:
 
-        total = show_progress and response.headers.get("Content-Length", None)
+        content_length = response.headers.get("Content-Length", None)
+        desc = path.name
 
-        if total:
-            desc = path.name
+        if show_progress and content_length:
+
             progress = tqdm(
-                total=int(total),
+                total=int(content_length),
                 desc=f"Downloading {desc}",
                 bar_format="{desc}:{percentage:3.0f}%|{bar}|{n:.2f}MB/{total:.2f}MB [{elapsed}<{remaining},{rate_noinv_fmt}]",
                 unit_scale=1 / (1024 ** 2),
                 unit="MB",
                 smoothing=0.05,
             )
+        else:
+            print(f"Downloading {desc}...")
 
         async with aiofiles.open(path, "ab") as f:
             async for chunk in response.aiter_bytes():
-                if total:
+                if show_progress and content_length:
                     progress.update(n=len(chunk))
 
                 await f.write(chunk)
