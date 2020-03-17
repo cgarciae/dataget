@@ -18,7 +18,8 @@ nav:
           - cifar100: datasets/image/cifar100.md
           - fashion_mnist: datasets/image/fashion_mnist.md
           - imagenet: datasets/image/imagenet.md
-
+      - audio:
+          - free_spoken_digit: datasets/audio/free_spoken_digit.md
       - structured:
           - movielens:
               - movielens_25m: datasets/structured/movielens/movielens_25m.md
