@@ -5,7 +5,7 @@ Dataget is an easy to use, framework-agnostic, dataset library that gives you qu
 Main features:
 
 * **Minimal**: Downloads entire datasets with just 1 line of code.
-* **Compatible**: Loads data as `numpy` arrays or `pandas` dataframes which can be easily used with the majority of Machine Learning frameworks.
+* **Framework Agnostic**: Loads data as `numpy` arrays or `pandas` dataframes which can be easily used with the majority of Machine Learning frameworks.
 * **Transparent**: By default stores the data in your current project so you can easily inspect it.
 * **Memory Efficient**: When a dataset doesn't fit in memory it will return metadata instead so you can iteratively load it.
 * **Integrates with Kaggle**: Supports loading datasets directly from Kaggle in a variety of formats.
@@ -67,8 +67,7 @@ poetry add dataget
 ```
 
 ## Contributing
-
-Read our guide on [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in adding a dataset to dataget.
+Adding a new dataset is easy! Read our guide on [Creating a Dataset](https://cgarciae.github.io/dataget/dataset/) if you are interested in contributing a dataset.
 
 ## License
 MIT License
