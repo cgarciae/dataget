@@ -18,8 +18,8 @@ class Dataset(ABC):
         By default every dataset is downloaded inside `./data/{dataset_name}` in the current directory, however, you can use the the parameters from the base `dataget.Dataset` class constructor to constrol where the data is stored.
 
         Parameters:
-            path: 
-            global_cache: dcd
+            path: if set defines the exact location where the dataset will be stored. Takes precedence over `global_cache`.
+            global_cache: if `True` the data is downloaded to `~/.dataget/{dataset_name}` instead. Use this to reuse datasets across projects.
 
         ### Examples
 
