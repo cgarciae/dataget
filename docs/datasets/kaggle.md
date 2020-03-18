@@ -6,7 +6,7 @@ Download any dataset from the Kaggle platform and immediately loads it into memo
 ```python
 import dataget
 
-df_train, df_test = dataget.kaggle("cristiangarcia/pointcloudmnist2d").get(
+df_train, df_test = dataget.kaggle(dataset="cristiangarcia/pointcloudmnist2d").get(
     files=["train.csv", "test.csv"]
 )
 ```

@@ -37,7 +37,7 @@ Kaggle [promotes](https://www.kaggle.com/docs/datasets#supported-file-types) the
 ```python
 import dataget
 
-df_train, df_test = dataget.kaggle("cristiangarcia/pointcloudmnist2d").get(
+df_train, df_test = dataget.kaggle(dataset="cristiangarcia/pointcloudmnist2d").get(
     files=["train.csv", "test.csv"]
 )
 ```
