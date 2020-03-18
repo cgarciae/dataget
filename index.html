@@ -815,7 +815,7 @@
 <p>Kaggle <a href="https://www.kaggle.com/docs/datasets#supported-file-types">promotes</a> the use of <code>csv</code> files and <code>dataget</code> loves it! With dataget you can quickly download any dataset from the platform and have immediate access to the data:</p>
 <p><div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">dataget</span>
 
-<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dataget</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+<span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <span class="n">dataget</span><span class="o">.</span><span class="n">kaggle</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;cristiangarcia/pointcloudmnist2d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
     <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;train.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
