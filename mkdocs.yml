@@ -17,6 +17,7 @@ nav:
           - cifar100: datasets/image/cifar100.md
           - fashion_mnist: datasets/image/fashion_mnist.md
           - imagenet: datasets/image/imagenet.md
+          - udacity_simulator: datasets/image/udacity_simulator.md
       - audio:
           - free_spoken_digit: datasets/audio/free_spoken_digit.md
       - structured:
