@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.9] - 2020-03-21
+### Adds
+- Adds the `image.udacity_simulator` dataset.
+
 ## [0.4.8] - 2020-03-17
 ### Adds
 - Adds the `audio.free_spoken_digit` dataset.

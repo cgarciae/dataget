@@ -7,4 +7,4 @@ from . import structured
 from . import text
 from . import audio
 
-__version__ = "0.4.8"
+__version__ = "0.4.9"
