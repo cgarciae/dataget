@@ -22,8 +22,8 @@ class kaggle(Dataset):
             competition: the name of the kaggle competition.
             kwargs: common init kwargs.
         """
-        assert (
-            dataset is not None != competition is not None
+        assert (dataset is not None) != (
+            competition is not None
         ), "Set either dataset or competition"
 
         self.kaggle_dataset = dataset
@@ -38,14 +38,16 @@ class kaggle(Dataset):
                 f"kaggle datasets download -p {self.path} --unzip {self.kaggle_dataset}"
             )
         else:
-            cmd = f"kaggle competitions download -p {self.path} --unzip {self.kaggle_competition}"
+            cmd = (
+                f"kaggle competitions download -p {self.path} {self.kaggle_competition}"
+            )
 
         subprocess.check_call(cmd, shell=True)
 
         if self.kaggle_competition:
             zip_path = self.path / f"{self.kaggle_competition}.zip"
 
-            utils.ungzip(zip_path, self.path)
+            utils.unzip(zip_path, self.path)
             zip_path.unlink()
 
     def load(self, files: list):
