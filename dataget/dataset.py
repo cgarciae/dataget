@@ -69,7 +69,12 @@ class Dataset(ABC):
             coro = self.download()
 
             if isinstance(coro, tp.Awaitable):
-                asyncio.new_event_loop().run_until_complete(coro)
+                loop = asyncio.get_event_loop()
+
+                if loop.is_running():
+                    asyncio.run_coroutine_threadsafe(coro, loop).result()
+                else:
+                    loop.run_until_complete(coro)
 
             # mark as valid
             (self.path / ".valid").touch()
