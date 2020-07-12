@@ -3,6 +3,7 @@ import os
 import shutil
 from abc import ABC, abstractmethod
 from pathlib import Path
+import typing as tp
 
 from dataget import utils
 
@@ -67,8 +68,8 @@ class Dataset(ABC):
             # get data
             coro = self.download()
 
-            if coro is not None:
-                asyncio.run(coro)
+            if isinstance(coro, tp.Awaitable):
+                asyncio.new_event_loop().run_until_complete(coro)
 
             # mark as valid
             (self.path / ".valid").touch()
@@ -79,7 +80,7 @@ class Dataset(ABC):
         return (self.path / ".valid").exists()
 
     @abstractmethod
-    def download(self):
+    def download(self) -> tp.Optional[tp.Awaitable]:
         pass
 
     @abstractmethod
