@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dataget"
-version = "0.4.12"
+version = "0.4.14"
 description = "A framework-agnostic datasets library for Machine Learning research and education."
 authors = ["Cristian Garcia <cgarcia.e88@gmail.com>"]
 readme = "README.md"
@@ -9,7 +9,7 @@ homepage = "https://cgarciae.github.io/dataget"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.1"
 kaggle = "^1.5.6"
 httpx = "^0.11.1"
 numpy = "^1.18.1"
@@ -27,6 +27,8 @@ mkdocs = "^1.0.4"
 mkdocs-material = "^4.6.0"
 mkdocstrings = "^0.7.0"
 matplotlib = "^3.2.0"
+jupyter = "^1.0.0"
+black = {version = "^19.10b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry"]

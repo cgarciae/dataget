@@ -3,6 +3,7 @@ import os
 import shutil
 from abc import ABC, abstractmethod
 from pathlib import Path
+import threading
 import typing as tp
 
 from dataget import utils
@@ -66,15 +67,18 @@ class Dataset(ABC):
                 self.path.mkdir(parents=True)
 
             # get data
-            coro = self.download()
+            def target():
 
-            if isinstance(coro, tp.Awaitable):
-                loop = asyncio.get_event_loop()
+                coro = self.download()
 
-                if loop.is_running():
-                    asyncio.run_coroutine_threadsafe(coro, loop).result()
-                else:
+                if isinstance(coro, tp.Awaitable):
+                    loop = asyncio.new_event_loop()
                     loop.run_until_complete(coro)
+
+            t = threading.Thread(target=target)
+            t.daemon = True
+            t.start()
+            t.join()
 
             # mark as valid
             (self.path / ".valid").touch()
