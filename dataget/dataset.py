@@ -12,7 +12,7 @@ from dataget import utils
 class Dataset(ABC):
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> str:
         pass
 
     def __init__(self, path: Path = None, global_cache: bool = False):
@@ -50,7 +50,7 @@ class Dataset(ABC):
 
         self.path = path
 
-    def get(self, clean: bool = False, _debug: bool = False, **kwargs):
+    def get(self, clean: bool = False, _debug: bool = False, **kwargs) -> tp.Any:
         """
         Downloads and load the dataset into memory.
 
@@ -66,9 +66,12 @@ class Dataset(ABC):
                 shutil.rmtree(self.path, ignore_errors=True)
                 self.path.mkdir(parents=True)
 
-            # get data
+            # this code has to run in a thread
+            # in case the user runs it in jupyter
+            # which has problems with asyncio
             def target():
 
+                # get data
                 coro = self.download()
 
                 if isinstance(coro, tp.Awaitable):
@@ -85,7 +88,7 @@ class Dataset(ABC):
 
         return self.load(**kwargs)
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         return (self.path / ".valid").exists()
 
     @abstractmethod
